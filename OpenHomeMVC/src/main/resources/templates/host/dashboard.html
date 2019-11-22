@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Host Dashboard</title>
+</head>
+<body>
+<h1>Host Dashboard</h1>
+<div th:if="${host != null}">
+	<a href="/host/update">Host Update</a>
+	<a href="/host/delete">Host Delete</a>
+	
+	<div th:if="${ host.userDetails.email != host.userDetails.verifiedDetails.verifiedEmail }">
+		<a href="/verify/email">Host Verify Email</a>
+   	</div>
+   	<div th:if="${ host.userDetails.phoneNumber != '' && host.userDetails.phoneNumber != host.userDetails.verifiedDetails.verifiedPhoneNumber }">
+		<a href="/verify/phone">Host Verify Phone</a>
+   	</div>
+	
+	<table border="1">
+		<tr>
+			<th>Email</th>
+			<td>[[${host.userDetails.email}]]</td>
+		</tr>
+		<tr>
+			<th>Password</th>
+			<td>[[${host.userDetails.password}]]</td>
+		</tr>
+		<tr>
+			<th>First Name</th>
+			<td>[[${host.userDetails.firstName}]]</td>
+		</tr>
+		<tr>
+			<th>Last Name</th>
+			<td>[[${host.userDetails.lastName}]]</td>
+		</tr>
+		<tr>
+			<th>Phone Number</th>
+			<td>[[${host.userDetails.phoneNumber}]]</td>
+		</tr>
+	</table>
+</div>	
+</body>
+</html>

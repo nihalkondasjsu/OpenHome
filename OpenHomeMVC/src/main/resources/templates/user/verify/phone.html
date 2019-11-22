@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<script>
+	var successLink = "[[${successLink}]]";
+	if(successLink != undefined && successLink != ""){
+		window.location = "/"+successLink;
+	}
+</script>
+</head>
+<body>
+	<p style="color:red">[[${errorMessage}]]</p>
+	<form action="/verify/phone/token" method="GET" id="myForm">
+		<input type="text" id="phoneNumber" th:value="${userDetails.phoneNumber}" readonly>
+		<input type="button" value="Send OTP" onclick="mF()"><br>
+		<input type="text" required id="verificationcode" placeholder="enter verification">
+		<input name="userId" required id="userId" type="hidden">
+		<input name="verificationToken" required id="verificationToken" type="hidden">
+		<input type="button" value="Submit" onclick="myFunction()"><br>
+		<input type="submit">
+	</form>
+	
+	<div id="recaptcha-container"></div>
+
+<!-- The core Firebase JS SDK is always required and must be listed first -->
+<script src="https://www.gstatic.com/firebasejs/7.3.0/firebase-app.js"></script>
+
+<script src="https://www.gstatic.com/firebasejs/7.2.3/firebase-auth.js"></script>
+
+<!-- TODO: Add SDKs for Firebase products that you want to use
+     https://firebase.google.com/docs/web/setup#available-libraries -->
+<script src="https://www.gstatic.com/firebasejs/7.3.0/firebase-analytics.js"></script>
+
+<script>
+  // Your web app's Firebase configuration
+  var firebaseConfig = {
+    apiKey: "AIzaSyDU7lyhMUZ1HAkPdRH5pjZnsnJrJIDn4eY",
+    authDomain: "openhome-3a5c8.firebaseapp.com",
+    databaseURL: "https://openhome-3a5c8.firebaseio.com",
+    projectId: "openhome-3a5c8",
+    storageBucket: "openhome-3a5c8.appspot.com",
+    messagingSenderId: "135823705890",
+    appId: "1:135823705890:web:69280d4159a2318f4d077b",
+    measurementId: "G-Z8DK31M2GY"
+  };
+  // Initialize Firebase
+  firebase.initializeApp(firebaseConfig);
+  firebase.analytics();
+</script>
+
+<script>
+	
+	window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container'); 
+	
+	function mF(){
+		firebase.auth().signInWithPhoneNumber("[[${userDetails.phoneNumber}]]", window.recaptchaVerifier) 
+			.then(function(confirmationResult) { 
+				window.confirmationResult = confirmationResult; 
+				//alert(confirmationResult); 
+				console.log(confirmationResult);
+		});
+	}
+	
+	var myFunction = function() { 
+		window.confirmationResult.confirm(document.getElementById("verificationcode").value) 
+		.then(function(result) { 
+				alert('login process successfull!\n redirecting');
+				alert(JSON.stringify(result));
+				
+				console.log(result);
+				
+				document.getElementById("userId").value = result.user.uid;
+				
+				firebase.auth().currentUser.getIdToken(/* forceRefresh */ true).then(function(idToken) {
+					  
+					console.log(idToken);
+					
+					document.getElementById("verificationToken").value = idToken;
+					
+					//document.getElementById("myForm").submit();
+					
+				}).catch(function(error) {
+				  // Handle error
+				});
+				
+				}, 
+				function(error) { 
+					alert(error); 
+				}
+		); 
+	};
+</script>
+
+</body>
+</html>

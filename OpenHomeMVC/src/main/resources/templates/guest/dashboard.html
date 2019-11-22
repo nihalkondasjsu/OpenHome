@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Guest Dashboard</title>
+</head>
+<body>
+<h1>Guest Dashboard</h1>
+<div th:if="${guest != null}">
+	<a href="/guest/update">Guest Update</a>
+	<a href="/guest/delete">Guest Delete</a>
+	<div th:if="${ guest.userDetails.email != guest.userDetails.verifiedDetails.verifiedEmail }">
+		<a href="/verify/email">Guest Verify Email</a>
+   	</div>
+   	<div th:if="${ guest.userDetails.phoneNumber != null && guest.userDetails.phoneNumber != guest.userDetails.verifiedDetails.verifiedPhoneNumber }">
+		<a href="/verify/phone">Guest Verify Phone</a>
+   	</div>
+	<table border="1">
+		<tr>
+			<th>Email</th>
+			<td>[[${guest.userDetails.email}]]</td>
+		</tr>
+		<tr>
+			<th>Password</th>
+			<td>[[${guest.userDetails.password}]]</td>
+		</tr>
+		<tr>
+			<th>First Name</th>
+			<td>[[${guest.userDetails.firstName}]]</td>
+		</tr>
+		<tr>
+			<th>Last Name</th>
+			<td>[[${guest.userDetails.lastName}]]</td>
+		</tr>
+		<tr>
+			<th>Phone Number</th>
+			<td>[[${guest.userDetails.phoneNumber}]]</td>
+		</tr>
+	</table>
+</div>
+</body>
+</html>

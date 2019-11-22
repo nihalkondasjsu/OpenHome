@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Host Update</title>
+<script>
+	var successLink = "[[${successLink}]]";
+	if(successLink != undefined && successLink != ""){
+		window.location = "/"+successLink;
+	}
+</script>
+</head>
+<body>
+<h1>Host Update Form</h1>
+<p style="color:red">[[${errorMessage}]]</p>
+<form action="/host/update" method="POST">
+	<table border="1">
+		<tr>
+			<th>Email</th>
+			<td><input name="email" th:value="${host.userDetails.email}" required></td>
+		</tr>
+		<tr>
+			<th>Password</th>
+			<td><input name="password" required></td>
+		</tr>
+		<tr>
+			<th>New Email</th>
+			<td><input name="newEmail" ></td>
+		</tr>
+		<tr>
+			<th>New Password</th>
+			<td><input name="newPassword" ></td>
+		</tr>
+		<tr>
+			<th>First Name</th>
+			<td><input name="firstName" th:value="${host.userDetails.firstName}" required></td>
+		</tr>
+		<tr>
+			<th>Last Name</th>
+			<td><input name="lastName" th:value="${host.userDetails.lastName}" required></td>
+		</tr>
+		<tr>
+			<th>Phone Number</th>
+			<td><input name="phoneNumber" th:value="${host.userDetails.phoneNumber}" required></td>
+		</tr>
+		<tr>
+			<td colspan="2"><input type="submit"></td>
+		</tr>
+	</table>
+</form>
+</body>
+</html>

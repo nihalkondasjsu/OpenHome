@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Space List</title>
+</head>
+<body>
+<h1>Space List</h1>
+<p style="color:red">[[${errorMessage}]]</p>
+<div th:if="${spaces != null}">
+    <ul>
+       <li th:each="space : ${spaces}" >
+       		<a th:text="${space.spaceDetails.name}" th:href="@{${op} + '?spaceId=' + ${space.id}}"></a>
+       </li>
+    </ul>
+</div>
+</body>
+</html>

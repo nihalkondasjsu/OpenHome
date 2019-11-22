@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Space View</title>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script>
+	var successLink = "[[${successLink}]]";
+	if(successLink != undefined && successLink != ""){
+		window.location = "/"+successLink;
+	}
+</script>
+</head>
+<body>
+<h1>Space View</h1>
+<p style="color:red">[[${errorMessage}]]</p>
+
+<div th:if="${hostAccess == true}">
+	<a th:href="@{'/category/edit/' + ${space.id}}">View Booking Data</a>
+	<a th:href="@{'/space/update?spaceId=' + ${space.id}}">Update Space</a>
+	<a th:href="@{'/space/delete?spaceId=' + ${space.id}}">Delete Space</a>
+</div>
+
+<table border="1">
+	<tr>
+		<th>Name</th>
+		<td><input readonly name="name" th:value="${space.spaceDetails.name}" ></td>
+	</tr>
+	<tr>
+		<th>Property Type</th>
+		<td>
+			<select readonly name='propertyType' th:value="${space.spaceDetails.propertyType}" >
+				<option value='House' selected>House</option>
+				<option value='Apartment'>Apartment</option>
+				<option value='Bed and breakfast'>Bed and breakfast</option>
+				<option value='Boutique hotel'>Boutique hotel</option>
+				<option value='Bungalow'>Bungalow</option>
+				<option value='Cabin'>Cabin</option>
+				<option value='Cottage'>Cottage</option>
+				<option value='Guest suite'>Guest suite</option>
+				<option value='Guesthouse'>Guesthouse</option>
+				<option value='Hotel'>Hotel</option>
+				<option value='Loft'>Loft</option>
+				<option value='Serviced apartment'>Serviced apartment</option>
+				<option value='Townhouse'>Townhouse</option>
+				<option value='Villa'>Villa</option>
+			</select>
+		</td>
+	</tr>
+	<tr>
+		<th>Room Type</th>
+		<td>
+			<select readonly name='roomType' th:value="${space.spaceDetails.roomType}" >
+				<option value='Entire House' selected>Entire House</option>
+				<option value='Shared Room'>Shared Room</option>
+				<option value='Private Room'>Private Room</option>
+			</select>
+		</td>
+	</tr>
+	<tr>
+		<th>Accomodates</th>
+		<td><input readonly name='accomodates' th:value="${space.spaceDetails.accomodates}" type='number' ></td>
+	</tr>
+	<tr>
+		<th>Amenities</th>
+		<td>
+			<div id='amenities' class='checkBoxContainer' th:attr="svals=${space.spaceDetails.amenities}" vals='Kitchen;Shampoo;Heating;Air conditioning;Washer;Dryer;Wifi;Breakfast;Indoor fireplace;Hangers;Iron;Hair dryer;Laptop friendly workspace;TV;Crib;High chair;Self check-in;Smoke detector;Carbon monoxide detector;Private bathroom;Beachfront;Waterfront'></div>
+		</td>
+	</tr>
+	<tr>
+		<th>Facilities</th>
+		<td>
+			<div id='facilities' class='checkBoxContainer' th:attr="svals=${space.spaceDetails.facilities}" vals='Free parking on premises;Gym;Hot tub;Pool'></div>
+		</td>
+	</tr>
+	<tr>
+		<th>House Rules</th>
+		<td>
+			<div id='houseRules' class='checkBoxContainer' th:attr="svals=${space.spaceDetails.houseRules}" vals='Suitable for events;Pets allowed;Smoking allowed'></div>
+		</td>
+	</tr>
+	<tr>
+		<th>Images</th>
+		<td></td>
+	</tr>
+	<tr>
+		<th>No Of Bedrooms</th>
+		<td><input readonly name='noOfBedrooms' th:value="${space.spaceDetails.noOfBedrooms}" type='number' ></td>
+	</tr>
+	<tr>
+		<th>No Of Bathrooms</th>
+		<td><input readonly name='noOfBathrooms' th:value="${space.spaceDetails.noOfBathrooms}" type='number' ></td>
+	</tr>
+	<tr>
+		<th>No Of Beds</th>
+		<td><input readonly name='noOfBeds' th:value="${space.spaceDetails.noOfBeds}" type='number' ></td>
+	</tr>
+	<tr>
+		<th>Weekday Rent Price</th>
+		<td><input readonly name='weekdayRentPrice' th:value="${space.spaceDetails.weekdayRentPrice}" type='number' ></td>
+	</tr>
+	<tr>
+		<th>Weekend Rent Price</th>
+		<td><input readonly name='weekendRentPrice' th:value="${space.spaceDetails.weekendRentPrice}" type='number' ></td>
+	</tr>
+	<tr>
+		<th>SqFt</th>
+		<td><input readonly name='sqft' th:value="${space.spaceDetails.sqft}" type='number' ></td>
+	</tr>
+	<tr>
+		<th>Description</th>
+		<td><textarea readonly name='description' >[[${space.spaceDetails.description}]]</textarea></td>
+	</tr>
+	<tr>
+		<th>Free WiFi</th>
+		<td>
+			<select readonly name='freeWiFi' th:value="${space.spaceDetails.freeWiFi}" required>
+				<option value='true' selected>Yes</option>
+				<option value='false'>No</option>
+			</select>
+		</td>
+	</tr>
+	<tr>
+		<th>Parking Available</th>
+		<td>
+			<select readonly name='parkingAvailable' th:value="${space.spaceDetails.parkingAvailable}" required>
+				<option value='true' selected>Yes</option>
+				<option value='false'>No</option>
+			</select>
+		</td>
+	</tr>
+	<tr>
+		<th>Daily Parking Fee</th>
+		<td><input readonly name='dailyParkingFee' th:value="${space.spaceDetails.dailyParkingFee}" type='number' ></td>
+	</tr>
+	<tr>
+		<th>Latitude</th>
+		<td><input readonly name="address.latitude" th:value="${space.spaceDetails.address.latitude}"  ></td>
+	</tr>
+	<tr>
+		<th>Longitude</th>
+		<td><input readonly name="address.longitude" th:value="${space.spaceDetails.address.longitude}"  ></td>
+	</tr>
+	<tr>
+		<th>Address Line 1</th>
+		<td><input readonly name="address.addressLine1" th:value="${space.spaceDetails.address.addressLine1}" ></td>
+	</tr>
+	<tr>
+		<th>Address Line 2</th>
+		<td><input readonly name="address.addressLine2" th:value="${space.spaceDetails.address.addressLine2}" ></td>
+	</tr>
+	<tr>
+		<th>City</th>
+		<td><input readonly name="address.city" th:value="${space.spaceDetails.address.city}"  ></td>
+	</tr>
+	<tr>
+		<th>State</th>
+		<td><input readonly name="address.state" th:value="${space.spaceDetails.address.state}"  ></td>
+	</tr>
+	<tr>
+		<th>Zip</th>
+		<td><input readonly name="address.zip" th:value="${space.spaceDetails.address.zip}"  ></td>
+	</tr>
+	<tr>
+		<th>Country</th>
+		<td><input readonly name="address.country" th:value="${space.spaceDetails.address.country}"  ></td>
+	</tr>
+</table>
+<script>
+$(function() {
+	$( ".checkBoxContainer" ).each(function( index ) {
+		  console.log( index + ": " + $( this ).attr("id") );
+		  loadCheckBoxes(this,$(this).attr("vals").split(";"),$(this).attr("svals"));
+	});
+	
+	function loadCheckBoxes(elem,langs,selectedlangs){
+	 langs.forEach(function(lang) {
+	  var label = document.createElement("label");
+	  var checklist = document.createElement("input");
+	  checklist.setAttribute("type","checkbox");
+	  checklist.setAttribute("name",$(elem).attr("id"));
+	  checklist.setAttribute("value",lang);
+	  if(selectedlangs.includes(lang))
+	  	checklist.setAttribute("checked",true);
+	  label.append(checklist);
+	  label.append(lang);
+	  $(elem).append(label);
+	 });
+	}
+	
+	
+	
+});
+
+</script>
+</body>
+</html>
