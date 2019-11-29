@@ -2,20 +2,18 @@ package com.openhome;
 
 import java.io.FileInputStream;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.core.io.ClassPathResource;
-import org.thymeleaf.templateresolver.ClassLoaderTemplateResolver;
-
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.auth.oauth2.GoogleCredentials;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
+import com.openhome.tam.TimeAdvancementManagement;
 
 @SpringBootApplication
 public class OpenHomeMvcApplication {
 
+	
 	public static void main(String[] args) {
 		SpringApplication.run(OpenHomeMvcApplication.class, args);
 		System.out.println("Happy");

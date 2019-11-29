@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Time Delta</title>
+</head>
+<body>
+
+<form action="/timeDelta" method="POST">
+	<p>Current Time is [[${dateString}]]</p>
+	<input type="datetime-local" id="meeting-time"
+       name="datetime" th:value="${dateString}"
+       format-value="yyyy-MM-ddTHH:mm"
+       th:min="${dateString}">
+    <input type="submit">   
+</form>
+
+</body>
+</html>

@@ -38,6 +38,10 @@
 			<th>Phone Number</th>
 			<td>[[${host.userDetails.phoneNumber}]]</td>
 		</tr>
+		<tr>
+			<th>Display Picture</th>
+			<td><img style="width:200px" th:src="${host.userDetails.displayPictureId == null ? 'https://vignette.wikia.nocookie.net/made-for-tv-movie/images/6/62/Image_unavailable.png/revision/latest?cb=20171002225603' : host.userDetails.displayPictureId.url}"></td>
+		</tr>
 	</table>
 </div>	
 </body>

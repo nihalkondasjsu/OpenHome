@@ -39,9 +39,11 @@ public class UserDashboardController {
 		
 		if(userRole.equals("host")) {
 			Host h = sessionManager.getHost(httpSession);
+			System.out.println("Host : "+h);
 			model.addAttribute(userRole, h == null ? new Host() : h);
 		}else {
 			Guest g = sessionManager.getGuest(httpSession);
+			System.out.println("Guest : "+g);
 			model.addAttribute(userRole, g == null ? new Guest() : g);
 		}
 		

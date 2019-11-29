@@ -6,10 +6,17 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
+import org.springframework.beans.factory.annotation.Autowired;
+
+import com.openhome.data.Image;
 import com.openhome.data.SpaceDetails;
+import com.openhome.tam.TimeAdvancementManagement;
 
 public class SampleDBData {
 
+	@Autowired
+	TimeAdvancementManagement timeAdvancementManagement;
+	
 	Double[][] gps = new Double[][] {
 		{37.336259,-121.887067},
 		{38.7034611,-121.1685456},
@@ -94,7 +101,7 @@ public class SampleDBData {
 	} 
 	
 	public SpaceDetails getRandomSpaceDetails() {
-		SpaceDetails sd = new SpaceDetails();
+		SpaceDetails sd = new SpaceDetails(timeAdvancementManagement);
 		
 		Random R = new Random();
 		
@@ -114,7 +121,7 @@ public class SampleDBData {
 		
 		sd.setHouseRules(getRandomElement(houseRules));
 		
-		sd.setImages(new ArrayList<String>());
+		sd.setImages(new ArrayList<Image>());
 		
 		sd.setNoOfBathrooms(R.nextInt(bedrooms));
 		

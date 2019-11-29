@@ -10,6 +10,11 @@
 		window.location = "/"+successLink;
 	}
 </script>
+<style>
+img{
+	width:200px;
+}
+</style>
 </head>
 <body>
 <h1>Space View</h1>
@@ -81,7 +86,19 @@
 	</tr>
 	<tr>
 		<th>Images</th>
-		<td></td>
+		<td>
+		<div th:if="${hostAccess == true}">
+			<a th:href="@{'/space/updateSpaceImages?op=add&spaceId=' + ${space.id}}" target="_blank">Add Space Images</a>
+			<a th:href="@{'/space/updateSpaceImages?op=delete&spaceId=' + ${space.id}}" target="_blank">Delete Space Images</a>
+			<a th:href="@{'/space/updateSpaceImages?op=rearrange&spaceId=' + ${space.id}}" target="_blank">Rearrange Space Images</a>
+		</div>
+			<br>
+			<ul>
+				<li th:each="image : ${space.spaceDetails.images}">
+					<img th:src="${image.url}"/>
+				</li>
+			</ul>
+		</td>
 	</tr>
 	<tr>
 		<th>No Of Bedrooms</th>
@@ -191,6 +208,10 @@ $(function() {
 	
 	
 });
+
+function updateSpaceImages(){
+	
+}
 
 </script>
 </body>

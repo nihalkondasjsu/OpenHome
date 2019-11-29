@@ -1,5 +1,6 @@
 package com.openhome.data;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -11,9 +12,14 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.Transient;
+
+import org.springframework.beans.factory.annotation.Autowired;
 
 import com.openhome.dao.helper.StringListConverter;
+import com.openhome.tam.TimeAdvancementManagement;
 
 @Entity
 public class SpaceDetails {
@@ -23,12 +29,16 @@ public class SpaceDetails {
 	@Basic(optional = false)
 	private Long id;
 	
+	@Column(nullable = false)
 	private String name;
 	
+	@Column(nullable = false)
 	private String propertyType = "Apartment";
 	
+	@Column(nullable = false)
 	private String roomType = "Shared Room";
 	
+	@Column(nullable = false)
 	private Integer accomodates = 2;
 	
 	@Column(length=512)
@@ -44,8 +54,10 @@ public class SpaceDetails {
 	private List<String> houseRules;
 	//private String houseRules = "Suitable for events;Pets allowed;Smoking allowed;";
 	
-	@Convert(converter = StringListConverter.class)
-	private List<String> images;
+	@OneToMany(fetch = FetchType.LAZY,
+			cascade=CascadeType.ALL,
+			orphanRemoval=true)
+	private List<Image> images;
 	
 	@Column(nullable = false)
 	private Integer noOfBedrooms = 2;
@@ -83,8 +95,23 @@ public class SpaceDetails {
 	@Column(nullable=false,updatable=false)
 	private Date registeredDate;
 	
+
+	
+	
+	
 	public SpaceDetails() {
 		registeredDate = new Date();
+		images = new ArrayList<Image>();
+	}
+	
+	public SpaceDetails(TimeAdvancementManagement timeAdvancementManagement) {
+		try {
+			registeredDate = timeAdvancementManagement.getCurrentDate();
+		} catch (Exception e) {
+			// TODO: handle exception
+			registeredDate = new Date();
+		}
+		images = new ArrayList<Image>();
 	}
 	
 	public String getName() {
@@ -129,10 +156,16 @@ public class SpaceDetails {
 	public void setHouseRules(List<String> houseRules) {
 		this.houseRules = houseRules;
 	}
-	public List<String> getImages() {
+	public List<Image> getImages() {
 		return images;
 	}
-	public void setImages(List<String> images) {
+	public void addImage(Image image) {
+		this.images.add(image);
+	}
+	public boolean deleteImage(Image image) {
+		return this.images.remove(image);
+	}
+	public void setImages(List<Image> images) {
 		this.images = images;
 	}
 	public Integer getNoOfBedrooms() {

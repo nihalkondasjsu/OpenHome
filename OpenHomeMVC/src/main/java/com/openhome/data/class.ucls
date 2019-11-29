@@ -37,8 +37,8 @@
       <operations public="false" package="false" protected="false" private="false" static="true"/>    
     </display>  
   </class>  
-  <class id="5" language="java" name="com.openhome.data.Payment" project="OpenHomeMVC" 
-    file="/OpenHomeMVC/src/main/java/com/openhome/data/Payment.java" binary="false" corner="BOTTOM_RIGHT">    
+  <class id="5" language="java" name="com.openhome.data.Transaction" project="OpenHomeMVC" 
+    file="/OpenHomeMVC/src/main/java/com/openhome/data/Transaction.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="1006" y="513"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
@@ -101,11 +101,11 @@
     </display>  
   </class>  
   <association id="12">    
-    <end type="SOURCE" refId="3" navigable="false">      
-      <attribute id="13" name="bookings">        
+    <end type="SOURCE" refId="7" navigable="false">      
+      <attribute id="13" name="booking">        
         <position height="0" width="0" x="-1" y="-58"/>      
       </attribute>      
-      <multiplicity id="14" minimum="0" maximum="2147483647">        
+      <multiplicity id="14" minimum="0" maximum="1">        
         <position height="0" width="0" x="-1" y="-58"/>      
       </multiplicity>    
     </end>    
@@ -113,67 +113,71 @@
     <display labels="true" multiplicity="true"/>  
   </association>  
   <association id="15">    
-    <end type="SOURCE" refId="11" navigable="false">      
-      <attribute id="16" name="payment"/>      
-      <multiplicity id="17" minimum="0" maximum="1"/>    
+    <end type="SOURCE" refId="2" navigable="false">      
+      <attribute id="16" name="address">        
+        <position height="0" width="0" x="-1" y="205"/>      
+      </attribute>      
+      <multiplicity id="17" minimum="0" maximum="1">        
+        <position height="0" width="0" x="-1" y="205"/>      
+      </multiplicity>    
     </end>    
-    <end type="TARGET" refId="5" navigable="true"/>    
+    <end type="TARGET" refId="10" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
   <association id="18">    
-    <end type="SOURCE" refId="4" navigable="false">      
-      <attribute id="19" name="host">        
-        <position height="0" width="0" x="-1" y="-58"/>      
+    <end type="SOURCE" refId="9" navigable="false">      
+      <attribute id="19" name="verifiedDetails">        
+        <position height="0" width="0" x="0" y="192"/>      
       </attribute>      
       <multiplicity id="20" minimum="0" maximum="1">        
-        <position height="0" width="0" x="-1" y="-58"/>      
+        <position height="0" width="0" x="0" y="192"/>      
       </multiplicity>    
     </end>    
-    <end type="TARGET" refId="8" navigable="true"/>    
+    <end type="TARGET" refId="1" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
   <association id="21">    
-    <end type="SOURCE" refId="4" navigable="false">      
-      <attribute id="22" name="spaceDetails">        
-        <position height="0" width="0" x="-1" y="-58"/>      
+    <end type="SOURCE" refId="6" navigable="false">      
+      <attribute id="22" name="payment">        
+        <position height="0" width="0" x="16" y="48"/>      
       </attribute>      
       <multiplicity id="23" minimum="0" maximum="1">        
-        <position height="0" width="0" x="-1" y="-58"/>      
+        <position height="0" width="0" x="16" y="48"/>      
       </multiplicity>    
     </end>    
-    <end type="TARGET" refId="2" navigable="true"/>    
+    <end type="TARGET" refId="5" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
   <association id="24">    
     <end type="SOURCE" refId="6" navigable="false">      
-      <attribute id="25" name="payment">        
-        <position height="0" width="0" x="16" y="48"/>      
+      <attribute id="25" name="guest">        
+        <position height="0" width="0" x="-1" y="-58"/>      
       </attribute>      
       <multiplicity id="26" minimum="0" maximum="1">        
-        <position height="0" width="0" x="16" y="48"/>      
+        <position height="0" width="0" x="-1" y="-58"/>      
       </multiplicity>    
     </end>    
-    <end type="TARGET" refId="5" navigable="true"/>    
+    <end type="TARGET" refId="3" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
   <association id="27">    
-    <end type="SOURCE" refId="8" navigable="false">      
-      <attribute id="28" name="rentingSpaces">        
-        <position height="0" width="0" x="-1" y="-58"/>      
+    <end type="SOURCE" refId="6" navigable="false">      
+      <attribute id="28" name="cancellation">        
+        <position height="0" width="0" x="0" y="0"/>      
       </attribute>      
-      <multiplicity id="29" minimum="0" maximum="2147483647">        
-        <position height="0" width="0" x="-1" y="-58"/>      
+      <multiplicity id="29" minimum="0" maximum="1">        
+        <position height="0" width="0" x="0" y="0"/>      
       </multiplicity>    
     </end>    
-    <end type="TARGET" refId="4" navigable="true"/>    
+    <end type="TARGET" refId="11" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
   <association id="30">    
-    <end type="SOURCE" refId="6" navigable="false">      
-      <attribute id="31" name="space">        
+    <end type="SOURCE" refId="8" navigable="false">      
+      <attribute id="31" name="rentingSpaces">        
         <position height="0" width="0" x="-1" y="-58"/>      
       </attribute>      
-      <multiplicity id="32" minimum="0" maximum="1">        
+      <multiplicity id="32" minimum="0" maximum="2147483647">        
         <position height="0" width="0" x="-1" y="-58"/>      
       </multiplicity>    
     </end>    
@@ -181,43 +185,43 @@
     <display labels="true" multiplicity="true"/>  
   </association>  
   <association id="33">    
-    <end type="SOURCE" refId="8" navigable="false">      
-      <attribute id="34" name="userDetails">        
+    <end type="SOURCE" refId="4" navigable="false">      
+      <attribute id="34" name="host">        
         <position height="0" width="0" x="-1" y="-58"/>      
       </attribute>      
       <multiplicity id="35" minimum="0" maximum="1">        
         <position height="0" width="0" x="-1" y="-58"/>      
       </multiplicity>    
     </end>    
-    <end type="TARGET" refId="9" navigable="true"/>    
+    <end type="TARGET" refId="8" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
   <association id="36">    
-    <end type="SOURCE" refId="3" navigable="false">      
-      <attribute id="37" name="userDetails">        
-        <position height="0" width="0" x="-1" y="-58"/>      
+    <end type="SOURCE" refId="11" navigable="false">      
+      <attribute id="37" name="payment">        
+        <position height="0" width="0" x="0" y="0"/>      
       </attribute>      
       <multiplicity id="38" minimum="0" maximum="1">        
-        <position height="0" width="0" x="-1" y="-58"/>      
+        <position height="0" width="0" x="0" y="0"/>      
       </multiplicity>    
     </end>    
-    <end type="TARGET" refId="9" navigable="true"/>    
+    <end type="TARGET" refId="5" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
   <association id="39">    
-    <end type="SOURCE" refId="7" navigable="false">      
-      <attribute id="40" name="booking">        
-        <position height="0" width="0" x="-1" y="-58"/>      
+    <end type="SOURCE" refId="6" navigable="false">      
+      <attribute id="40" name="rating">        
+        <position height="0" width="0" x="85" y="-101"/>      
       </attribute>      
       <multiplicity id="41" minimum="0" maximum="1">        
-        <position height="0" width="0" x="-1" y="-58"/>      
+        <position height="0" width="0" x="85" y="-101"/>      
       </multiplicity>    
     </end>    
-    <end type="TARGET" refId="6" navigable="true"/>    
+    <end type="TARGET" refId="7" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
   <association id="42">    
-    <end type="SOURCE" refId="4" navigable="false">      
+    <end type="SOURCE" refId="3" navigable="false">      
       <attribute id="43" name="bookings">        
         <position height="0" width="0" x="-1" y="-58"/>      
       </attribute>      
@@ -229,59 +233,63 @@
     <display labels="true" multiplicity="true"/>  
   </association>  
   <association id="45">    
-    <end type="SOURCE" refId="9" navigable="false">      
-      <attribute id="46" name="verifiedDetails">        
-        <position height="0" width="0" x="0" y="192"/>      
+    <end type="SOURCE" refId="4" navigable="false">      
+      <attribute id="46" name="bookings">        
+        <position height="0" width="0" x="-1" y="-58"/>      
       </attribute>      
-      <multiplicity id="47" minimum="0" maximum="1">        
-        <position height="0" width="0" x="0" y="192"/>      
+      <multiplicity id="47" minimum="0" maximum="2147483647">        
+        <position height="0" width="0" x="-1" y="-58"/>      
       </multiplicity>    
     </end>    
-    <end type="TARGET" refId="1" navigable="true"/>    
+    <end type="TARGET" refId="6" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
   <association id="48">    
-    <end type="SOURCE" refId="2" navigable="false">      
-      <attribute id="49" name="address">        
-        <position height="0" width="0" x="-1" y="205"/>      
+    <end type="SOURCE" refId="3" navigable="false">      
+      <attribute id="49" name="userDetails">        
+        <position height="0" width="0" x="-1" y="-58"/>      
       </attribute>      
       <multiplicity id="50" minimum="0" maximum="1">        
-        <position height="0" width="0" x="-1" y="205"/>      
+        <position height="0" width="0" x="-1" y="-58"/>      
       </multiplicity>    
     </end>    
-    <end type="TARGET" refId="10" navigable="true"/>    
+    <end type="TARGET" refId="9" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
   <association id="51">    
-    <end type="SOURCE" refId="6" navigable="false">      
-      <attribute id="52" name="guest">        
+    <end type="SOURCE" refId="4" navigable="false">      
+      <attribute id="52" name="spaceDetails">        
         <position height="0" width="0" x="-1" y="-58"/>      
       </attribute>      
       <multiplicity id="53" minimum="0" maximum="1">        
         <position height="0" width="0" x="-1" y="-58"/>      
       </multiplicity>    
     </end>    
-    <end type="TARGET" refId="3" navigable="true"/>    
+    <end type="TARGET" refId="2" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
   <association id="54">    
-    <end type="SOURCE" refId="6" navigable="false">      
-      <attribute id="55" name="rating">        
-        <position height="0" width="0" x="85" y="-101"/>      
+    <end type="SOURCE" refId="8" navigable="false">      
+      <attribute id="55" name="userDetails">        
+        <position height="0" width="0" x="-1" y="-58"/>      
       </attribute>      
       <multiplicity id="56" minimum="0" maximum="1">        
-        <position height="0" width="0" x="85" y="-101"/>      
+        <position height="0" width="0" x="-1" y="-58"/>      
       </multiplicity>    
     </end>    
-    <end type="TARGET" refId="7" navigable="true"/>    
+    <end type="TARGET" refId="9" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
   <association id="57">    
     <end type="SOURCE" refId="6" navigable="false">      
-      <attribute id="58" name="cancellation"/>      
-      <multiplicity id="59" minimum="0" maximum="1"/>    
+      <attribute id="58" name="space">        
+        <position height="0" width="0" x="-1" y="-58"/>      
+      </attribute>      
+      <multiplicity id="59" minimum="0" maximum="1">        
+        <position height="0" width="0" x="-1" y="-58"/>      
+      </multiplicity>    
     </end>    
-    <end type="TARGET" refId="11" navigable="true"/>    
+    <end type="TARGET" refId="4" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
   <classifier-display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 

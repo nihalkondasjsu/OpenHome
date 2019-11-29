@@ -9,9 +9,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.openhome.FileSystem;
 import com.openhome.Json;
 import com.openhome.dao.GuestDAO;
 import com.openhome.dao.HostDAO;
@@ -37,6 +40,9 @@ public class UserRegistrationController {
 	@Autowired
 	SessionManager sessionManager;
 	
+	@Autowired
+	FileSystem fileSystem;
+	
 	@RequestMapping(method=RequestMethod.GET)
 	public String registerForm( @PathVariable("userRole") String userRole,  Model model ) {
 		System.out.println("RegistrationController");
@@ -48,7 +54,7 @@ public class UserRegistrationController {
 	}
 
 	@RequestMapping(method=RequestMethod.POST)
-	public String registerFormSubmission( @PathVariable("userRole") String userRole,  UserDetails userDetails , Model model , HttpSession httpSession ) {
+	public String registerFormSubmission( @PathVariable("userRole") String userRole,  UserDetails userDetails , Model model , HttpSession httpSession , @RequestParam(value="displayPicture",required=false) MultipartFile displayPicture) {
 		Json.printObject(userDetails);
 		
 		if(userRole.equals("host")==false)
@@ -60,6 +66,10 @@ public class UserRegistrationController {
 			UserDetails userDetailsDB = userDetailsDao.getUserByEmail(userDetails.getEmail());
 			
 			if(userDetailsDB == null) {
+				System.out.println("displayPicture : "+displayPicture);
+				if(displayPicture != null) {
+					userDetails.setDisplayPictureId(fileSystem.saveImage(displayPicture));
+				}
 				if(userRole.equals("host")) {
 					Host h = new Host();
 					h.setUserDetails(userDetails);

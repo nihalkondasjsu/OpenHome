@@ -14,11 +14,14 @@ import org.thymeleaf.templateresolver.ClassLoaderTemplateResolver;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.openhome.FileSystem;
 import com.openhome.dao.GuestDAO;
 import com.openhome.dao.HostDAO;
+import com.openhome.dao.ImageDAO;
 import com.openhome.dao.SpaceDAO;
 import com.openhome.data.Address;
 import com.openhome.data.Host;
+import com.openhome.data.Image;
 import com.openhome.data.Space;
 import com.openhome.data.SpaceDetails;
 import com.openhome.data.UserDetails;
@@ -35,6 +38,12 @@ public class LoadDBController extends SampleDBData{
 
 	@Autowired
 	SpaceDAO spaceDAO;
+	
+	@Autowired
+	ImageDAO imageDAO;
+	
+	@Autowired
+	FileSystem fileSystem;
 
 	@GetMapping("/resetDB")
 	public String resetDB() {
@@ -67,6 +76,8 @@ public class LoadDBController extends SampleDBData{
 	@GetMapping("/reloadDB")
 	public String reloadDB() {
 		
+		deleteAllImages();
+		
 		hostDAO.deleteAll();
 		guestDAO.deleteAll();
 		spaceDAO.deleteAll();
@@ -74,6 +85,14 @@ public class LoadDBController extends SampleDBData{
 		reloadDB1();
 		
 		return "index";
+	}
+
+	private void deleteAllImages() {
+		List<Image> images = imageDAO.findAll();
+		for (Image image : images) {
+			fileSystem.deleteImage(image);
+		}
+		imageDAO.deleteAll();
 	}
 
 	private void reloadDB1() {
@@ -107,7 +126,7 @@ public class LoadDBController extends SampleDBData{
 				
 				spaces.add(s);
 			}
-			UserDetails ud = new UserDetails("a"+i+"@b.c","ab@c*"+i,"00"+i,new UserVerifiedDetails(),"a"+i,"bc"+i);
+			UserDetails ud = new UserDetails("a"+i+"@b.c","ab@c*"+i,"00"+i,new UserVerifiedDetails(),"a"+i,"bc"+i,timeAdvancementManagement);
 			if(i != 2) {
 				ud.setVerifiedDetails(new UserVerifiedDetails(ud.getEmail(),ud.getPhoneNumber()));
 			}
@@ -119,6 +138,7 @@ public class LoadDBController extends SampleDBData{
 
 	private void createHost(UserDetails userDetails, List<Space> rentingSpaces) {
 		Host h = new Host();
+		userDetails.encryptPassword();
 		h.setUserDetails(userDetails);
 		for (Space space : rentingSpaces) {
 			h.addSpace(space);

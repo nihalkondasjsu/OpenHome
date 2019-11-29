@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<script>
+	var closeOp = "[[${close}]]";
+	if(closeOp == "yes"){
+		window.close();
+	}
+</script>
+<style>
+img{
+	width:200px;
+}
+</style>
+</head>
+<body>
+
+<form th:action="@{'/space/updateSpaceImagesDelete?spaceId=' + ${space.id}}" method="POST" >
+	<ul>
+		<li th:each="image : ${space.spaceDetails.images}">
+			<img th:src="${image.url}"/>
+			<input type="submit" name="deleteImageId" th:value="${image.id}">
+		</li>
+	</ul>
+</form>
+
+</body>
+</html>

@@ -16,8 +16,11 @@ public class StringListConverter implements AttributeConverter<List<String>, Str
     	//System.out.println(">>>>convertToDatabaseColumn>>>>>"+stringList);
     	if(stringList == null)
     		return "";
-    	Collections.sort(stringList);
-        return ";"+String.join(";;", stringList)+";";
+    	
+    	if(stringList.get(0).endsWith(".jpg") == false)
+    		Collections.sort(stringList);
+        
+    	return ";"+String.join(";;", stringList)+";";
     }
 
     @Override

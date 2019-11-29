@@ -13,13 +13,18 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Transient;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Configurable;
+import org.springframework.stereotype.Component;
+
 import com.openhome.security.Encryption;
+import com.openhome.tam.TimeAdvancementManagement;
 
 @Entity
 public class UserDetails {
 
 	@Transient
-	public static final boolean canEmailBeChanged = true;
+	public static final boolean canEmailBeChanged = false;
 	
 	@Id
 	@GeneratedValue
@@ -39,6 +44,11 @@ public class UserDetails {
 	
 	private String phoneNumber = "";
 	
+	@OneToOne(fetch=FetchType.EAGER,
+			orphanRemoval=true,
+			cascade=CascadeType.ALL)
+	private Image displayPictureId;
+	
 	@JoinColumn(updatable=false)
 	@OneToOne(fetch=FetchType.EAGER,
 			cascade=CascadeType.ALL,
@@ -53,16 +63,26 @@ public class UserDetails {
 
 	@Column(nullable=false,updatable=false)
 	private Date registeredDate;
-
 	
 	public UserDetails() {
 		registeredDate = new Date();
 		verifiedDetails = new UserVerifiedDetails();
 	}
 	
+	public UserDetails(TimeAdvancementManagement timeAdvancementManagement) {
+		try {
+			registeredDate = timeAdvancementManagement.getCurrentDate();
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+			registeredDate = new Date();
+		}
+		verifiedDetails = new UserVerifiedDetails();
+	}
+	
 	public UserDetails(String email, String password, String phoneNumber, UserVerifiedDetails verifiedDetails,
-			String firstName, String lastName) {
-		this();
+			String firstName, String lastName, TimeAdvancementManagement timeAdvancementManagement) {
+		this(timeAdvancementManagement);
 		this.email = email;
 		this.password = password;
 		this.phoneNumber = phoneNumber;
@@ -194,5 +214,14 @@ public class UserDetails {
 		}
 		encryptPassword();
 		setVerifiedDetails(userVerifiedDetails);
+		
+	}
+
+	public Image getDisplayPictureId() {
+		return displayPictureId;
+	}
+
+	public void setDisplayPictureId(Image displayPictureId) {
+		this.displayPictureId = displayPictureId;
 	}
 }

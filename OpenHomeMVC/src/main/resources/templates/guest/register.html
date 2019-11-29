@@ -13,7 +13,7 @@
 <body>
 <h1>Guest Registration Form</h1>
 <p style="color:red">[[${errorMessage}]]</p>
-<form action="/guest/register" method="POST">
+<form action="/guest/register" method="POST" enctype="multipart/form-data">
 	<table border="1">
 		<tr>
 			<th>Email</th>
@@ -34,6 +34,10 @@
 		<tr>
 			<th>Phone Number</th>
 			<td><input name="phoneNumber" required></td>
+		</tr>
+		<tr>
+			<th>Display Picture</th>
+			<td><input name="displayPicture" type="file" accept="image/*"></td>
 		</tr>
 		<tr>
 			<td colspan="2"><input type="submit"></td>

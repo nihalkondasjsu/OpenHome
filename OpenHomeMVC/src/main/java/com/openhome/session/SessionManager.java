@@ -47,11 +47,13 @@ public class SessionManager {
 	public void setHost(HttpSession httpSession,Long id) {
 		httpSession.setAttribute("hostId", id);
 		httpSession.setAttribute("guestId", null);
+		System.out.println("hostId: "+id);
 	}
 	
 	public void setGuest(HttpSession httpSession,Long id) {
 		httpSession.setAttribute("hostId", null);
 		httpSession.setAttribute("guestId", id);
+		System.out.println("guestId: "+id);
 	}
 	
 	public void logoutUser(HttpSession httpSession) {
@@ -65,18 +67,6 @@ public class SessionManager {
 	
 	public Long getGuestId(HttpSession httpSession) {
 		return (Long)httpSession.getAttribute("guestId");
-	}
-
-	public Date setSessionDate(HttpSession httpSession,Date sessionDate) {
-		httpSession.setAttribute("sessionDate", sessionDate);
-		return sessionDate;
-	}
-	
-	public Date getSessionDate(HttpSession httpSession) {
-		Date d = (Date) httpSession.getAttribute("sessionDate");
-		if(d == null)
-			d = new Date();
-		return d;
 	}
 	
 	public UserDetails getSessionUserDetails(HttpSession httpSession) {

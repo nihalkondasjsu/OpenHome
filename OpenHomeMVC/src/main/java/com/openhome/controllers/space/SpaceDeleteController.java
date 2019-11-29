@@ -3,6 +3,7 @@ package com.openhome.controllers.space;
 import java.util.Date;
 import java.util.List;
 
+import javax.persistence.Transient;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +18,7 @@ import com.openhome.data.Booking;
 import com.openhome.data.Host;
 import com.openhome.data.Space;
 import com.openhome.session.SessionManager;
+import com.openhome.tam.TimeAdvancementManagement;
 
 @Controller
 @RequestMapping("/space/delete")
@@ -27,6 +29,9 @@ public class SpaceDeleteController {
 	
 	@Autowired
 	SessionManager sessionManager;
+
+	@Autowired
+	TimeAdvancementManagement timeAdvancementManagement;
 	
 	@RequestMapping(method=RequestMethod.GET)
 	public String deleteForm( @RequestParam(value="spaceId",required=false) Long spaceId, Model model , HttpSession httpSession ) {
@@ -58,7 +63,7 @@ public class SpaceDeleteController {
 			return "redirect";
 		}
 		
-		Date current = sessionManager.getSessionDate(httpSession);
+		Date current = timeAdvancementManagement.getCurrentDate();
 		
 		List<Booking> bookings = s.getBookings();
 		

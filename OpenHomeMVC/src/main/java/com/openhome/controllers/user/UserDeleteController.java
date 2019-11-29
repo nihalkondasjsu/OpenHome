@@ -22,6 +22,7 @@ import com.openhome.data.Guest;
 import com.openhome.data.Host;
 import com.openhome.data.UserDetails;
 import com.openhome.session.SessionManager;
+import com.openhome.tam.TimeAdvancementManagement;
 
 @Controller
 @RequestMapping("/{userRole}/delete")
@@ -41,6 +42,10 @@ public class UserDeleteController {
 	
 	@Autowired
 	SessionManager sessionManager;
+	
+
+	@Autowired
+	TimeAdvancementManagement timeAdvancementManagement;
 	
 	@RequestMapping(method=RequestMethod.GET)
 	public String loginForm( @PathVariable("userRole") String userRole, Model model ) {
@@ -110,7 +115,7 @@ public class UserDeleteController {
 			} else {
 				guest.canAccess(userDetails);
 					
-				Date current = sessionManager.getSessionDate(httpSession);
+				Date current = timeAdvancementManagement.getCurrentDate();
 				
 				List<Booking> bookings = guest.getBookings();
 				

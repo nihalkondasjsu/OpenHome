@@ -8,12 +8,16 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
+import com.openhome.FileSystem;
 import com.openhome.Json;
 import com.openhome.dao.HostDAO;
 import com.openhome.dao.UserDetailsDAO;
 import com.openhome.data.Guest;
 import com.openhome.data.Host;
+import com.openhome.data.Image;
 import com.openhome.data.UserDetails;
 import com.openhome.session.SessionManager;
 
@@ -29,6 +33,9 @@ public class UserUpdateController {
 	
 	@Autowired
 	SessionManager sessionManager;
+	
+	@Autowired
+	FileSystem fileSystem;
 	
 	@RequestMapping(method=RequestMethod.GET)
 	public String updateForm( @PathVariable("userRole") String userRole, Model model , HttpSession httpSession ) {
@@ -49,7 +56,7 @@ public class UserUpdateController {
 	}
 
 	@RequestMapping(method=RequestMethod.POST)
-	public String updateFormSubmission(@PathVariable("userRole") String userRole, UserDetails userDetails , Model model , HttpSession httpSession ) {
+	public String updateFormSubmission(@PathVariable("userRole") String userRole, UserDetails userDetails , Model model , HttpSession httpSession , @RequestParam(value="displayPicture",required=false) MultipartFile displayPicture) {
 		Json.printObject(userDetails);
 		
 		try {
@@ -57,7 +64,21 @@ public class UserUpdateController {
 			UserDetails userDetailsDB = userDetailsDao.getUserByEmail(userDetails.getEmail());
 		
 			try {
+				System.out.println("DisplayPictureId : "+userDetails.getDisplayPictureId());
+				boolean displayPictureChange = displayPicture == null ? false : (displayPicture.getSize() > 1000);
+				if(displayPictureChange == false) {
+					System.out.println("No Image Change");
+					userDetails.setDisplayPictureId(userDetailsDB.getDisplayPictureId());
+				}else {
+					System.out.println("Image Change");
+					Image oldDpId = userDetailsDB.getDisplayPictureId();
+					if(oldDpId != null) {
+						fileSystem.deleteImage(oldDpId);
+					}
+					userDetails.setDisplayPictureId(fileSystem.saveImage(displayPicture));
+				}
 				userDetails.updateDetails(userDetailsDB.getEmail(), userDetailsDB.getPassword(),userDetailsDB.getVerifiedDetails());
+				System.out.println("DisplayPictureId : "+userDetails.getDisplayPictureId());
 			} catch (Exception e) {
 				model.addAttribute("errorMessage", "Invalid Credentials.");
 				return "host/update";

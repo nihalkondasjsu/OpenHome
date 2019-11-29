@@ -69,7 +69,7 @@ public class UserLoginController {
 					userRole = "guest";
 				}
 			} catch (Exception e) {
-				
+				e.printStackTrace();
 			}
 			
 			Json.printObject(userDetailsDB);
@@ -78,7 +78,11 @@ public class UserLoginController {
 				model.addAttribute("errorMessage", "Invalid Credentials.");
 			} else {
 				if(userDetailsDB.checkPassword(userDetails.getPassword())) {
-					sessionManager.setGuest(httpSession, userId);
+					if(userRole.equals("host"))
+						sessionManager.setHost(httpSession, userId);
+					else
+						sessionManager.setGuest(httpSession, userId);
+					
 					model.addAttribute("successLink", userRole+"/dashboard");
 					return "redirect";
 				}else {
