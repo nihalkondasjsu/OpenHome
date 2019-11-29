@@ -54,9 +54,7 @@ public class SpaceDetails {
 	private List<String> houseRules;
 	//private String houseRules = "Suitable for events;Pets allowed;Smoking allowed;";
 	
-	@OneToMany(fetch = FetchType.LAZY,
-			cascade=CascadeType.ALL,
-			orphanRemoval=true)
+	@OneToMany(fetch = FetchType.LAZY)
 	private List<Image> images;
 	
 	@Column(nullable = false)
@@ -87,6 +85,10 @@ public class SpaceDetails {
 	@Column(nullable = false)
 	private Double dailyParkingFee = 0.0;
 	
+	private Integer totalReviewsCount = 0;
+	
+	private Double averageOverallRating = 0.0;
+	
 	@OneToOne(fetch=FetchType.EAGER,
 			orphanRemoval=true,
 			cascade=CascadeType.ALL)
@@ -94,10 +96,6 @@ public class SpaceDetails {
 
 	@Column(nullable=false,updatable=false)
 	private Date registeredDate;
-	
-
-	
-	
 	
 	public SpaceDetails() {
 		registeredDate = new Date();
@@ -108,7 +106,6 @@ public class SpaceDetails {
 		try {
 			registeredDate = timeAdvancementManagement.getCurrentDate();
 		} catch (Exception e) {
-			// TODO: handle exception
 			registeredDate = new Date();
 		}
 		images = new ArrayList<Image>();
@@ -239,6 +236,28 @@ public class SpaceDetails {
 	}
 	public void setAddress(Address address) {
 		this.address = address;
+	}
+
+	public Integer getTotalReviewsCount() {
+		return totalReviewsCount;
+	}
+
+	public void setTotalReviewsCount(Integer totalReviewsCount) {
+		this.totalReviewsCount = totalReviewsCount;
+	}
+
+	public Double getAverageOverallRating() {
+		return averageOverallRating;
+	}
+
+	public void setAverageOverallRating(Double averageOverallRating) {
+		this.averageOverallRating = averageOverallRating;
+	}
+	
+	public void addRating(Rating rating) {
+		this.averageOverallRating = ((this.totalReviewsCount * this.averageOverallRating)+(rating.getRatingOverall())) 
+				/ (this.totalReviewsCount + 1) ;
+		this.totalReviewsCount++;
 	}
 	
 }

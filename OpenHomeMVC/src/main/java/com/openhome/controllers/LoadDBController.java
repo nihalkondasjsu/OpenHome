@@ -92,7 +92,6 @@ public class LoadDBController extends SampleDBData{
 		for (Image image : images) {
 			fileSystem.deleteImage(image);
 		}
-		imageDAO.deleteAll();
 	}
 
 	private void reloadDB1() {

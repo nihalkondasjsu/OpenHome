@@ -17,8 +17,8 @@ import com.openhome.data.SpaceDetails;
 import com.openhome.session.SessionManager;
 
 @Controller
-@RequestMapping("/space/view")
-public class SpaceViewController {
+@RequestMapping("/space/searchresults")
+public class SpaceSearchController {
 
 	@Autowired
 	SpaceDAO spaceDao;
@@ -28,32 +28,34 @@ public class SpaceViewController {
 	
 	@RequestMapping(method=RequestMethod.GET)
 	public String viewForm( @RequestParam(value="spaceId",required=false) Long spaceId , @RequestParam(value="preview",required=false) Boolean preview , Model model , HttpSession httpSession ) {
-		System.out.println("SpaceViewController");
-		
-		Space s = null;
-		
-		try {
-			s = spaceDao.getOne(spaceId);
-		} catch (Exception e) {
-			model.addAttribute("op", "view");
-			model.addAttribute("spaces", spaceDao.findAll());
-			return "space/viewall";
-		}
-		
-		model.addAttribute("space", s );
-		
-		model.addAttribute("hostAccess", false);
-		
-		try {
-			Host h = sessionManager.getHost(httpSession);
-			if(s.getHost().getId() == h.getId()) {
-				model.addAttribute("hostAccess", true);
-			}
-		} catch (Exception e) {
-			
-		}
-		
-		return preview == null ? "space/view" : "space/preview";
+//		System.out.println("SpaceViewController");
+//		
+//		Space s = null;
+//		
+//		try {
+//			s = spaceDao.getOne(spaceId);
+//		} catch (Exception e) {
+//			model.addAttribute("op", "view");
+//			model.addAttribute("spaces", spaceDao.findAll());
+//			return "space/viewall";
+//		}
+//		
+//		model.addAttribute("space", s );
+//		
+//		model.addAttribute("hostAccess", false);
+//		
+//		try {
+//			Host h = sessionManager.getHost(httpSession);
+//			if(s.getHost().getId() == h.getId()) {
+//				model.addAttribute("hostAccess", true);
+//			}
+//		} catch (Exception e) {
+//			
+//		}
+//		
+//		return preview == null ? "space/view" : "space/preview";
+		model.addAttribute("spaces", spaceDao.findAll());
+		return "space/searchresults";
 	}
 	
 }

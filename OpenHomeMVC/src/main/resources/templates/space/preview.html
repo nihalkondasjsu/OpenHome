@@ -1,0 +1,105 @@
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Space Preview</title>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<style>
+	body{
+		margin:0;
+	}
+	#previewContainer{
+		width:420px;
+		height:400px;
+		
+	}
+	#imageContainer{
+		width:420px;
+		height:300px;
+		position:relative;
+	}
+	#image{
+		position:absolute;
+		width:420px;
+		height:300px;
+    	object-fit: cover;
+	}
+	#price{
+		position:absolute;
+	    bottom: 10%;
+	    background-color: #404040A0;
+	    color: white;
+	    font-size: 21pt;
+	    padding: 10px;	
+	}
+	p{
+		margin:0;
+	}
+	
+	#infoContainer{
+		padding:10px;
+		width:400px;
+		height:90px;
+		white-space:nowrap;
+	}
+	
+	#name{
+		font-size: 18pt;
+	    margin-bottom: 10px;
+	    width: inherit;
+	    text-overflow: ellipsis;
+	    white-space: nowrap;
+	    overflow: hidden;
+	}
+	
+	.info{
+		vertical-align: middle;
+	    margin-bottom: 5px;
+	    font-size: 12pt;
+	    color: #666;
+	    width: inherit;
+	    text-overflow: ellipsis;
+	    white-space: nowrap;
+	    overflow: hidden;
+	}
+</style>
+</head>
+<body>
+
+	<div id="previewContainer">
+		<div id="imageContainer">
+			<img id="image" th:src="${#lists.size(space.spaceDetails.images) == 0 ? 'https://vignette.wikia.nocookie.net/made-for-tv-movie/images/6/62/Image_unavailable.png/revision/latest?cb=20171002225603' : space.spaceDetails.images[0].url}"/>
+			<p id="price">$[[${space.spaceDetails.weekdayRentPrice}]] to $[[${space.spaceDetails.weekendRentPrice}]]</p>
+		</div>
+		<div id="infoContainer">
+			<p id="name">[[${space.spaceDetails.name}]]</p>
+			<p class="info">[[${space.spaceDetails.propertyType}]]&#8729;[[${space.spaceDetails.roomType}]]&#8729;[[${space.spaceDetails.accomodates}]] Guests&#8729;[[${space.spaceDetails.address.addressLine1}]]</p>
+			<p class="info"><span class="info" id="stars" th:attr="stars=${space.spaceDetails.averageOverallRating}"></span>&#8729;[[${space.spaceDetails.totalReviewsCount == null ? 10 : space.spaceDetails.totalReviewsCount}]] Reviews</p>
+		</div>
+	</div>
+
+	<script>
+		function addStars(rating=4.5){
+	        stars = "";
+	        count = 0;
+			for(var i=0; i<Math.floor(rating); i++)
+			{
+				stars+="<i style='vertical-align:middle;'class='material-icons'>star</i>";
+				count = count+1;
+			}
+			if (rating % 1 != 0)
+			{
+				stars+="<i style='vertical-align:middle;'class='material-icons'>star_half</i>";
+				count = count+1;
+			}
+			for (var i=0; i<5-count; i++)
+			{
+				stars+="<i style='vertical-align:middle;'class='material-icons'>star_border</i>";
+			}
+	
+	        return stars;
+	    }
+		document.getElementById("stars").innerHTML += addStars([[${space.spaceDetails.averageOverallRating}]]);
+	</script>
+
+</body>
+</html>

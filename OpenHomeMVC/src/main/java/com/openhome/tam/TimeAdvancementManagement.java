@@ -45,7 +45,6 @@ public class TimeAdvancementManagement {
 		if(getCurrentDate().after(date))
 			return;
 		TimeManagement timeManagement = new TimeManagement(date.getTime() - new Date().getTime());
-		//timeManagementDao.deleteById(101);
 		timeManagementDao.deleteAll();
 		timeManagementDao.save(timeManagement);
 		TimeAdvancementManagement.timeDelta = timeManagement.getTimeDelta();

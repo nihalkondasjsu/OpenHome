@@ -8,23 +8,25 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
 
+import com.openhome.tam.TimeAdvancementManagement;
+
 @Entity
 public class Rating {
 	@Id
 	@GeneratedValue
 	private Long id;
 	
-	private Double ratingOverall;
+	private Double ratingOverall=0.0;
 	
-	private Double ratingCommunication;
-	private Double ratingCheckIn;
-	private Double ratingLocation;
-	private Double ratingValue;
-	private Double ratingCleanliness;
-	private Double ratingAccuracy;
+	private Double ratingCommunication=0.0;
+	private Double ratingCheckIn=0.0;
+	private Double ratingLocation=0.0;
+	private Double ratingValue=0.0;
+	private Double ratingCleanliness=0.0;
+	private Double ratingAccuracy=0.0;
 	
-	private String title;
-	private String review;
+	private String title="";
+	private String review="";
 
 	private Date createdDate;
 	
@@ -32,7 +34,15 @@ public class Rating {
 	private Booking booking;
 	
 	public Rating() {
-		// TODO Auto-generated constructor stub
+		
+	}
+	
+	public Rating(TimeAdvancementManagement timeAdvancementManagement) {
+		try {
+			createdDate = timeAdvancementManagement.getCurrentDate();
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
 	}
 
 	public Long getId() {
@@ -113,6 +123,14 @@ public class Rating {
 
 	public void setReview(String review) {
 		this.review = review;
+	}
+
+	public Date getCreatedDate() {
+		return createdDate;
+	}
+
+	public void setCreatedDate(Date createdDate) {
+		this.createdDate = createdDate;
 	}
 	
 }

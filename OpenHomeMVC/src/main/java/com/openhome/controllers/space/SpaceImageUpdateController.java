@@ -176,16 +176,20 @@ public class SpaceImageUpdateController {
 				List<Image> prevImgList = sd.getImages();
 				List<Image> newImgList = new ArrayList<Image>();
 				for (Long imageId : images) {
+					System.out.println("Looking for "+imageId);
 					for (Image image : prevImgList) {
-						if(image.getId() == imageId) {
+						System.out.println("Checking with "+image.getId());
+						if(image.getId().equals(imageId)) {
+							System.out.println("Image Found");
 							newImgList.add(image);
 							break;
 						}
 					}
 				}
-				sd.setImages(newImgList);
 				
-				spaceDetailsDao.save(sd);
+				for (int i = 0; i < prevImgList.size(); i++) {
+					imageDao.updateImage(prevImgList.get(i).getId(),newImgList.get(i).getPublicId(),newImgList.get(i).getUrl());
+				}
 			}
 			
 			model.addAttribute("space", s);
