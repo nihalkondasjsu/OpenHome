@@ -21,8 +21,10 @@ import com.openhome.dao.HostDAO;
 import com.openhome.dao.UserDetailsDAO;
 import com.openhome.data.Guest;
 import com.openhome.data.Host;
+import com.openhome.data.Image;
 import com.openhome.data.UserDetails;
 import com.openhome.session.SessionManager;
+import com.openhome.tam.TimeAdvancementManagement;
 
 @Controller
 @RequestMapping("/{userRole}/register")
@@ -42,6 +44,9 @@ public class UserRegistrationController {
 	
 	@Autowired
 	FileSystem fileSystem;
+
+	@Autowired
+	TimeAdvancementManagement timeAdvancementManagement;
 	
 	@RequestMapping(method=RequestMethod.GET)
 	public String registerForm( @PathVariable("userRole") String userRole,  Model model ) {
@@ -54,22 +59,37 @@ public class UserRegistrationController {
 	}
 
 	@RequestMapping(method=RequestMethod.POST)
-	public String registerFormSubmission( @PathVariable("userRole") String userRole,  UserDetails userDetails , Model model , HttpSession httpSession , @RequestParam(value="displayPicture",required=false) MultipartFile displayPicture) {
+	public String registerFormSubmission( @PathVariable("userRole") String userRole,  UserDetails userDetails , Model model , HttpSession httpSession , @RequestParam(value="image",required=false) MultipartFile image, @RequestParam(value="imageUrl",required=false) String imageUrl) {
 		Json.printObject(userDetails);
 		
 		if(userRole.equals("host")==false)
 			userRole = "guest";
 		
 		try {
-			userDetails.encryptPassword();
+			userDetails.prepareForRegistration(timeAdvancementManagement.getCurrentDate());
 			
 			UserDetails userDetailsDB = userDetailsDao.getUserByEmail(userDetails.getEmail());
 			
 			if(userDetailsDB == null) {
-				System.out.println("displayPicture : "+displayPicture);
-				if(displayPicture != null) {
-					userDetails.setDisplayPictureId(fileSystem.saveImage(displayPicture));
+				
+				Image imageObj = null;
+				if(image == null) {
+					if(imageUrl == null) {
+						System.out.println("No Image Provided");
+					}else
+					imageObj = fileSystem.saveImage(imageUrl);
+				}else {
+					if(image.getSize()<1000) {
+						System.out.println("No Image Provided");
+					}else
+					imageObj = fileSystem.saveImage(image);
 				}
+				
+				if(imageObj != null) {
+					System.out.println("Image Provided");
+					userDetails.setDisplayPictureId(imageObj);
+				}
+				
 				if(userRole.equals("host")) {
 					Host h = new Host();
 					h.setUserDetails(userDetails);

@@ -1,13 +1,16 @@
 package com.openhome.data;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.Enumerated;
 import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -16,9 +19,9 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Transient;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.openhome.dao.helper.StringListConverter;
 import com.openhome.tam.TimeAdvancementManagement;
 
 @Entity
@@ -28,6 +31,9 @@ public class Booking {
 	enum BookingState{
 		Booked,CheckedIn,CheckedOut,Cancelled
 	}
+
+	private static String CHECK_IN_TIME = "15:00";
+	private static String CHECK_OUT_TIME = "11:00";
 	
 	@Id
 	@GeneratedValue
@@ -36,6 +42,15 @@ public class Booking {
 	
 	@Column(nullable=false,updatable=false)
 	private Date createdDate;
+	
+	@Transient
+	private String checkInDateString;
+
+	@Transient
+	private String checkOutDateString;
+	
+	@Transient
+	private String requiredDays;
 	
 	private Long checkIn;
 	
@@ -69,16 +84,7 @@ public class Booking {
 	public Booking() {
 		// TODO Auto-generated constructor stub
 		createdDate = new Date();
-		bookingState = BookingState.Booked;
-	}
-	
-	public Booking(TimeAdvancementManagement timeAdvancementManagement) {
-		try {
-			createdDate = timeAdvancementManagement.getCurrentDate();
-		} catch (Exception e) {
-			// TODO: handle exception
-			createdDate = new Date();
-		}
+		this.transactions = new ArrayList<Transaction>();
 		bookingState = BookingState.Booked;
 	}
 	
@@ -139,7 +145,7 @@ public class Booking {
 	}
 
 	public void addTransaction(Transaction transaction) {
-		
+		this.transactions.add(transaction);
 	}
 	
 	public Rating getRating() {
@@ -196,6 +202,30 @@ public class Booking {
 
 	public void setBookingState(BookingState bookingState) {
 		this.bookingState = bookingState;
+	}
+	
+	public String getRequiredDays() {
+		return requiredDays;
+	}
+
+	public void setRequiredDays(String requiredDays) {
+		this.requiredDays = requiredDays;
+	}
+	
+	public String getCheckInDateString() {
+		return checkInDateString;
+	}
+
+	public void setCheckInDateString(String checkInDateString) {
+		this.checkInDateString = checkInDateString;
+	}
+
+	public String getCheckOutDateString() {
+		return checkOutDateString;
+	}
+
+	public void setCheckOutDateString(String checkOutDateString) {
+		this.checkOutDateString = checkOutDateString;
 	}
 
 	public boolean bookingEnded() {
@@ -266,7 +296,7 @@ public class Booking {
 		return date.getDay() == 6 ? weekendRentPrice : weekdayRentPrice;
 	}
 	
-	public Double getPriceForDays() {
+	public Double priceForDays() {
 		Double price = 0.0 ;
 		
 		Date start,end;
@@ -282,11 +312,50 @@ public class Booking {
 		
 		long Start = start.getTime() , End = end.getTime();
 		
-		for (long i = Start; i <= End; i += 24*60*60*1000 ) {
+		for (long i = Start; i < End; i += 24*60*60*1000 ) {
 			price += getPriceForDay(new Date(i));
 		}
 		
 		return price;
+	}
+	
+	public void prepareForRegistration(Date createdDate,Space space,Guest guest) throws ParseException {
+		this.createdDate = createdDate;
+		String pattern = "yyyy-MM-dd HH:mm";
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
+		this.checkIn = simpleDateFormat.parse(checkInDateString+" "+CHECK_IN_TIME).getTime();
+		this.checkOut = simpleDateFormat.parse(checkOutDateString+" "+CHECK_OUT_TIME).getTime();
+		if(this.checkIn<createdDate.getTime() || this.checkOut - this.checkIn < 20 * 60 * 60 * 1000) {
+			throw new IllegalArgumentException("Invalid Booking");
+		}
+		this.requiredDays = weekDays();
+		this.actualCheckIn = null;
+		this.actualCheckOut = checkOut;
+		this.bookingState = BookingState.Booked;
+		this.space = space;
+		this.transactions = new ArrayList<Transaction>();
+		this.rating = null;
+		this.guest = guest;
+		this.weekdayRentPrice = this.space.getSpaceDetails().getWeekdayRentPrice();
+		this.weekendRentPrice = this.space.getSpaceDetails().getWeekendRentPrice();
+	}
+	
+	public String weekDays() throws ParseException {
+		List<String> weekdays = new ArrayList<String>();
+		String pattern = "yyyy-MM-dd HH:mm";
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
+		long start = simpleDateFormat.parse(checkInDateString+" 00:00").getTime();
+		long end = simpleDateFormat.parse(checkOutDateString+" 00:00").getTime();
+		String[] week = "Sunday;Monday;Tuesday;Wednesday;Thursday;Friday;Saturday".split(";");
+		for (long i = start; i <= end; i+= 24*60*60*1000) {
+			String weekS = week[new Date(i).getDay()];
+			if(weekdays.contains(weekS) == false)
+				weekdays.add(weekS);
+			else break;
+		}
+		String res = "%"+StringListConverter.listToString(weekdays).replace(";;",";%;")+"%";
+		System.out.println(res);
+		return res;
 	}
 	
 }

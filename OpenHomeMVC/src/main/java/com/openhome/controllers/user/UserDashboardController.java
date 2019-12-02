@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.openhome.Json;
+import com.openhome.aop.helper.annotation.UserLoginRequired;
 import com.openhome.dao.GuestDAO;
 import com.openhome.dao.UserDetailsDAO;
 import com.openhome.data.Guest;
@@ -31,20 +32,19 @@ public class UserDashboardController {
 	SessionManager sessionManager;
 	
 	@RequestMapping(method=RequestMethod.GET)
+	@UserLoginRequired
 	public String registerForm(@PathVariable("userRole") String userRole, Model model , HttpSession httpSession ) {
 		System.out.println("DashboardController");
 		
-		if(userRole.equals("host")==false)
-			userRole = "guest";
+		Guest g = sessionManager.getGuest(httpSession);
 		
-		if(userRole.equals("host")) {
-			Host h = sessionManager.getHost(httpSession);
-			System.out.println("Host : "+h);
-			model.addAttribute(userRole, h == null ? new Host() : h);
+		if(g != null) {
+			userRole = "guest";
+			model.addAttribute(userRole, g );
 		}else {
-			Guest g = sessionManager.getGuest(httpSession);
-			System.out.println("Guest : "+g);
-			model.addAttribute(userRole, g == null ? new Guest() : g);
+			Host h = sessionManager.getHost(httpSession);
+			userRole = "host";
+			model.addAttribute(userRole, h );
 		}
 		
 		return userRole+"/dashboard";

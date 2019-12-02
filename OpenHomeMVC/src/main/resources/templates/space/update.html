@@ -24,8 +24,8 @@
 		<tr>
 			<th>Property Type</th>
 			<td>
-				<select name='propertyType' th:value="${space.spaceDetails.propertyType}" required>
-					<option value='House' selected>House</option>
+				<select name='propertyType' th:field="*{space.spaceDetails.propertyType}" required>
+					<option value='House'>House</option>
 					<option value='Apartment'>Apartment</option>
 					<option value='Bed and breakfast'>Bed and breakfast</option>
 					<option value='Boutique hotel'>Boutique hotel</option>
@@ -45,8 +45,8 @@
 		<tr>
 			<th>Room Type</th>
 			<td>
-				<select name='roomType' th:value="${space.spaceDetails.roomType}" required>
-					<option value='Entire House' selected>Entire House</option>
+				<select name='roomType' th:field="*{space.spaceDetails.roomType}" required>
+					<option value='Entire House'>Entire House</option>
 					<option value='Shared Room'>Shared Room</option>
 					<option value='Private Room'>Private Room</option>
 				</select>
@@ -75,8 +75,10 @@
 			</td>
 		</tr>
 		<tr>
-			<th>Images</th>
-			<td></td>
+			<th>Available On</th>
+			<td>
+				<div id='availableWeekDays' class='checkBoxContainer' th:attr="svals=${space.spaceDetails.availableWeekDays}" vals='Sunday;Monday;Tuesday;Wednesday;Thursday;Friday;Saturday'></div>
+			</td>
 		</tr>
 		<tr>
 			<th>No Of Bedrooms</th>
@@ -104,13 +106,13 @@
 		</tr>
 		<tr>
 			<th>Description</th>
-			<td><textarea name='description' th:value="${space.spaceDetails.description}"></textarea></td>
+			<td><textarea name='description'>[[${space.spaceDetails.description}]]</textarea></td>
 		</tr>
 		<tr>
 			<th>Free WiFi</th>
 			<td>
-				<select name='freeWiFi' th:value="${space.spaceDetails.freeWiFi}" required>
-					<option value='true' selected>Yes</option>
+				<select name='freeWiFi' th:field="*{space.spaceDetails.freeWiFi}" required>
+					<option value='true'>Yes</option>
 					<option value='false'>No</option>
 				</select>
 			</td>
@@ -118,8 +120,8 @@
 		<tr>
 			<th>Parking Available</th>
 			<td>
-				<select name='parkingAvailable' th:value="${space.spaceDetails.parkingAvailable}" required>
-					<option value='true' selected>Yes</option>
+				<select name='parkingAvailable' th:field="*{space.spaceDetails.parkingAvailable}" required>
+					<option value='true'>Yes</option>
 					<option value='false'>No</option>
 				</select>
 			</td>
@@ -127,41 +129,6 @@
 		<tr>
 			<th>Daily Parking Fee</th>
 			<td><input name='dailyParkingFee' th:value="${space.spaceDetails.dailyParkingFee}" type='number' required></td>
-		</tr>
-		<tr>
-			<th colspan="2"><button onclick="pickLoc()">Pick Location</button></th>
-		</tr>
-		<tr>
-			<th>Latitude</th>
-			<td><input name="address.latitude" th:value="${space.spaceDetails.address.latitude}" required readonly></td>
-		</tr>
-		<tr>
-			<th>Longitude</th>
-			<td><input name="address.longitude" th:value="${space.spaceDetails.address.longitude}" required readonly></td>
-		</tr>
-		<tr>
-			<th>Address Line 1</th>
-			<td><input name="address.addressLine1" th:value="${space.spaceDetails.address.addressLine1}" required></td>
-		</tr>
-		<tr>
-			<th>Address Line 2</th>
-			<td><input name="address.addressLine2" th:value="${space.spaceDetails.address.addressLine2}" required></td>
-		</tr>
-		<tr>
-			<th>City</th>
-			<td><input name="address.city" th:value="${space.spaceDetails.address.city}" required readonly></td>
-		</tr>
-		<tr>
-			<th>State</th>
-			<td><input name="address.state" th:value="${space.spaceDetails.address.state}" required readonly></td>
-		</tr>
-		<tr>
-			<th>Zip</th>
-			<td><input name="address.zip" th:value="${space.spaceDetails.address.zip}" required readonly></td>
-		</tr>
-		<tr>
-			<th>Country</th>
-			<td><input name="address.country" th:value="${space.spaceDetails.address.country}" required readonly></td>
 		</tr>
 		<tr>
 			<td colspan="2"><input type="submit"></td>

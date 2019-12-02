@@ -78,5 +78,9 @@ public class SessionManager {
 		}
 		return null;
 	}
+
+	public boolean hasUserLogin(HttpSession httpSession) {
+		return getGuestId(httpSession) != null || getHostId(httpSession) != null;
+	}
 	
 }

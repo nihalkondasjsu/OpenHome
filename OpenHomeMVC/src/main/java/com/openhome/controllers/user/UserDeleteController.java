@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.openhome.Json;
+import com.openhome.aop.helper.annotation.UserLoginRequired;
 import com.openhome.dao.GuestDAO;
 import com.openhome.dao.HostDAO;
 import com.openhome.dao.SpaceDAO;
@@ -48,6 +49,7 @@ public class UserDeleteController {
 	TimeAdvancementManagement timeAdvancementManagement;
 	
 	@RequestMapping(method=RequestMethod.GET)
+	@UserLoginRequired
 	public String loginForm( @PathVariable("userRole") String userRole, Model model ) {
 		System.out.println("DeleteController");
 		if(userRole.equals("host")==false)
@@ -56,6 +58,7 @@ public class UserDeleteController {
 	}
 
 	@RequestMapping(method=RequestMethod.POST)
+	@UserLoginRequired
 	public String loginFormSubmission(@PathVariable("userRole") String userRole,  UserDetails userDetails , Model model , HttpSession httpSession ) {
 		Json.printObject(userDetails);
 		

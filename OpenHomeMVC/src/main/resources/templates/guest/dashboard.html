@@ -15,6 +15,9 @@
    	<div th:if="${ guest.userDetails.phoneNumber != null && guest.userDetails.phoneNumber != guest.userDetails.verifiedDetails.verifiedPhoneNumber }">
 		<a href="/verify/phone">Guest Verify Phone</a>
    	</div>
+   	
+	<a href="/guest/booking/list">Bookings of Space</a>
+	
 	<table border="1">
 		<tr>
 			<th>Email</th>

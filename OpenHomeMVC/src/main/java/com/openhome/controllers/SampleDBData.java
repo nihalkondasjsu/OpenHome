@@ -14,8 +14,6 @@ import com.openhome.tam.TimeAdvancementManagement;
 
 public class SampleDBData {
 
-	@Autowired
-	TimeAdvancementManagement timeAdvancementManagement;
 	
 	Double[][] gps = new Double[][] {
 		{37.336259,-121.887067},
@@ -101,7 +99,7 @@ public class SampleDBData {
 	} 
 	
 	public SpaceDetails getRandomSpaceDetails() {
-		SpaceDetails sd = new SpaceDetails(timeAdvancementManagement);
+		SpaceDetails sd = new SpaceDetails();
 		
 		Random R = new Random();
 		

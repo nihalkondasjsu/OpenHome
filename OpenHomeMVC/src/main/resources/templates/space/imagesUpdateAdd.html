@@ -24,7 +24,7 @@ img{
 </ul>
 
 <form th:action="@{'/space/updateSpaceImagesAdd?spaceId=' + ${space.id}}" method="POST" enctype="multipart/form-data">
-	<input type="file" name="image">
+	<input type="file" name="image" accept="image/*">
 	<input type="submit">
 </form>
 <form th:action="@{'/space/updateSpaceImagesAdd?spaceId=' + ${space.id}}" method="POST" >

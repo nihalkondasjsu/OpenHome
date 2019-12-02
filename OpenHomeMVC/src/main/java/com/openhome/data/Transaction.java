@@ -40,17 +40,11 @@ public class Transaction {
 	TransactionNature transactionNature;
 	
 	public Transaction() {
-		// TODO Auto-generated constructor stub
 		createdDate = new Date();
 	}
 	
-	public Transaction(TimeAdvancementManagement timeAdvancementManagement) {
-		try {
-			createdDate = timeAdvancementManagement.getCurrentDate();
-		} catch (Exception e) {
-			// TODO: handle exception
-			createdDate = new Date();
-		}
+	public Transaction(Date createdDate) {
+		createdDate = new Date();
 	}
 
 	public Long getId() {

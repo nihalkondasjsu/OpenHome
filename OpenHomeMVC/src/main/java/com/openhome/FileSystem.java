@@ -69,6 +69,8 @@ public class FileSystem {
 	
 	public void deleteImage(Image oldDpId) {
 		try {
+			if(oldDpId.getPublicId().equals(""))
+				return;
 			cloudinary.uploader().destroy(oldDpId.getPublicId(), null);
 		} catch (IOException e) {
 			e.printStackTrace();

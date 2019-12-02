@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.openhome.Json;
+import com.openhome.aop.helper.annotation.ValidSpaceId;
 import com.openhome.dao.SpaceDAO;
 import com.openhome.data.Host;
 import com.openhome.data.Space;
@@ -27,30 +28,18 @@ public class SpaceViewController {
 	SessionManager sessionManager;
 	
 	@RequestMapping(method=RequestMethod.GET)
+	@ValidSpaceId
 	public String viewForm( @RequestParam(value="spaceId",required=false) Long spaceId , @RequestParam(value="preview",required=false) Boolean preview , Model model , HttpSession httpSession ) {
 		System.out.println("SpaceViewController");
 		
-		Space s = null;
-		
-		try {
-			s = spaceDao.getOne(spaceId);
-		} catch (Exception e) {
-			model.addAttribute("op", "view");
-			model.addAttribute("spaces", spaceDao.findAll());
-			return "space/viewall";
-		}
+		Space s = spaceDao.getOne(spaceId);
 		
 		model.addAttribute("space", s );
 		
 		model.addAttribute("hostAccess", false);
 		
-		try {
-			Host h = sessionManager.getHost(httpSession);
-			if(s.getHost().getId() == h.getId()) {
-				model.addAttribute("hostAccess", true);
-			}
-		} catch (Exception e) {
-			
+		if(sessionManager.getHostId(httpSession) != null) {
+			model.addAttribute("hostAccess", sessionManager.getHostId(httpSession) == s.getHost().getId());
 		}
 		
 		return preview == null ? "space/view" : "space/preview";

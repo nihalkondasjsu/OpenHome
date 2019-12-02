@@ -29,7 +29,6 @@ public class Guest {
 	private List<Booking> bookings;
 	
 	public Guest() {
-		// TODO Auto-generated constructor stub
 		userDetails = new UserDetails();
 		bookings = new ArrayList<Booking>();
 	}

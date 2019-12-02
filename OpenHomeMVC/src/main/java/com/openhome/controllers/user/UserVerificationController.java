@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseToken;
 import com.google.firebase.auth.UserRecord;
+import com.openhome.aop.helper.annotation.UserLoginRequired;
 import com.openhome.dao.UserDetailsDAO;
 import com.openhome.dao.UserVerifiedDetailsDAO;
 import com.openhome.data.UserDetails;
@@ -37,13 +38,10 @@ public class UserVerificationController {
 	UserVerifiedDetailsDAO userVerifiedDetailsDao;
 	
 	@RequestMapping(value="/verify/{credential}" , method = RequestMethod.GET)
+	@UserLoginRequired
 	public String loadVerificationPage( @PathVariable("credential") String credential , Model model, HttpSession httpSession ) {
 		
 		UserDetails ud = sessionManager.getSessionUserDetails(httpSession);
-		
-		if(ud == null) {
-			return "index";
-		}
 		
 		model.addAttribute("userDetails", ud);
 		
@@ -55,14 +53,9 @@ public class UserVerificationController {
 	}
 	
 	@RequestMapping(value="/verify/{credential}/token" , method = RequestMethod.GET)
+	@UserLoginRequired
 	public String verifyToken(@PathVariable("credential") String credential ,@RequestParam("verificationToken") String verificationToken ,@RequestParam(value="userId",required=false) String userId , Model model, HttpSession httpSession ) {
 		UserDetails ud = sessionManager.getSessionUserDetails(httpSession);
-		
-		
-		if(ud == null) {
-			return "index";
-		}
-		
 		
 		if(credential.equals("email")) {
 			if(Encryption.verifyToken(ud.getEmail(), verificationToken)) {

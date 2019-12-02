@@ -36,7 +36,7 @@ public class UserLoginController {
 	SessionManager sessionManager;
 	
 	@RequestMapping(method=RequestMethod.GET)
-	public String loginForm( @PathVariable("userRole") String userRole, Model model ) {
+	public String loginForm( @PathVariable("userRole") String userRole, Model model, HttpSession httpSession ) {
 		System.out.println("LoginController");
 		
 		if(userRole.equals("host")==false)

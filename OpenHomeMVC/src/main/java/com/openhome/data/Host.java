@@ -64,6 +64,7 @@ public class Host {
 		if(getUserDetails().verifiedEmail() == false)
 			return;
 		rentingSpaces.add(space);
+		System.out.println(this.getId()+" host | space "+space.getId());
 		space.setHost(this);
 	}
 

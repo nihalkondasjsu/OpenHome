@@ -69,20 +69,9 @@ public class UserDetails {
 		verifiedDetails = new UserVerifiedDetails();
 	}
 	
-	public UserDetails(TimeAdvancementManagement timeAdvancementManagement) {
-		try {
-			registeredDate = timeAdvancementManagement.getCurrentDate();
-		} catch (Exception e) {
-			// TODO: handle exception
-			e.printStackTrace();
-			registeredDate = new Date();
-		}
-		verifiedDetails = new UserVerifiedDetails();
-	}
-	
 	public UserDetails(String email, String password, String phoneNumber, UserVerifiedDetails verifiedDetails,
-			String firstName, String lastName, TimeAdvancementManagement timeAdvancementManagement) {
-		this(timeAdvancementManagement);
+			String firstName, String lastName) {
+		this();
 		this.email = email;
 		this.password = password;
 		this.phoneNumber = phoneNumber;
@@ -191,8 +180,10 @@ public class UserDetails {
 		this.lastName = lastName;
 	}
 	
-	public void encryptPassword() {
-		setPassword(Encryption.encryptPassword(getPassword()));
+	public void prepareForRegistration(Date registeredDate) {
+		this.registeredDate = registeredDate;
+		encryptPassword();
+		setVerifiedDetails(new UserVerifiedDetails());
 	}
 	
 	public boolean checkPassword(String plainPassword) {
@@ -212,7 +203,7 @@ public class UserDetails {
 		if(getNewPassword().equals("") == false) {
 			setPassword(getNewPassword());
 		}
-		encryptPassword();
+		prepareForRegistration(getRegisteredDate());
 		setVerifiedDetails(userVerifiedDetails);
 		
 	}
@@ -223,5 +214,9 @@ public class UserDetails {
 
 	public void setDisplayPictureId(Image displayPictureId) {
 		this.displayPictureId = displayPictureId;
+	}
+
+	public void encryptPassword() {
+		setPassword(Encryption.encryptPassword(getPassword()));
 	}
 }

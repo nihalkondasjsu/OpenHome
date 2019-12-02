@@ -36,14 +36,6 @@ public class Rating {
 	public Rating() {
 		
 	}
-	
-	public Rating(TimeAdvancementManagement timeAdvancementManagement) {
-		try {
-			createdDate = timeAdvancementManagement.getCurrentDate();
-		} catch (Exception e) {
-			// TODO: handle exception
-		}
-	}
 
 	public Long getId() {
 		return id;
@@ -131,6 +123,11 @@ public class Rating {
 
 	public void setCreatedDate(Date createdDate) {
 		this.createdDate = createdDate;
+	}
+	
+	public void prepareForRegistration(Date createdDate,Booking booking) {
+		this.createdDate = createdDate;
+		this.booking = booking;
 	}
 	
 }

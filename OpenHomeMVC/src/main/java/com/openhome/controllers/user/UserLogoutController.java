@@ -8,6 +8,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import com.openhome.aop.helper.annotation.UserLoginRequired;
 import com.openhome.session.SessionManager;
 
 @Controller
@@ -17,6 +18,7 @@ public class UserLogoutController {
 	SessionManager sessionManager;
 
 	@RequestMapping("/{userRole}/logout")
+	@UserLoginRequired
 	public String logout(@PathVariable("userRole") String userRole, Model model, HttpSession httpSession) {
 		
 		System.out.println("UserLogoutController");

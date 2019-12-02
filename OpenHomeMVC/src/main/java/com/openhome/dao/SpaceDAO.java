@@ -30,6 +30,8 @@ public interface SpaceDAO extends JpaRepository<Space,Long>{
 			@Param("spaceName")String spaceName
 			);
 	
+	/*
+	
 	@Query("select s from Space s where s.spaceDetails in (select sd from SpaceDetails sd where "+
 			"sd.address in (select a from Address a where (a.latitude between :minLatitude and :maxLatitude) and (a.longitude between :minLongitude and :maxLongitude))) "+
 			"and 0 = (select count(*) from Booking b where b.space = s and b.actualCheckOut >= :startDate and b.checkIn <= :endTime )")
@@ -50,6 +52,15 @@ public interface SpaceDAO extends JpaRepository<Space,Long>{
 			@Param("startDate")Long startDate,
 			@Param("endTime")Long endTime
 			);
+	
+	@Query("select s from Space s where s.spaceDetails in (select sd from SpaceDetails sd where "+
+			"sd.address in (select a from Address a where a.city = :city)) "+
+			"and 0 = (select count(*) from Booking b where b.space = s and b.actualCheckOut >= :startDate and b.checkIn <= :endTime )")
+	public List<Space> getSpacesByCityAndDates(
+			@Param("city")String city,
+			@Param("startDate")Long startDate,
+			@Param("endTime")Long endTime
+			);
 
 	@Query("select s from Space s where s.spaceDetails in (select sd from SpaceDetails sd where "+
 			"(sd.weekdayRentPrice between :minPrice and :maxPrice ) and "+
@@ -65,8 +76,11 @@ public interface SpaceDAO extends JpaRepository<Space,Long>{
 			@Param("minPrice")Double minPrice,
 			@Param("maxPrice")Double maxPrice
 			);
+
+	*/
 	
 	@Query("select s from Space s where s.spaceDetails in (select sd from SpaceDetails sd where "+
+			"(sd.availableWeekDaysString like :requiredWeekDays) and "+
 			"(sd.weekdayRentPrice between :minPrice and :maxPrice ) and "+
 			"sd.address in (select a from Address a where a.zip = :zip)) "+
 			"and 0 = (select count(*) from Booking b where b.space = s and b.actualCheckOut >= :startDate and b.checkIn <= :endTime )")
@@ -75,7 +89,36 @@ public interface SpaceDAO extends JpaRepository<Space,Long>{
 			@Param("startDate")Long startDate,
 			@Param("endTime")Long endTime,
 			@Param("minPrice")Double minPrice,
-			@Param("maxPrice")Double maxPrice
+			@Param("maxPrice")Double maxPrice,
+			@Param("requiredWeekDays")String requiredWeekDays
 			);
+	
+	@Query("select s from Space s where s.spaceDetails in (select sd from SpaceDetails sd where "+
+			"(sd.availableWeekDaysString like :requiredWeekDays) and "+
+			"(sd.weekdayRentPrice between :minPrice and :maxPrice ) and "+
+			"sd.address in (select a from Address a where a.city = :city)) "+
+			"and 0 = (select count(*) from Booking b where b.space = s and b.actualCheckOut >= :startDate and b.checkIn <= :endTime )")
+	public List<Space> getSpacesByCityAndDatesAndPrice(
+			@Param("city")String city,
+			@Param("startDate")Long startDate,
+			@Param("endTime")Long endTime,
+			@Param("minPrice")Double minPrice,
+			@Param("maxPrice")Double maxPrice,
+			@Param("requiredWeekDays")String requiredWeekDays
+			);
+	
+	@Query("select count(s) from Space s where s.id = :spaceId and s.spaceDetails in (select sd from SpaceDetails sd where "+
+			"(sd.availableWeekDaysString like :requiredWeekDays) )"+
+			"and 0 = (select count(*) from Booking b where b.space = s and b.actualCheckOut >= :startDate and b.checkIn <= :endTime )")
+	public Integer getSpecifiSpacesCountByDates(
+			@Param("spaceId")Long spaceId,
+			@Param("startDate")Long startDate,
+			@Param("endTime")Long endTime,
+			@Param("requiredWeekDays")String requiredWeekDays
+			);
+	
+//	@Query("select s from Space s where s.spaceDetails = (select sd from SpaceDetails sd where )")
+//	public Integer getBookingsOfSpaceByTime(@Param("spaceId")Long spaceId,@Param("checkIn")Long checkIn,@Param("checkOut")Long checkOut);
+	
 	
 }

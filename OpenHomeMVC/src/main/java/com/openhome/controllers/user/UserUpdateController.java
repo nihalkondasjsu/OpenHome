@@ -13,6 +13,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.openhome.FileSystem;
 import com.openhome.Json;
+import com.openhome.aop.helper.annotation.UserLoginRequired;
 import com.openhome.dao.HostDAO;
 import com.openhome.dao.UserDetailsDAO;
 import com.openhome.data.Guest;
@@ -20,6 +21,7 @@ import com.openhome.data.Host;
 import com.openhome.data.Image;
 import com.openhome.data.UserDetails;
 import com.openhome.session.SessionManager;
+import com.openhome.tam.TimeAdvancementManagement;
 
 @Controller
 @RequestMapping("/{userRole}/update")
@@ -38,6 +40,7 @@ public class UserUpdateController {
 	FileSystem fileSystem;
 	
 	@RequestMapping(method=RequestMethod.GET)
+	@UserLoginRequired
 	public String updateForm( @PathVariable("userRole") String userRole, Model model , HttpSession httpSession ) {
 		System.out.println("UpdateController");
 		
@@ -56,7 +59,8 @@ public class UserUpdateController {
 	}
 
 	@RequestMapping(method=RequestMethod.POST)
-	public String updateFormSubmission(@PathVariable("userRole") String userRole, UserDetails userDetails , Model model , HttpSession httpSession , @RequestParam(value="displayPicture",required=false) MultipartFile displayPicture) {
+	@UserLoginRequired
+	public String updateFormSubmission(@PathVariable("userRole") String userRole, UserDetails userDetails , Model model , HttpSession httpSession , @RequestParam(value="image",required=false) MultipartFile image, @RequestParam(value="imageUrl",required=false) String imageUrl) {
 		Json.printObject(userDetails);
 		
 		try {
@@ -65,9 +69,21 @@ public class UserUpdateController {
 		
 			try {
 				System.out.println("DisplayPictureId : "+userDetails.getDisplayPictureId());
-				boolean displayPictureChange = displayPicture == null ? false : (displayPicture.getSize() > 1000);
-				if(displayPictureChange == false) {
-					System.out.println("No Image Change");
+				
+				Image imageObj=null;
+				if(image == null) {
+					if(imageUrl == null) {
+						System.out.println("No Image Change");
+					}else
+					imageObj = fileSystem.saveImage(imageUrl);
+				}else {
+					if(image.getSize()<1000) {
+						System.out.println("No Image Change");
+					}else
+					imageObj = fileSystem.saveImage(image);
+				}
+				
+				if(imageObj == null) {
 					userDetails.setDisplayPictureId(userDetailsDB.getDisplayPictureId());
 				}else {
 					System.out.println("Image Change");
@@ -75,14 +91,17 @@ public class UserUpdateController {
 					if(oldDpId != null) {
 						fileSystem.deleteImage(oldDpId);
 					}
-					userDetails.setDisplayPictureId(fileSystem.saveImage(displayPicture));
+					userDetails.setDisplayPictureId(imageObj);
 				}
+				
 				userDetails.updateDetails(userDetailsDB.getEmail(), userDetailsDB.getPassword(),userDetailsDB.getVerifiedDetails());
 				System.out.println("DisplayPictureId : "+userDetails.getDisplayPictureId());
 			} catch (Exception e) {
 				model.addAttribute("errorMessage", "Invalid Credentials.");
 				return "host/update";
 			}
+			
+			userDetails.setRegisteredDate(userDetailsDB.getRegisteredDate());
 			
 			userDetails.setId(userDetailsDB.getId());
 			

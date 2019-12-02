@@ -1,6 +1,7 @@
 package com.openhome.data;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -26,7 +27,7 @@ public class SpaceDetails {
 
 	@Id
 	@GeneratedValue
-	@Basic(optional = false)
+	//@Basic(optional = false)
 	private Long id;
 	
 	@Column(nullable = false)
@@ -54,7 +55,8 @@ public class SpaceDetails {
 	private List<String> houseRules;
 	//private String houseRules = "Suitable for events;Pets allowed;Smoking allowed;";
 	
-	@OneToMany(fetch = FetchType.LAZY)
+	@OneToMany(fetch = FetchType.LAZY,
+			cascade=CascadeType.ALL)
 	private List<Image> images;
 	
 	@Column(nullable = false)
@@ -89,6 +91,11 @@ public class SpaceDetails {
 	
 	private Double averageOverallRating = 0.0;
 	
+	@Transient
+	private List<String> availableWeekDays = Arrays.asList("Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday");
+	
+	private String availableWeekDaysString = StringListConverter.listToString(availableWeekDays);
+	
 	@OneToOne(fetch=FetchType.EAGER,
 			orphanRemoval=true,
 			cascade=CascadeType.ALL)
@@ -99,15 +106,6 @@ public class SpaceDetails {
 	
 	public SpaceDetails() {
 		registeredDate = new Date();
-		images = new ArrayList<Image>();
-	}
-	
-	public SpaceDetails(TimeAdvancementManagement timeAdvancementManagement) {
-		try {
-			registeredDate = timeAdvancementManagement.getCurrentDate();
-		} catch (Exception e) {
-			registeredDate = new Date();
-		}
 		images = new ArrayList<Image>();
 	}
 	
@@ -258,6 +256,43 @@ public class SpaceDetails {
 		this.averageOverallRating = ((this.totalReviewsCount * this.averageOverallRating)+(rating.getRatingOverall())) 
 				/ (this.totalReviewsCount + 1) ;
 		this.totalReviewsCount++;
+	}
+
+	public List<String> getAvailableWeekDays() {
+		try {
+			this.availableWeekDays = (StringListConverter.stringToList(availableWeekDaysString));
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+		return availableWeekDays;
+	}
+
+	public void setAvailableWeekDays(List<String> availableWeekDays) {
+		this.availableWeekDays = availableWeekDays;
+		this.availableWeekDaysString = (StringListConverter.listToString(availableWeekDays));
+	}
+
+	public Date getRegisteredDate() {
+		return registeredDate;
+	}
+
+	public void setRegisteredDate(Date registeredDate) {
+		this.registeredDate = registeredDate;
+	}
+
+	public String getAvailableWeekDaysString() {
+		return availableWeekDaysString;
+	}
+
+	public void setAvailableWeekDaysString(String availableWeekDaysString) {
+		this.availableWeekDaysString = availableWeekDaysString;
+		this.availableWeekDays = (StringListConverter.stringToList(availableWeekDaysString));
+	}
+	
+	public void prepareForRegistration() {
+		this.images = new ArrayList<Image>();
+		this.averageOverallRating = 0.0;
+		this.totalReviewsCount = 0;
 	}
 	
 }

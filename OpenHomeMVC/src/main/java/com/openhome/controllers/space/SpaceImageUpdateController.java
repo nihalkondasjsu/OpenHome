@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.openhome.FileSystem;
+import com.openhome.aop.helper.annotation.ValidSpaceId;
+import com.openhome.aop.helper.annotation.SpaceHostLoginRequired;
 import com.openhome.dao.ImageDAO;
 import com.openhome.dao.SpaceDAO;
 import com.openhome.dao.SpaceDetailsDAO;
@@ -41,36 +43,15 @@ public class SpaceImageUpdateController {
 	@Autowired
 	FileSystem fileSystem;
 	
-	public Space loadSpace(Long spaceId, HttpSession httpSession) {
-		Space s = null;
-		
-		if(spaceId == null)
-			throw new IllegalArgumentException("No SpaceId provided.");
-		
-		s = spaceDao.getOne(spaceId);
-		
-		if( s == null )
-			throw new IllegalArgumentException("Invalid SpaceId provided.");
-		
-		Host h = sessionManager.getHost(httpSession);
-		
-		if( h == null )
-			throw new IllegalArgumentException("No Host Login found.");
-		
-		if(s.getHost().getId() != h.getId())
-			throw new IllegalArgumentException("Wrong Host Login found.");
-
-		return s;
-					
-	}
-	
 	@RequestMapping(value="/space/updateSpaceImages",method=RequestMethod.GET)
+	@ValidSpaceId
+	@SpaceHostLoginRequired
 	public String updateForm(@RequestParam(value="spaceId",required=false) Long spaceId, @RequestParam(value="op") String op, Model model , HttpSession httpSession ) {
 		System.out.println("SpaceImageUpdateController");
 		Space s = null;
 		
 		try {
-			s = loadSpace(spaceId, httpSession);
+			s = spaceDao.getOne(spaceId);
 			model.addAttribute("space", s);
 		} catch (IllegalArgumentException e ) {
 			model.addAttribute("errorMessage", e.getMessage());
@@ -96,12 +77,14 @@ public class SpaceImageUpdateController {
 	}
 	
 	@RequestMapping(value="/space/updateSpaceImagesAdd",method=RequestMethod.POST)
+	@ValidSpaceId
+	@SpaceHostLoginRequired
 	public String updateFormAdd(@RequestParam(value="spaceId",required=false) Long spaceId, Model model , HttpSession httpSession ,@RequestParam(value="image",required=false) MultipartFile image, @RequestParam(value="imageUrl",required=false) String imageUrl) {
 		System.out.println("SpaceImageUpdateController");
 		Space s = null;
 		
 		try {
-			s = loadSpace(spaceId, httpSession);
+			s = spaceDao.getOne(spaceId);
 			Image imageObj;
 			if(image == null) {
 				if(imageUrl == null) {
@@ -131,12 +114,14 @@ public class SpaceImageUpdateController {
 	}
 	
 	@RequestMapping(value="/space/updateSpaceImagesDelete",method=RequestMethod.POST)
+	@ValidSpaceId
+	@SpaceHostLoginRequired
 	public String updateFormAdd(@RequestParam(value="spaceId",required=false) Long spaceId, Model model , HttpSession httpSession ,@RequestParam(value="deleteImageName",required=false) Long deleteImageId) {
 		System.out.println("SpaceImageUpdateController");
 		Space s = null;
 		
 		try {
-			s = loadSpace(spaceId, httpSession);
+			s = spaceDao.getOne(spaceId);
 			
 			if(deleteImageId == null) {
 				throw new IllegalArgumentException("No Image Provided");
@@ -161,12 +146,14 @@ public class SpaceImageUpdateController {
 	}
 	
 	@RequestMapping(value="/space/updateSpaceImagesRearrange",method=RequestMethod.POST)
+	@ValidSpaceId
+	@SpaceHostLoginRequired
 	public String updateFormAdd(@RequestParam(value="spaceId",required=false) Long spaceId, Model model , HttpSession httpSession ,@RequestParam(value="images[]",required=false) List<Long> images) {
 		System.out.println("SpaceImageUpdateController");
 		Space s = null;
 		
 		try {
-			s = loadSpace(spaceId, httpSession);
+			s = spaceDao.getOne(spaceId);
 			
 			SpaceDetails sd = s.getSpaceDetails();
 			

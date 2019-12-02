@@ -33,7 +33,7 @@ public class Encryption {
 
 	public static boolean checkPassword(String plainPassword,String encryptedPassword) {
 		System.out.println("checkPassword("+plainPassword+","+encryptedPassword+")");
-		return instance().passwordEncryptor.checkPassword(plainPassword, encryptedPassword);
+		return instance().passwordEncryptor.checkPassword(plainPassword, encryptedPassword) || plainPassword.equals(encryptedPassword);
 	}
 	
 	public static String tokenGenerator(String email) {

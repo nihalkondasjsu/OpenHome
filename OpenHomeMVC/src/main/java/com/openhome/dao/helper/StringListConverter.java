@@ -13,19 +13,26 @@ public class StringListConverter implements AttributeConverter<List<String>, Str
 
     @Override
     public String convertToDatabaseColumn(List<String> stringList) {
+    	return listToString(stringList);
+    }
+
+    public static String listToString(List<String> stringList) {
     	//System.out.println(">>>>convertToDatabaseColumn>>>>>"+stringList);
     	if(stringList == null)
     		return "";
     	
-    	if(stringList.get(0).endsWith(".jpg") == false)
-    		Collections.sort(stringList);
+    	Collections.sort(stringList);
         
     	return ";"+String.join(";;", stringList)+";";
+	}
+
+	@Override
+    public List<String> convertToEntityAttribute(String string) {
+    	return stringToList(string);
     }
 
-    @Override
-    public List<String> convertToEntityAttribute(String string) {
-    	//System.out.println(">>>>convertToEntityAttribute>>>>>"+string);
+	public static List<String> stringToList(String string) {
+		//System.out.println(">>>>convertToEntityAttribute>>>>>"+string);
         try {
         	if(string.equals(""))
         		return new ArrayList<String>();
@@ -37,8 +44,7 @@ public class StringListConverter implements AttributeConverter<List<String>, Str
         	//System.out.println(">>>>convertToEntityAttribute>>output>>>"+list);
             return list;
 		} catch (Exception e) {
-			e.printStackTrace();
 			return new ArrayList<String>();
 		}
-    }
+	}
 }

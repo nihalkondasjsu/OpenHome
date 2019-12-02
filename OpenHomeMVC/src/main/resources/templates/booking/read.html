@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Booking Read</title>
+</head>
+<body>
+	<h1>Booking Read</h1>
+	<table border="1">
+		<tr>
+			<td>Booking Id</td>
+			<td>[[${booking.id}]]</td>
+		</tr>
+		<tr>
+			<td>Booking Created Time</td>
+			<td>[[${booking.createdTime}]]</td>
+		</tr>
+		<tr>
+			<td>Booking Check In</td>
+			<td>[[${booking.checkIn}]]</td>
+		</tr>
+		<tr>
+			<td>Booking Check Out</td>
+			<td>[[${booking.checkOut}]]</td>
+		</tr>
+		<tr>
+			<td>Booking Actual Check In</td>
+			<td>[[${booking.actualCheckIn}]]</td>
+		</tr>
+		<tr>
+			<td>Booking Actual Check Out</td>
+			<td>[[${booking.actualCheckOut}]]</td>
+		</tr>
+		<tr>
+			<td>Booking Space Id</td>
+			<td>[[${booking.space.id}]]</td>
+		</tr>
+		<tr>
+			<td>Booking Guest</td>
+			<td>[[${booking.guest.userDetails.email}]]</td>
+		</tr>
+		<tr>
+			<td>Booking State</td>
+			<td>[[${booking.bookingState}]]</td>
+		</tr>
+		<tr>
+			<td>Booking Weekday Rent Price</td>
+			<td>[[${booking.weekdayRentPrice}]]</td>
+		</tr>
+		<tr>
+			<td>Booking Weekday Rent Price</td>
+			<td>[[${booking.weekendRentPrice}]]</td>
+		</tr>
+	</table>
+</body>
+</html>

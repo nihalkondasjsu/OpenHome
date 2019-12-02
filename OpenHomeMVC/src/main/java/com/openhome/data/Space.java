@@ -14,6 +14,7 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.Transient;
 
 import com.openhome.dao.helper.StringListConverter;
 
@@ -38,8 +39,12 @@ public class Space {
 			cascade=CascadeType.ALL)
 	private SpaceDetails spaceDetails;
 	
+	@Transient
+	private Boolean bestSuitedSearchResult = false;
+	
 	public Space() {
 		bookings = new ArrayList<Booking>();
+		spaceDetails = new SpaceDetails();
 	}
 	
 	public Space(List<Booking> bookings, SpaceDetails spaceDetails) {
@@ -71,6 +76,14 @@ public class Space {
 	}
 	public void setSpaceDetails(SpaceDetails spaceDetails) {
 		this.spaceDetails = spaceDetails;
+	}
+
+	public Boolean getBestSuitedSearchResult() {
+		return bestSuitedSearchResult;
+	}
+
+	public void setBestSuitedSearchResult(Boolean bestSuitedSearchResult) {
+		this.bestSuitedSearchResult = bestSuitedSearchResult;
 	}
 	
 	

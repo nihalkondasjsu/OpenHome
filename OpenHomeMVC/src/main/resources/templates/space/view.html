@@ -24,6 +24,11 @@ img{
 	<a th:href="@{'/category/edit/' + ${space.id}}">View Booking Data</a>
 	<a th:href="@{'/space/update?spaceId=' + ${space.id}}">Update Space</a>
 	<a th:href="@{'/space/delete?spaceId=' + ${space.id}}">Delete Space</a>
+	<a th:href="@{'/space/booking/list?spaceId=' + ${space.id}}">Bookings of Space</a>
+</div>
+
+<div th:if="${hostAccess == false}">
+	<a th:href="@{'/booking/create?spaceId=' + ${space.id}}">Make Booking</a>
 </div>
 
 <table border="1">
@@ -82,6 +87,12 @@ img{
 		<th>House Rules</th>
 		<td>
 			<div id='houseRules' class='checkBoxContainer' th:attr="svals=${space.spaceDetails.houseRules}" vals='Suitable for events;Pets allowed;Smoking allowed'></div>
+		</td>
+	</tr>
+	<tr>
+		<th>Available On</th>
+		<td>
+			<div id='availableWeekDays' class='checkBoxContainer' th:attr="svals=${space.spaceDetails.availableWeekDays}" vals='Sunday;Monday;Tuesday;Wednesday;Thursday;Friday;Saturday'></div>
 		</td>
 	</tr>
 	<tr>

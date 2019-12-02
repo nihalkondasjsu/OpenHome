@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.openhome.aop.helper.annotation.ValidSpaceId;
+import com.openhome.aop.helper.annotation.SpaceHostLoginRequired;
 import com.openhome.dao.SpaceDAO;
 import com.openhome.data.Booking;
 import com.openhome.data.Host;
@@ -34,34 +36,16 @@ public class SpaceDeleteController {
 	TimeAdvancementManagement timeAdvancementManagement;
 	
 	@RequestMapping(method=RequestMethod.GET)
+	@ValidSpaceId
+	@SpaceHostLoginRequired
 	public String deleteForm( @RequestParam(value="spaceId",required=false) Long spaceId, Model model , HttpSession httpSession ) {
 		System.out.println("SpaceDeleteController");
 		
 		model.addAttribute("successLink", "");
-		
-		if(spaceId == null) {
-			model.addAttribute("Message", "Invalid Space Id.");
-			return "redirect";
-		}
-		
+
 		Space s = spaceDao.getOne(spaceId);
-		
-		if(s == null) {
-			model.addAttribute("Message", "Invalid Space Id.");
-			return "redirect";
-		}
-		
+				
 		Host h = sessionManager.getHost(httpSession);
-		
-		if(h == null) {
-			model.addAttribute("Message", "Invalid Host Login.");
-			return "redirect";
-		}
-		
-		if(s.getHost().getId() != h.getId()) {
-			model.addAttribute("Message", "Invalid Host Login.");
-			return "redirect";
-		}
 		
 		Date current = timeAdvancementManagement.getCurrentDate();
 		

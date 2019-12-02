@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Space Booking List</title>
+</head>
+<body>
+	<h1>Space Booking List</h1>
+	<table border="1">
+		<tr>
+			<td>Id</td>
+			<td>Created Time</td>
+			<td>Check In</td>
+			<td>Check Out</td>
+			<td>Actual Check In</td>
+			<td>Actual Check In</td>
+			<td>Space Id</td>
+			<td>Guest</td>
+			<td>State</td>
+			<td>Weekday Rent Price</td>
+			<td>Weekday Rent Price</td>
+		</tr>
+		<tr th:each="booking : ${bookings}">
+			<td>[[${booking.id}]]</td>
+			<td>[[${booking.createdDate}]]</td>
+			<td>[[${booking.checkIn}]]</td>
+			<td>[[${booking.checkOut}]]</td>
+			<td>[[${booking.actualCheckIn}]]</td>
+			<td>[[${booking.actualCheckOut}]]</td>
+			<td>[[${booking.space.id}]]</td>
+			<td>[[${booking.guest.userDetails.email}]]</td>
+			<td>[[${booking.bookingState}]]</td>
+			<td>[[${booking.weekdayRentPrice}]]</td>
+			<td>[[${booking.weekendRentPrice}]]</td>
+		</tr>
+	</table>
+	
+</body>
+</html>
