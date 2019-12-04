@@ -39,7 +39,7 @@ public class SpaceViewController {
 		model.addAttribute("hostAccess", false);
 		
 		if(sessionManager.getHostId(httpSession) != null) {
-			model.addAttribute("hostAccess", sessionManager.getHostId(httpSession) == s.getHost().getId());
+			model.addAttribute("hostAccess", sessionManager.getHostId(httpSession).equals(s.getHost().getId())  );
 		}
 		
 		return preview == null ? "space/view" : "space/preview";

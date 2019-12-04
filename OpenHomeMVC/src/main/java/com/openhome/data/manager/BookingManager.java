@@ -19,6 +19,7 @@ public class BookingManager {
 	private static final Double SERVICE_CHARGE = 1.00;
 	private static final Long MS_24_HOURS = 24*60*60*1000l;
 	private static final Long MS_12_HOURS = 12*60*60*1000l;
+	private static final Long MS_4_HOURS = 4*60*60*1000l;
 
 	private static final Long CHECK_IN_TIME = 15*60*60*1000l;//3 pm
 	private static final Long CHECK_OUT_TIME = 11*60*60*1000l;//11 am
@@ -115,7 +116,7 @@ public class BookingManager {
 	}
 
 	@Debug
-	public void chargeGuestForPreviousDay(Date currentTime) {
+	public void chargeGuestForPreviousDays(Date currentTime) {
 		
 		Date dayToChargeFor = new Date(currentTime.getTime() - MS_24_HOURS );
 		
@@ -124,6 +125,8 @@ public class BookingManager {
 		chargeGuestForDay(currentTime, dayToChargeFor);
 		
 	}
+	
+	
 	
 	@Debug
 	public void guestCancelBooking(Date currentTime) {
@@ -134,7 +137,7 @@ public class BookingManager {
 	
 	@Debug
 	public void hostCancelBooking(Date currentTime) {
-		for (int i = 1 ; i < 7 ; i++) {
+		for (int i = getBooking().getBookingState() == BookingState.CheckedIn ? 1 : 0 ; i < 7 ; i++) {
 			chargeHostFeeForDay(currentTime, new Date(currentTime.getTime()+(i*MS_24_HOURS)));
 		}
 	}
@@ -159,45 +162,36 @@ public class BookingManager {
 		return getPriceForDay(date) * 0.30 ;
 	}
 	
+	private double getPriceForDay(Date date) {
+		date.setHours(0);date.setMinutes(0);date.setSeconds(0);
+		
+		Date checkInDate = new Date(getBooking().getCheckIn());
+
+		checkInDate.setHours(0);checkInDate.setMinutes(0);checkInDate.setSeconds(0);
+		
+		Date checkOutDate = new Date(getBooking().getCheckOut());
+		
+		checkOutDate.setHours(0);checkOutDate.setMinutes(0);checkOutDate.setSeconds(0);
+		
+		if(date.after(checkOutDate) || date.getTime() == checkOutDate.getTime()) {
+			//date being asked for price is the last day(morning) of the booking (unchargeable) or after the last day
+			return 0;
+		}
+		
+		if(date.before(checkInDate)) {
+			//date being asked for price is before the booking begins
+			return 0;
+		}
+		
+		return (date.getDay() == 5 || date.getDay() == 6) ? getBooking().getWeekendRentPrice() : getBooking().getWeekdayRentPrice();
+	}
+
 	@Debug
 	public Double getHostCancellationFeeForDay(Date currentDate,Date date) {
 		if(date.getTime() - currentDate.getTime() >= 7*MS_24_HOURS) {
 			return 0.0;
 		}
 		return getPriceForDay(date) * 0.15 ;
-	}
-	
-	@Debug
-	public Double getPriceForDay(Date date) {
-		if(date.before(new Date(getBooking().getCheckIn())) || date.after(new Date(getBooking().getCheckOut()))) {
-			System.out.println("date.before(new Date(getBooking().getCheckIn()))");
-			return 0.0;
-		}
-		return date.getDay() == 6 ? getBooking().getWeekendRentPrice() : getBooking().getWeekdayRentPrice();
-	}
-	
-	@Debug
-	public Double priceForDays() {
-		Double price = 0.0 ;
-		
-		Date start,end;
-		
-		start = new Date(getBooking().getCheckIn());
-		end = new Date(getBooking().getCheckOut());
-		
-		start.setHours(0);end.setHours(0);
-		
-		start.setMinutes(0);end.setMinutes(0);
-		
-		start.setSeconds(0);end.setSeconds(0);
-		
-		long Start = start.getTime() , End = end.getTime();
-		
-		for (long i = Start; i < End; i += 24*60*60*1000 ) {
-			price += getPriceForDay(new Date(i));
-		}
-		
-		return price;
 	}
 	
 	@Debug
@@ -249,7 +243,7 @@ public class BookingManager {
 		
 		processBooking(currentDate);
 		
-		if(bookingEnded()) {
+		if(getBooking().getBookingState()!=BookingState.Booked) {
 			throw new IllegalAccessException("Cancellation is not Allowed.");
 		}
 		
@@ -274,7 +268,7 @@ public class BookingManager {
 		//getBooking().setActualCheckOut(currentDate.getTime());
 		getBooking().setBookingState(BookingState.HostCancelled);
 	}
-	
+
 	@Debug
 	public void processBooking(Date currentDate) {
 		if(bookingEnded()) {
@@ -296,51 +290,42 @@ public class BookingManager {
 		}
 		
 		// its time for the guest to check-in ( current time is after 3pm of first day )
-		if(currentDate.before(checkOutTime)) {
-			// checkInTime < currentTime < checkOutTime
-			if(getBooking().getActualCheckIn() == null) {
-				// no record of guest check-in found
-				if(currentDate.before(new Date(getBooking().getCheckIn()+MS_12_HOURS))) {
-					// guest still has 12 hours to check-in
-					System.out.println("Check in day first 12 hours");
-					return;
-				}
-				// guest has not checked in within the first 12 hours of their booking 
-				performGuestNoShowProtocol(currentDate);
-				System.out.println("Guest no show");
+		// checkInTime < currentTime < checkOutTime
+		if(getBooking().getActualCheckIn() == null) {
+			// no record of guest check-in found
+			if(currentDate.before(new Date(getBooking().getCheckIn()+MS_12_HOURS))) {
+				// guest still has 12 hours to check-in
+				System.out.println("Check in day first 12 hours");
 				return;
 			}
+			// guest has not checked in within the first 12 hours of their booking 
+			performGuestNoShowProtocol(currentDate);
+			System.out.println("Guest no show");
+			return;
+		}
+		
+		if(currentDate.after(checkOutTime)) {
+			// currentTime is after check-out time
+			performGuestAutoCheckOut(currentDate);
+			System.out.println("Guest Auto checkout");
+			return;
+		}else {
 			// record of guest check-in found
-			chargeGuestForPreviousDay(currentDate);
+			chargeGuestForPreviousDays(currentDate);
 			System.out.println("Guest charge");
 			return;
 		}
-		// currentTime is after check-out time
-		performGuestAutoCheckOut(currentDate);
-		System.out.println("Guest Auto checkout");
-		return;
+		
 	}
 
 	@Debug
 	private void performGuestNoShowProtocol(Date currentTime) {
-		//overriding currentTime
-		currentTime = new Date(getBooking().getCheckIn()+MS_12_HOURS+1);
-		//currentTime overridden
 		
-		chargeGuestFeeForDay(currentTime, new Date(currentTime.getTime()-MS_12_HOURS));
-		guestCancelBooking(currentTime);
-		getBooking().setBookingState(Booking.BookingState.GuestCancelled);
 	}
 	
 
 	@Debug
 	private void performGuestAutoCheckOut(Date currentTime) {
-		//overriding currentTime
-		currentTime = new Date(getBooking().getCheckOut()+1);
-		//currentTime overridden
-				
-		chargeGuestForPreviousDay(currentTime);
-		chargeGuestForDay(currentTime, currentTime);
-		getBooking().setBookingState(Booking.BookingState.CheckedOut);
+		
 	}
 }

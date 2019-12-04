@@ -2,6 +2,7 @@ package com.openhome.controllers;
 
 
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,24 +38,31 @@ public class TestController {
 	Booking booking;
 	Date currentDate;
 	
+	SimpleDateFormat simpleDateFormat;
+	
 	@GetMapping("/test1")
-	public String test1() throws IllegalAccessException {
-		testRefresh();
+	public String test1() throws Exception {
+		
+		simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+		
+		testNoShow();
+		
+		//testAutoCheckOut();
 		
 		return "index";
 	}
 	
-	public void testRefresh() {
+	public void testInit() throws Exception {
 		space = spaceDao.getOne(510l);
 		
 		guest = guestDao.getOne(492l);
 		
 		booking = new Booking();
 
-		currentDate = new Date(2020-1900,04-01,10);
+		currentDate = simpleDateFormat.parse("2020-04-10 10:00");
 		
-		booking.setCheckInDateString("2020-04-15");
-		booking.setCheckOutDateString("2020-04-25");
+		booking.setCheckInDateString("2020-04-20");
+		booking.setCheckOutDateString("2020-04-30");
 		
 		try {
 			booking.prepareForRegistration(currentDate, space, guest);
@@ -70,44 +78,68 @@ public class TestController {
 	}
 	
 	public void testNoShow() throws Exception {
-		testRefresh();
+		testInit();
 		bookingManager.processBooking(currentDate);
 
-		currentDate = new Date(2020-1900,04-01,15,14,59);
+		currentDate = simpleDateFormat.parse("2020-04-20 14:59");
 
 		bookingManager.processBooking(currentDate);
 
 		//bookingManager.performGuestCheckIn(currentDate);
 		
-		currentDate = new Date(2020-1900,04-01,15,15,01);
+		currentDate = simpleDateFormat.parse("2020-04-20 15:01");
 
 		bookingManager.processBooking(currentDate);
 		
-		currentDate = new Date(2020-1900,04-01,16,2,59);
+		currentDate = simpleDateFormat.parse("2020-04-21 02:59");
 		
 		bookingManager.processBooking(currentDate);		
 		
-		currentDate = new Date(2020-1900,04-01,16,3,01);
+		currentDate = simpleDateFormat.parse("2020-04-21 03:01");
 
 		bookingManager.processBooking(currentDate);
 		
 		System.out.println(booking);
 		
-		if(booking.getBookingState().equals(Booking.BookingState.GuestCancelled) != false) {
+		if(booking.getBookingState() != Booking.BookingState.GuestCancelled) {
 			throw new Exception("Booking was not in GuestCancelled state . No Show did not happen.");
 		}
 	}
 	
-	public void testAutoCheckOut() {
+	public void testAutoCheckOut() throws Exception {
+		testProperCheckIn();
+
+		currentDate = simpleDateFormat.parse("2020-04-30 10:59");
 		
+		bookingManager.processBooking(currentDate);
+		
+		currentDate = simpleDateFormat.parse("2020-04-30 11:01");
+		
+		bookingManager.processBooking(currentDate);
+		
+		System.out.println(booking);
+		
+		if(booking.getBookingState() != Booking.BookingState.CheckedOut) {
+			throw new Exception("Auto check out failed");
+		}
 	}
-	
+
 	public void testEarlyCheckIn() {
 		
 	}
 	
-	public void testProperCheckIn() {
+	public void testProperCheckIn() throws Exception {
+		testInit();
 		
+		currentDate = simpleDateFormat.parse("2020-04-20 15:01");
+
+		bookingManager.performGuestCheckIn(currentDate);
+		
+		System.out.println(booking);
+		
+		if(booking.getBookingState() != Booking.BookingState.CheckedIn) {
+			throw new Exception("Guest Could not check in.");
+		}
 	}
 
 	public void testLateCheckIn() {
