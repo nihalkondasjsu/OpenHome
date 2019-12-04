@@ -22,9 +22,9 @@ img{
 </head>
 <body>
 
-<form th:action="@{'/space/updateSpaceImagesRearrange?spaceId=' + ${space.id}}" method="POST" >
+<form th:action="@{'/place/updatePlaceImagesRearrange?placeId=' + ${place.id}}" method="POST" >
 	<table border="1" id="mytable">
-		<tr th:each="image : ${space.spaceDetails.images}">
+		<tr th:each="image : ${place.placeDetails.images}">
 			<td><img th:src="${image.url}"/><input type="hidden" name="images[]" th:value="${image.id}"></td>
 			<td>
 				<p class="move up">Move Up</p>

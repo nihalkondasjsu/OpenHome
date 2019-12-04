@@ -18,16 +18,16 @@ img{
 <body>
 
 <ul>
-	<li th:each="image : ${space.spaceDetails.images}">
+	<li th:each="image : ${place.placeDetails.images}">
 		<img th:src="${image.url}"/>
 	</li>
 </ul>
 
-<form th:action="@{'/space/updateSpaceImagesAdd?spaceId=' + ${space.id}}" method="POST" enctype="multipart/form-data">
+<form th:action="@{'/place/updatePlaceImagesAdd?placeId=' + ${place.id}}" method="POST" enctype="multipart/form-data">
 	<input type="file" name="image" accept="image/*">
 	<input type="submit">
 </form>
-<form th:action="@{'/space/updateSpaceImagesAdd?spaceId=' + ${space.id}}" method="POST" >
+<form th:action="@{'/place/updatePlaceImagesAdd?placeId=' + ${place.id}}" method="POST" >
 	<input type="text" name="imageUrl" placeholder="img link">
 	<input type="submit">
 </form>

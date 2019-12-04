@@ -9,12 +9,12 @@ import java.util.List;
 
 import com.openhome.dao.helper.StringListConverter;
 
-public class SpaceSearchQuery {
+public class PlaceSearchQuery {
 
 	private String keywords="";
 	private String cityOrZip="";
-	private String bookingStartDateTime="";
-	private String bookingEndDateTime="";
+	private String reservationStartDateTime="";
+	private String reservationEndDateTime="";
 	private List<String> sharingType=new ArrayList<String>();
 	private List<String> propertyType=new ArrayList<String>();
 	private Double minPrice=0.0;
@@ -30,32 +30,32 @@ public class SpaceSearchQuery {
 		this.keywords = keywords;
 	}
 	
-	public String getBookingStartDateTime() {
-		if(bookingStartDateTime == null)
-			throw new IllegalArgumentException("bookingStartDateTime not provided");
-		return bookingStartDateTime;
+	public String getReservationStartDateTime() {
+		if(reservationStartDateTime == null)
+			throw new IllegalArgumentException("reservationStartDateTime not provided");
+		return reservationStartDateTime;
 	}
-	public void setBookingStartDateTime(String bookingStartDateTime) {
-		this.bookingStartDateTime = bookingStartDateTime;
+	public void setReservationStartDateTime(String reservationStartDateTime) {
+		this.reservationStartDateTime = reservationStartDateTime;
 	}
-	public String getBookingEndDateTime() {
-		if(bookingEndDateTime == null)
-			throw new IllegalArgumentException("bookingEndDateTime not provided");
-		return bookingEndDateTime;
+	public String getReservationEndDateTime() {
+		if(reservationEndDateTime == null)
+			throw new IllegalArgumentException("reservationEndDateTime not provided");
+		return reservationEndDateTime;
 	}
 
-	public Date getBookingStartDateTimeObj() throws ParseException {
-		return stringToDate(getBookingStartDateTime());
+	public Date getReservationStartDateTimeObj() throws ParseException {
+		return stringToDate(getReservationStartDateTime());
 	}
 	
-	public Date getBookingEndDateTimeObj() throws ParseException {
-		return stringToDate(getBookingEndDateTime());
+	public Date getReservationEndDateTimeObj() throws ParseException {
+		return stringToDate(getReservationEndDateTime());
 	}
 	
 	public String getWeekDays() throws ParseException {
 		List<String> weekdays = new ArrayList<String>();
-		long start = getBookingStartDateTimeObj().getTime();
-		long end = getBookingEndDateTimeObj().getTime();
+		long start = getReservationStartDateTimeObj().getTime();
+		long end = getReservationEndDateTimeObj().getTime();
 		String[] week = "Sunday;Monday;Tuesday;Wednesday;Thursday;Friday;Saturday".split(";");
 		for (long i = start; i <= end; i+= 24*60*60*1000) {
 			String weekS = week[new Date(i).getDay()];
@@ -68,8 +68,8 @@ public class SpaceSearchQuery {
 		return res;
 	}
 	
-	public void setBookingEndDateTime(String bookingEndDateTime) {
-		this.bookingEndDateTime = bookingEndDateTime;
+	public void setReservationEndDateTime(String reservationEndDateTime) {
+		this.reservationEndDateTime = reservationEndDateTime;
 	}
 	
 	private Date stringToDate(String dateString) throws ParseException {
@@ -137,25 +137,25 @@ public class SpaceSearchQuery {
 		this.cityOrZip = cityOrZip;
 	}
 	
-	public boolean suitableMatch(SpaceDetails spaceDetails) {
+	public boolean suitableMatch(PlaceDetails placeDetails) {
 		if(getSharingType().size() > 0) {
 			List<String> eliminateSharingType = new ArrayList<String>(Arrays.asList("Entire House","Shared Room","Private Room"));
 			eliminateSharingType.removeAll(getSharingType());
-			if(eliminateSharingType.contains(spaceDetails.getRoomType())) {
-				System.out.println(spaceDetails.getName()+" fails at ST");
+			if(eliminateSharingType.contains(placeDetails.getRoomType())) {
+				System.out.println(placeDetails.getName()+" fails at ST");
 				return false;
 			}
 		}
 		if(getPropertyType().size() > 0) {
 			List<String> eliminatePropertyType = new ArrayList<String>(Arrays.asList("House","Apartment","Bed and breakfast"));
 			eliminatePropertyType.removeAll(getPropertyType());
-			if(eliminatePropertyType.contains(spaceDetails.getPropertyType())) {
-				System.out.println(spaceDetails.getName()+" fails at PT");
+			if(eliminatePropertyType.contains(placeDetails.getPropertyType())) {
+				System.out.println(placeDetails.getName()+" fails at PT");
 				return false;
 			}
 		}
 		String[] keywords = getKeywords().toLowerCase().split(" ");
-		String description = spaceDetails.getDescription().toLowerCase();
+		String description = placeDetails.getDescription().toLowerCase();
 		boolean temp = false;
 		for (String keyword : keywords) {
 			if(description.contains(keyword)) {
@@ -164,12 +164,12 @@ public class SpaceSearchQuery {
 			}
 		}
 		if(temp == false) {
-			System.out.println(spaceDetails.getName()+" fails at KW");
+			System.out.println(placeDetails.getName()+" fails at KW");
 			return false;
 		}
 		if(getInternetAvailable()) {
-			if(spaceDetails.getFreeWiFi() == false) {
-				System.out.println(spaceDetails.getName()+" fails at WF");
+			if(placeDetails.getFreeWiFi() == false) {
+				System.out.println(placeDetails.getName()+" fails at WF");
 				return false;
 			}
 		}

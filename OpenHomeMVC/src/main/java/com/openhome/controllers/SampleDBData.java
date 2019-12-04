@@ -9,7 +9,7 @@ import java.util.Random;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.openhome.data.Image;
-import com.openhome.data.SpaceDetails;
+import com.openhome.data.PlaceDetails;
 import com.openhome.tam.TimeAdvancementManagement;
 
 public class SampleDBData {
@@ -80,7 +80,7 @@ public class SampleDBData {
 		"20002"
 	};
 	
-	List<String> amenities = Arrays.asList("Kitchen;Shampoo;Heating;Air conditioning;Washer;Dryer;Wifi;Breakfast;Indoor fireplace;Hangers;Iron;Hair dryer;Laptop friendly workspace;TV;Crib;High chair;Self check-in;Smoke detector;Carbon monoxide detector;Private bathroom;Beachfront;Waterfront;".split(";"));
+	List<String> amenities = Arrays.asList("Kitchen;Shampoo;Heating;Air conditioning;Washer;Dryer;Wifi;Breakfast;Indoor fireplace;Hangers;Iron;Hair dryer;Laptop friendly workplace;TV;Crib;High chair;Self check-in;Smoke detector;Carbon monoxide detector;Private bathroom;Beachfront;Waterfront;".split(";"));
 	
 	List<String> facilities = Arrays.asList("Free parking on premises;Gym;Hot tub;Pool;".split(";"));
 	
@@ -98,8 +98,8 @@ public class SampleDBData {
 		return newList.subList(0, newList.size()/2); 
 	} 
 	
-	public SpaceDetails getRandomSpaceDetails() {
-		SpaceDetails sd = new SpaceDetails();
+	public PlaceDetails getRandomPlaceDetails() {
+		PlaceDetails sd = new PlaceDetails();
 		
 		Random R = new Random();
 		

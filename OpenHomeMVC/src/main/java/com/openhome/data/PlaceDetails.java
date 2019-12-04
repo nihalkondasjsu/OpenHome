@@ -23,7 +23,7 @@ import com.openhome.dao.helper.StringListConverter;
 import com.openhome.tam.TimeAdvancementManagement;
 
 @Entity
-public class SpaceDetails {
+public class PlaceDetails {
 
 	@Id
 	@GeneratedValue
@@ -45,7 +45,7 @@ public class SpaceDetails {
 	@Column(length=512)
 	@Convert(converter = StringListConverter.class)
 	private List<String> amenities;
-	//private String amenities = "Kitchen;Shampoo;Heating;Air conditioning;Washer;Dryer;Wifi;Breakfast;Indoor fireplace;Hangers;Iron;Hair dryer;Laptop friendly workspace;TV;Crib;High chair;Self check-in;Smoke detector;Carbon monoxide detector;Private bathroom;Beachfront;Waterfront;";
+	//private String amenities = "Kitchen;Shampoo;Heating;Air conditioning;Washer;Dryer;Wifi;Breakfast;Indoor fireplace;Hangers;Iron;Hair dryer;Laptop friendly workplace;TV;Crib;High chair;Self check-in;Smoke detector;Carbon monoxide detector;Private bathroom;Beachfront;Waterfront;";
 	
 	@Convert(converter = StringListConverter.class)
 	private List<String> facilities;
@@ -104,7 +104,7 @@ public class SpaceDetails {
 	@Column(nullable=false,updatable=false)
 	private Date registeredDate;
 	
-	public SpaceDetails() {
+	public PlaceDetails() {
 		registeredDate = new Date();
 		images = new ArrayList<Image>();
 	}

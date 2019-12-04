@@ -2,59 +2,59 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Booking Read</title>
+<title>Reservation Read</title>
 </head>
 <body>
-	<h1>Booking Read</h1>
+	<h1>Reservation Read</h1>
 	<div th:if="${hostAccess == false}">
-		<div th:if="${booking.bookingState == Booked}">
-			<a th:href="@{'/booking/checkIn?bookingId=' + ${booking.id}}">Check In</a>
+		<div th:if="${reservation.reservationState == Booked}">
+			<a th:href="@{'/reservation/checkIn?reservationId=' + ${reservation.id}}">Check In</a>
 		</div>
 	</div>
 	<table border="1">
 		<tr>
-			<td>Booking Id</td>
-			<td>[[${booking.id}]]</td>
+			<td>Reservation Id</td>
+			<td>[[${reservation.id}]]</td>
 		</tr>
 		<tr>
-			<td>Booking Created Date</td>
-			<td>[[${booking.createdDate}]]</td>
+			<td>Reservation Created Date</td>
+			<td>[[${reservation.createdDate}]]</td>
 		</tr>
 		<tr>
-			<td>Booking Check In</td>
-			<td>[[${booking.checkIn}]]</td>
+			<td>Reservation Check In</td>
+			<td>[[${reservation.checkIn}]]</td>
 		</tr>
 		<tr>
-			<td>Booking Check Out</td>
-			<td>[[${booking.checkOut}]]</td>
+			<td>Reservation Check Out</td>
+			<td>[[${reservation.checkOut}]]</td>
 		</tr>
 		<tr>
-			<td>Booking Actual Check In</td>
-			<td>[[${booking.actualCheckIn}]]</td>
+			<td>Reservation Actual Check In</td>
+			<td>[[${reservation.actualCheckIn}]]</td>
 		</tr>
 		<tr>
-			<td>Booking Actual Check Out</td>
-			<td>[[${booking.actualCheckOut}]]</td>
+			<td>Reservation Actual Check Out</td>
+			<td>[[${reservation.actualCheckOut}]]</td>
 		</tr>
 		<tr>
-			<td>Booking Space Id</td>
-			<td>[[${booking.space.id}]]</td>
+			<td>Reservation Place Id</td>
+			<td>[[${reservation.place.id}]]</td>
 		</tr>
 		<tr>
-			<td>Booking Guest</td>
-			<td>[[${booking.guest.userDetails.email}]]</td>
+			<td>Reservation Guest</td>
+			<td>[[${reservation.guest.userDetails.email}]]</td>
 		</tr>
 		<tr>
-			<td>Booking State</td>
-			<td>[[${booking.bookingState}]]</td>
+			<td>Reservation State</td>
+			<td>[[${reservation.reservationState}]]</td>
 		</tr>
 		<tr>
-			<td>Booking Weekday Rent Price</td>
-			<td>[[${booking.weekdayRentPrice}]]</td>
+			<td>Reservation Weekday Rent Price</td>
+			<td>[[${reservation.weekdayRentPrice}]]</td>
 		</tr>
 		<tr>
-			<td>Booking Weekday Rent Price</td>
-			<td>[[${booking.weekendRentPrice}]]</td>
+			<td>Reservation Weekday Rent Price</td>
+			<td>[[${reservation.weekendRentPrice}]]</td>
 		</tr>
 	</table>
 </body>

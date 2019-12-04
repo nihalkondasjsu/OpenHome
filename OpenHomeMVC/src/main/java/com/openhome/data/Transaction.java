@@ -33,7 +33,7 @@ public class Transaction {
 	private Date dayToChargeFor;
 	
 	@ManyToOne(fetch = FetchType.LAZY)
-	private Booking booking;
+	private Reservation reservation;
 	
 	public enum TransactionNature{
 		Charge,Fee,Payment
@@ -53,12 +53,12 @@ public class Transaction {
 		createdDate = new Date();
 	}
 
-	public Transaction(Double amount, Date createdDate, Date dayToChargeFor, Booking booking, TransactionNature transactionNature,
+	public Transaction(Double amount, Date createdDate, Date dayToChargeFor, Reservation reservation, TransactionNature transactionNature,
 			TransactionUser transactionUser) {
 		this.amount = amount;
 		this.createdDate = createdDate;
 		this.dayToChargeFor = dayToChargeFor;
-		this.booking = booking;
+		this.reservation = reservation;
 		this.transactionNature = transactionNature;
 		this.transactionUser = transactionUser;
 	}
@@ -97,12 +97,12 @@ public class Transaction {
 		this.dayToChargeFor = dayToChargeFor;
 	}
 
-	public Booking getBooking() {
-		return booking;
+	public Reservation getReservation() {
+		return reservation;
 	}
 
-	public void setBooking(Booking booking) {
-		this.booking = booking;
+	public void setReservation(Reservation reservation) {
+		this.reservation = reservation;
 	}
 
 	public TransactionNature getTransactionNature() {

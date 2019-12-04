@@ -1,4 +1,4 @@
-package com.openhome.controllers.space;
+package com.openhome.controllers.place;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,26 +14,26 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.openhome.FileSystem;
-import com.openhome.aop.helper.annotation.ValidSpaceId;
+import com.openhome.aop.helper.annotation.ValidPlaceId;
 import com.openhome.controllers.helper.ControllerHelper;
-import com.openhome.aop.helper.annotation.SpaceHostLoginRequired;
+import com.openhome.aop.helper.annotation.PlaceHostLoginRequired;
 import com.openhome.dao.ImageDAO;
-import com.openhome.dao.SpaceDAO;
-import com.openhome.dao.SpaceDetailsDAO;
+import com.openhome.dao.PlaceDAO;
+import com.openhome.dao.PlaceDetailsDAO;
 import com.openhome.data.Host;
 import com.openhome.data.Image;
-import com.openhome.data.Space;
-import com.openhome.data.SpaceDetails;
+import com.openhome.data.Place;
+import com.openhome.data.PlaceDetails;
 import com.openhome.session.SessionManager;
 
 @Controller
-public class SpaceImageUpdateController {
+public class PlaceImageUpdateController {
 
 	@Autowired
-	SpaceDAO spaceDao;
+	PlaceDAO placeDao;
 	
 	@Autowired
-	SpaceDetailsDAO spaceDetailsDao;
+	PlaceDetailsDAO placeDetailsDao;
 	
 	@Autowired
 	SessionManager sessionManager;
@@ -44,40 +44,40 @@ public class SpaceImageUpdateController {
 	@Autowired
 	FileSystem fileSystem;
 	
-	@RequestMapping(value="/space/updateSpaceImages",method=RequestMethod.GET)
-	@ValidSpaceId
-	@SpaceHostLoginRequired
-	public String updateForm(@RequestParam(value="spaceId",required=false) Long spaceId, @RequestParam(value="op") String op, Model model , HttpSession httpSession ) {
-		System.out.println("SpaceImageUpdateController");
-		Space s = null;
+	@RequestMapping(value="/place/updatePlaceImages",method=RequestMethod.GET)
+	@ValidPlaceId
+	@PlaceHostLoginRequired
+	public String updateForm(@RequestParam(value="placeId",required=false) Long placeId, @RequestParam(value="op") String op, Model model , HttpSession httpSession ) {
+		System.out.println("PlaceImageUpdateController");
+		Place s = null;
 		
 		if(op.equals("add")) {
 			
-			return "space/imagesUpdateAdd";
+			return "place/imagesUpdateAdd";
 			
 		} else if(op.equals("delete")) {
 
-			return "space/imagesUpdateDelete";
+			return "place/imagesUpdateDelete";
 			
 		} else if(op.equals("rearrange")) {
 
-			return "space/imagesUpdateRearrange";
+			return "place/imagesUpdateRearrange";
 			
 		}
 		
-		return "space/imagesUpdate";
+		return "place/imagesUpdate";
 		
 	}
 	
-	@RequestMapping(value="/space/updateSpaceImagesAdd",method=RequestMethod.POST)
-	@ValidSpaceId
-	@SpaceHostLoginRequired
-	public String updateFormAdd(@RequestParam(value="spaceId",required=false) Long spaceId, Model model , HttpSession httpSession ,@RequestParam(value="image",required=false) MultipartFile image, @RequestParam(value="imageUrl",required=false) String imageUrl) {
-		System.out.println("SpaceImageUpdateController");
-		Space s = null;
+	@RequestMapping(value="/place/updatePlaceImagesAdd",method=RequestMethod.POST)
+	@ValidPlaceId
+	@PlaceHostLoginRequired
+	public String updateFormAdd(@RequestParam(value="placeId",required=false) Long placeId, Model model , HttpSession httpSession ,@RequestParam(value="image",required=false) MultipartFile image, @RequestParam(value="imageUrl",required=false) String imageUrl) {
+		System.out.println("PlaceImageUpdateController");
+		Place s = null;
 		
 		try {
-			s = spaceDao.getOne(spaceId);
+			s = placeDao.getOne(placeId);
 			Image imageObj;
 			if(image == null) {
 				if(imageUrl == null) {
@@ -91,29 +91,29 @@ public class SpaceImageUpdateController {
 				imageObj = fileSystem.saveImage(image);
 			}
 			
-			SpaceDetails sd = s.getSpaceDetails();
+			PlaceDetails sd = s.getPlaceDetails();
 			
 			sd.addImage(imageObj);
 			
-			spaceDetailsDao.save(sd);
+			placeDetailsDao.save(sd);
 			
-			model.addAttribute("space", s);
+			model.addAttribute("place", s);
 			model.addAttribute("close", "yes");
-			return "space/imagesUpdateAdd";
+			return "place/imagesUpdateAdd";
 		} catch (Exception e ) {
 			return ControllerHelper.popupMessageAndRedirect(e.getMessage(), "");
 		}
 	}
 	
-	@RequestMapping(value="/space/updateSpaceImagesDelete",method=RequestMethod.POST)
-	@ValidSpaceId
-	@SpaceHostLoginRequired
-	public String updateFormAdd(@RequestParam(value="spaceId",required=false) Long spaceId, Model model , HttpSession httpSession ,@RequestParam(value="deleteImageName",required=false) Long deleteImageId) {
-		System.out.println("SpaceImageUpdateController");
-		Space s = null;
+	@RequestMapping(value="/place/updatePlaceImagesDelete",method=RequestMethod.POST)
+	@ValidPlaceId
+	@PlaceHostLoginRequired
+	public String updateFormAdd(@RequestParam(value="placeId",required=false) Long placeId, Model model , HttpSession httpSession ,@RequestParam(value="deleteImageName",required=false) Long deleteImageId) {
+		System.out.println("PlaceImageUpdateController");
+		Place s = null;
 		
 		try {
-			s = spaceDao.getOne(spaceId);
+			s = placeDao.getOne(placeId);
 			
 			if(deleteImageId == null) {
 				throw new IllegalArgumentException("No Image Provided");
@@ -121,32 +121,32 @@ public class SpaceImageUpdateController {
 			
 			Image image = imageDao.getOne(deleteImageId);
 			
-			SpaceDetails sd = s.getSpaceDetails();
+			PlaceDetails sd = s.getPlaceDetails();
 			
 			if(sd.deleteImage(image)) {
 				fileSystem.deleteImage(image);
-				spaceDetailsDao.save(sd);
+				placeDetailsDao.save(sd);
 			}
 
-			model.addAttribute("space", s);
+			model.addAttribute("place", s);
 			model.addAttribute("close", "yes");
-			return "space/imagesUpdateDelete";
+			return "place/imagesUpdateDelete";
 		} catch (Exception e ) {
 			return ControllerHelper.popupMessageAndRedirect(e.getMessage(), "");
 		}
 	}
 	
-	@RequestMapping(value="/space/updateSpaceImagesRearrange",method=RequestMethod.POST)
-	@ValidSpaceId
-	@SpaceHostLoginRequired
-	public String updateFormAdd(@RequestParam(value="spaceId",required=false) Long spaceId, Model model , HttpSession httpSession ,@RequestParam(value="images[]",required=false) List<Long> images) {
-		System.out.println("SpaceImageUpdateController");
-		Space s = null;
+	@RequestMapping(value="/place/updatePlaceImagesRearrange",method=RequestMethod.POST)
+	@ValidPlaceId
+	@PlaceHostLoginRequired
+	public String updateFormAdd(@RequestParam(value="placeId",required=false) Long placeId, Model model , HttpSession httpSession ,@RequestParam(value="images[]",required=false) List<Long> images) {
+		System.out.println("PlaceImageUpdateController");
+		Place s = null;
 		
 		try {
-			s = spaceDao.getOne(spaceId);
+			s = placeDao.getOne(placeId);
 			
-			SpaceDetails sd = s.getSpaceDetails();
+			PlaceDetails sd = s.getPlaceDetails();
 			
 			System.out.println(images);
 			
@@ -170,9 +170,9 @@ public class SpaceImageUpdateController {
 				}
 			}
 			
-			model.addAttribute("space", s);
+			model.addAttribute("place", s);
 			model.addAttribute("close", "yes");
-			return "space/imagesUpdateRearrange";
+			return "place/imagesUpdateRearrange";
 		} catch (Exception e ) {
 			return ControllerHelper.popupMessageAndRedirect(e.getMessage(), "");
 		}

@@ -19,7 +19,7 @@ import javax.persistence.Transient;
 import com.openhome.dao.helper.StringListConverter;
 
 @Entity
-public class Space {
+public class Place {
 
 	@Id
 	@GeneratedValue
@@ -31,26 +31,26 @@ public class Space {
 	
 	@OneToMany(fetch = FetchType.LAZY,
 			orphanRemoval=true,
-			mappedBy = "space")
-	private List<Booking> bookings;
+			mappedBy = "place")
+	private List<Reservation> reservations;
 	
 	@OneToOne(fetch=FetchType.EAGER,
 			orphanRemoval=true,
 			cascade=CascadeType.ALL)
-	private SpaceDetails spaceDetails;
+	private PlaceDetails placeDetails;
 	
 	@Transient
 	private Boolean bestSuitedSearchResult = false;
 	
-	public Space() {
-		bookings = new ArrayList<Booking>();
-		spaceDetails = new SpaceDetails();
+	public Place() {
+		reservations = new ArrayList<Reservation>();
+		placeDetails = new PlaceDetails();
 	}
 	
-	public Space(List<Booking> bookings, SpaceDetails spaceDetails) {
+	public Place(List<Reservation> reservations, PlaceDetails placeDetails) {
 		super();
-		this.bookings = bookings;
-		this.spaceDetails = spaceDetails;
+		this.reservations = reservations;
+		this.placeDetails = placeDetails;
 	}
 
 	public Long getId() {
@@ -65,17 +65,17 @@ public class Space {
 	public void setHost(Host host) {
 		this.host = host;
 	}
-	public List<Booking> getBookings() {
-		return bookings;
+	public List<Reservation> getReservations() {
+		return reservations;
 	}
-	public void setBookings(List<Booking> bookings) {
-		this.bookings = bookings;
+	public void setReservations(List<Reservation> reservations) {
+		this.reservations = reservations;
 	}
-	public SpaceDetails getSpaceDetails() {
-		return spaceDetails;
+	public PlaceDetails getPlaceDetails() {
+		return placeDetails;
 	}
-	public void setSpaceDetails(SpaceDetails spaceDetails) {
-		this.spaceDetails = spaceDetails;
+	public void setPlaceDetails(PlaceDetails placeDetails) {
+		this.placeDetails = placeDetails;
 	}
 
 	public Boolean getBestSuitedSearchResult() {

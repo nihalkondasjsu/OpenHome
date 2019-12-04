@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Space Registration</title>
+<title>Place Registration</title>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 <script>
 	var successLink = "[[${successLink}]]";
@@ -12,9 +12,9 @@
 </script>
 </head>
 <body>
-<h1>Space Registration Form</h1>
+<h1>Place Registration Form</h1>
 <p style="color:red">[[${errorMessage}]]</p>
-<form id="myForm" action="/space/register" method="POST">
+<form id="myForm" action="/place/register" method="POST">
 	<table border="1">
 		<tr>
 			<th>Name</th>
@@ -58,7 +58,7 @@
 		<tr>
 			<th>Amenities</th>
 			<td>
-				<div id='amenities' class='checkBoxContainer' svals='' vals='Kitchen;Shampoo;Heating;Air conditioning;Washer;Dryer;Wifi;Breakfast;Indoor fireplace;Hangers;Iron;Hair dryer;Laptop friendly workspace;TV;Crib;High chair;Self check-in;Smoke detector;Carbon monoxide detector;Private bathroom;Beachfront;Waterfront'></div>
+				<div id='amenities' class='checkBoxContainer' svals='' vals='Kitchen;Shampoo;Heating;Air conditioning;Washer;Dryer;Wifi;Breakfast;Indoor fireplace;Hangers;Iron;Hair dryer;Laptop friendly workplace;TV;Crib;High chair;Self check-in;Smoke detector;Carbon monoxide detector;Private bathroom;Beachfront;Waterfront'></div>
 			</td>
 		</tr>
 		<tr>
@@ -74,7 +74,7 @@
 			</td>
 		</tr>
 		<tr>
-			<th>Space Preview Picture</th>
+			<th>Place Preview Picture</th>
 			<td><input name="image" type="file" accept="image/*"><input type="text" name="imageUrl" placeholder="img link"></td>
 		</tr>
 		<tr>

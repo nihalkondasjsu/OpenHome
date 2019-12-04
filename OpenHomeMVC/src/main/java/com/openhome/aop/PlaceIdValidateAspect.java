@@ -12,38 +12,37 @@ import org.springframework.ui.Model;
 
 import com.openhome.aop.helper.ArgsFinder;
 import com.openhome.controllers.helper.ControllerHelper;
-import com.openhome.dao.BookingDAO;
-import com.openhome.data.Booking;
+import com.openhome.dao.PlaceDAO;
+import com.openhome.data.Place;
 
 @Aspect
 @Component
 @Order(1)
-public class BookingIdValidateAspect {
+public class PlaceIdValidateAspect {
 
 	@Autowired
-	BookingDAO bookingDao;
+	PlaceDAO placeDao;
 	
-	@Around("@annotation(com.openhome.aop.helper.annotation.ValidBookingId)")
-	public Object rightBookingId(ProceedingJoinPoint joinPoint) throws Throwable {
+	@Around("@annotation(com.openhome.aop.helper.annotation.ValidPlaceId)")
+	public Object rightPlaceId(ProceedingJoinPoint joinPoint) throws Throwable {
 		System.out.println(joinPoint.toLongString());
 		System.out.println(Arrays.toString(joinPoint.getArgs()));
 		try {
-			Long bookingId = ArgsFinder.findArg(joinPoint.getArgs(), Long.class);
+			Long placeId = ArgsFinder.findArg(joinPoint.getArgs(), Long.class);
 			Model model = ArgsFinder.getModel(joinPoint.getArgs());
-			if(bookingId == null) {
-				return ControllerHelper.popupMessageAndRedirect("No BookingId provided.", "");
+			if(placeId == null) {
+				return ControllerHelper.popupMessageAndRedirect("No PlaceId provided.", "");
 			}
-			Booking b = bookingDao.getOne(bookingId);
-			if(b == null) {
-				return ControllerHelper.popupMessageAndRedirect("Invalid Booking Id.", "");
+			Place s = placeDao.getOne(placeId);
+			if(s == null) {
+				return ControllerHelper.popupMessageAndRedirect("Invalid Place Id.", "");
 			}
-			System.out.println("============>Booking Id is Valid");
+			System.out.println("============>Place Id is Valid");
 			return joinPoint.proceed();
 		} catch (Exception e) {
 			System.out.println(e.toString());
+			return ControllerHelper.popupMessageAndRedirect(e.getMessage(), "");
 		}
-		
-		return "index";
 		
 	 }
 	

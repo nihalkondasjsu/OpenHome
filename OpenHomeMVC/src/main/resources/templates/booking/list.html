@@ -2,10 +2,10 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Space Booking List</title>
+<title>Place Reservation List</title>
 </head>
 <body>
-	<h1>Space Booking List</h1>
+	<h1>Place Reservation List</h1>
 	<table border="1">
 		<tr>
 			<td>Id</td>
@@ -14,24 +14,24 @@
 			<td>Check Out</td>
 			<td>Actual Check In</td>
 			<td>Actual Check In</td>
-			<td>Space Id</td>
+			<td>Place Id</td>
 			<td>Guest</td>
 			<td>State</td>
 			<td>Weekday Rent Price</td>
 			<td>Weekday Rent Price</td>
 		</tr>
-		<tr th:each="booking : ${bookings}">
-			<td><a th:href="@{'/booking/view?bookingId=' + ${booking.id}}">[[${booking.id}]]</a></td>
-			<td>[[${booking.createdDate}]]</td>
-			<td>[[${booking.checkIn}]]</td>
-			<td>[[${booking.checkOut}]]</td>
-			<td>[[${booking.actualCheckIn}]]</td>
-			<td>[[${booking.actualCheckOut}]]</td>
-			<td><a th:href="@{'/space/view?spaceId=' + ${booking.space.id}}">[[${booking.space.spaceDetails.name}]]</a></td>
-			<td>[[${booking.guest.userDetails.email}]]</td>
-			<td>[[${booking.bookingState}]]</td>
-			<td>[[${booking.weekdayRentPrice}]]</td>
-			<td>[[${booking.weekendRentPrice}]]</td>
+		<tr th:each="reservation : ${reservations}">
+			<td><a th:href="@{'/reservation/view?reservationId=' + ${reservation.id}}">[[${reservation.id}]]</a></td>
+			<td>[[${reservation.createdDate}]]</td>
+			<td>[[${reservation.checkIn}]]</td>
+			<td>[[${reservation.checkOut}]]</td>
+			<td>[[${reservation.actualCheckIn}]]</td>
+			<td>[[${reservation.actualCheckOut}]]</td>
+			<td><a th:href="@{'/place/view?placeId=' + ${reservation.place.id}}">[[${reservation.place.placeDetails.name}]]</a></td>
+			<td>[[${reservation.guest.userDetails.email}]]</td>
+			<td>[[${reservation.reservationState}]]</td>
+			<td>[[${reservation.weekdayRentPrice}]]</td>
+			<td>[[${reservation.weekendRentPrice}]]</td>
 		</tr>
 	</table>
 	

@@ -12,17 +12,17 @@ import com.openhome.aop.helper.annotation.GuestLoginRequired;
 import com.openhome.session.SessionManager;
 
 @Controller
-@RequestMapping("/guest/booking/list")
-public class GuestBookingListController {
+@RequestMapping("/guest/reservation/list")
+public class GuestReservationListController {
 	
 	@Autowired
 	SessionManager sessionManager;
 	
 	@RequestMapping(method=RequestMethod.GET)
 	@GuestLoginRequired
-	public String getBookingCreatePage( Model model , HttpSession httpSession ) {
-		model.addAttribute("bookings", sessionManager.getGuest(httpSession).getBookings());
-		return "booking/list";
+	public String getReservationCreatePage( Model model , HttpSession httpSession ) {
+		model.addAttribute("reservations", sessionManager.getGuest(httpSession).getReservations());
+		return "reservation/list";
 	}
 	
 	

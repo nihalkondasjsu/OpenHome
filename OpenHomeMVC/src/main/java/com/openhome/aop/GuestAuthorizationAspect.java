@@ -14,10 +14,10 @@ import org.springframework.ui.Model;
 
 import com.openhome.aop.helper.ArgsFinder;
 import com.openhome.controllers.helper.ControllerHelper;
-import com.openhome.dao.SpaceDAO;
+import com.openhome.dao.PlaceDAO;
 import com.openhome.data.Guest;
 import com.openhome.data.Host;
-import com.openhome.data.Space;
+import com.openhome.data.Place;
 import com.openhome.session.SessionManager;
 
 @Aspect
@@ -26,7 +26,7 @@ import com.openhome.session.SessionManager;
 public class GuestAuthorizationAspect {
 
 	@Autowired
-	SpaceDAO spaceDao;
+	PlaceDAO placeDao;
 	
 	@Autowired
 	SessionManager sessionManager;

@@ -15,10 +15,10 @@ import org.springframework.ui.Model;
 
 import com.openhome.aop.helper.ArgsFinder;
 import com.openhome.controllers.helper.ControllerHelper;
-import com.openhome.dao.SpaceDAO;
-import com.openhome.dao.SpaceDetailsDAO;
+import com.openhome.dao.PlaceDAO;
+import com.openhome.dao.PlaceDetailsDAO;
 import com.openhome.data.Host;
-import com.openhome.data.Space;
+import com.openhome.data.Place;
 import com.openhome.session.SessionManager;
 
 @Aspect
@@ -27,7 +27,7 @@ import com.openhome.session.SessionManager;
 public class HostAuthorizationAspect {
 
 	@Autowired
-	SpaceDAO spaceDao;
+	PlaceDAO placeDao;
 	
 	@Autowired
 	SessionManager sessionManager;
@@ -45,16 +45,16 @@ public class HostAuthorizationAspect {
 			}
 	}
 	
-	public void hasSpaceHostLogin(ProceedingJoinPoint joinPoint) throws IllegalAccessException {
+	public void hasPlaceHostLogin(ProceedingJoinPoint joinPoint) throws IllegalAccessException {
 			hasHostLogin(joinPoint);
-			Long spaceId = ArgsFinder.findArg(joinPoint.getArgs(), Long.class);
+			Long placeId = ArgsFinder.findArg(joinPoint.getArgs(), Long.class);
 			Model model = ArgsFinder.getModel(joinPoint.getArgs());
 			
 			HttpSession httpSession = ArgsFinder.getHttpSession(joinPoint.getArgs());
 			
-			Space s = spaceDao.getOne(spaceId);
+			Place s = placeDao.getOne(placeId);
 			
-			model.addAttribute("space", s);
+			model.addAttribute("place", s);
 			
 			Host host = sessionManager.getHost(httpSession);
 			
@@ -76,11 +76,11 @@ public class HostAuthorizationAspect {
 		
 	 }
 	
-	@Around("@annotation(com.openhome.aop.helper.annotation.SpaceHostLoginRequired)")
+	@Around("@annotation(com.openhome.aop.helper.annotation.PlaceHostLoginRequired)")
 	public Object rightHostLoginRequired(ProceedingJoinPoint joinPoint) throws Throwable {
 		
 		try {
-			hasSpaceHostLogin(joinPoint);
+			hasPlaceHostLogin(joinPoint);
 			return joinPoint.proceed();
 		} catch (Exception e) {
 			e.printStackTrace();

@@ -1,4 +1,4 @@
-package com.openhome.controllers.space;
+package com.openhome.controllers.place;
 
 import javax.servlet.http.HttpSession;
 
@@ -18,23 +18,23 @@ import com.openhome.Json;
 import com.openhome.aop.helper.annotation.HostLoginRequired;
 import com.openhome.controllers.helper.ControllerHelper;
 import com.openhome.dao.HostDAO;
-import com.openhome.dao.SpaceDAO;
-import com.openhome.dao.SpaceDetailsDAO;
+import com.openhome.dao.PlaceDAO;
+import com.openhome.dao.PlaceDetailsDAO;
 import com.openhome.dao.UserDetailsDAO;
 import com.openhome.data.Host;
 import com.openhome.data.Image;
-import com.openhome.data.Space;
-import com.openhome.data.SpaceDetails;
+import com.openhome.data.Place;
+import com.openhome.data.PlaceDetails;
 import com.openhome.data.UserDetails;
 import com.openhome.session.SessionManager;
 import com.openhome.tam.TimeAdvancementManagement;
 
 @Controller
-@RequestMapping("/space/register")
-public class SpaceRegistrationController {
+@RequestMapping("/place/register")
+public class PlaceRegistrationController {
 
 	@Autowired
-	SpaceDAO spaceDao;
+	PlaceDAO placeDao;
 	
 	@Autowired
 	SessionManager sessionManager;
@@ -48,21 +48,21 @@ public class SpaceRegistrationController {
 	@RequestMapping(method=RequestMethod.GET)
 	@HostLoginRequired
 	public String registerForm( Model model ) {
-		System.out.println("SpaceRegistrationController");
-		return "space/register";
+		System.out.println("PlaceRegistrationController");
+		return "place/register";
 	}
 
 	@RequestMapping(method=RequestMethod.POST)
 	@HostLoginRequired
-	public String registerFormSubmission( SpaceDetails spaceDetails , Model model , HttpSession httpSession , @RequestParam(value="image",required=false) MultipartFile image, @RequestParam(value="imageUrl",required=false) String imageUrl) {
+	public String registerFormSubmission( PlaceDetails placeDetails , Model model , HttpSession httpSession , @RequestParam(value="image",required=false) MultipartFile image, @RequestParam(value="imageUrl",required=false) String imageUrl) {
 		try {
-			Json.printObject(spaceDetails);
+			Json.printObject(placeDetails);
 			
 			Host host = sessionManager.getHost(httpSession);
 			
-			Space space = new Space();
+			Place place = new Place();
 			
-			spaceDetails.prepareForRegistration();
+			placeDetails.prepareForRegistration();
 			
 			Image imageObj = null;
 			if(image == null) {
@@ -82,20 +82,20 @@ public class SpaceRegistrationController {
 				throw new IllegalArgumentException("No Image Provided");
 			}
 			
-			spaceDetails.addImage(imageObj);
+			placeDetails.addImage(imageObj);
 			
-			space.setSpaceDetails(spaceDetails);
+			place.setPlaceDetails(placeDetails);
 			
-			host.addSpace(space);
+			host.addPlace(place);
 			
-			space.setHost(host);
+			place.setHost(host);
 			
-			space = spaceDao.save(space);
+			place = placeDao.save(place);
 			
-			return ControllerHelper.popupMessageAndRedirect("Space Registered Successfully", "space/view?spaceId="+space.getId());
+			return ControllerHelper.popupMessageAndRedirect("Place Registered Successfully", "place/view?placeId="+place.getId());
 			
 		} catch (Exception e) {
-			return ControllerHelper.popupMessageAndRedirect(e.toString(), "space/register");
+			return ControllerHelper.popupMessageAndRedirect(e.toString(), "place/register");
 		}
 		
 	}

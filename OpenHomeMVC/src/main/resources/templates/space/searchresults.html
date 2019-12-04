@@ -20,40 +20,40 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 </head>
 <body>
-	<form action="../space/searchresults" method="POST">
-		<input name="keywords" th:value="${spaceSearchQuery.keywords}" placeholder="Keywords">
-		<input name="cityOrZip" th:value="${spaceSearchQuery.cityOrZip}" placeholder="City or Zip">
-		<input type="date" th:value="${spaceSearchQuery.bookingStartDateTime}"
-	       name="bookingStartDateTime"
+	<form action="../place/searchresults" method="POST">
+		<input name="keywords" th:value="${placeSearchQuery.keywords}" placeholder="Keywords">
+		<input name="cityOrZip" th:value="${placeSearchQuery.cityOrZip}" placeholder="City or Zip">
+		<input type="date" th:value="${placeSearchQuery.reservationStartDateTime}"
+	       name="reservationStartDateTime"
 	       format-value="yyyy-MM-dd">
-	    <input type="date" th:value="${spaceSearchQuery.bookingEndDateTime}"
-	       name="bookingEndDateTime"
+	    <input type="date" th:value="${placeSearchQuery.reservationEndDateTime}"
+	       name="reservationEndDateTime"
 	       format-value="yyyy-MM-dd">   
 	    <p>Sharing Type : 
-	    	<div id='sharingType' class='checkBoxContainer' th:attr="svals=${spaceSearchQuery.sharingType}" vals='Entire House;Shared Room;Private Room'></div>
+	    	<div id='sharingType' class='checkBoxContainer' th:attr="svals=${placeSearchQuery.sharingType}" vals='Entire House;Shared Room;Private Room'></div>
 		</p>
 	    <p>Property Type : 
-		    <div id='propertyType' class='checkBoxContainer' th:attr="svals=${spaceSearchQuery.propertyType}" vals='House;Apartment;Bed and breakfast;Boutique hotel;Bungalow;Cabin;Cottage;Guest suite;Guesthouse;Hotel;Loft;Serviced apartment;Townhouse;Villa'></div>
+		    <div id='propertyType' class='checkBoxContainer' th:attr="svals=${placeSearchQuery.propertyType}" vals='House;Apartment;Bed and breakfast;Boutique hotel;Bungalow;Cabin;Cottage;Guest suite;Guesthouse;Hotel;Loft;Serviced apartment;Townhouse;Villa'></div>
 		</p>
-	    <input name="minPrice" th:value="${spaceSearchQuery.minPrice}" type="number" placeholder="Min Price">
-	    <input name="maxPrice" th:value="${spaceSearchQuery.maxPrice}" type="number" placeholder="Max Price">
-	    <label><input type="checkbox" name="internetAvailable" value="Yes" th:checked="${spaceSearchQuery.internetAvailable}">Internet</label>
+	    <input name="minPrice" th:value="${placeSearchQuery.minPrice}" type="number" placeholder="Min Price">
+	    <input name="maxPrice" th:value="${placeSearchQuery.maxPrice}" type="number" placeholder="Max Price">
+	    <label><input type="checkbox" name="internetAvailable" value="Yes" th:checked="${placeSearchQuery.internetAvailable}">Internet</label>
 	    <input type="submit">
 	</form>
 	<div id="searchStubsContainer"></div>
-	<script type="text/javascript" th:inline="javascript" th:if="${spaces != null}">
-		var spaceDetails = [
-			/*[# th:each="space : ${spaces}"]*/
-			[ [[${space.id}]] , [[${space.bestSuitedSearchResult}]] ],
+	<script type="text/javascript" th:inline="javascript" th:if="${places != null}">
+		var placeDetails = [
+			/*[# th:each="place : ${places}"]*/
+			[ [[${place.id}]] , [[${place.bestSuitedSearchResult}]] ],
 			/*[/]*/
 			];
-		console.log(spaceDetails);
+		console.log(placeDetails);
 		
 		var page = 0 ;
 		
 		function loadPage(){
 			for( var i = (page*6)+0 ; i < (page*6)+6 ; i++ ){
-				if(spaceDetails.length <= i){
+				if(placeDetails.length <= i){
 					page++;
 					return;
 				}
@@ -64,7 +64,7 @@
 			$('IFRAME').on('load', function () {
 				var dataid = $(this).attr("data-id");
 			   $(this).contents().on('click', function () {
-				   window.location = "../space/view?spaceId="+dataid;
+				   window.location = "../place/view?placeId="+dataid;
 			   })
 			});
 		}
@@ -73,7 +73,7 @@
 		var efnbssr = false;
 		
 		function loadStub(i){
-			if(spaceDetails[i][1] == false){
+			if(placeDetails[i][1] == false){
 				if(efnbssr == false){
 					efnbssr = true;
 					document.getElementById("searchStubsContainer").appendChild(document.createElement("hr"));
@@ -81,8 +81,8 @@
 			}
 			var elem = document.createElement("iframe");
 			elem.setAttribute("class","searchStubs");
-			elem.setAttribute("src","../space/view?preview=true&spaceId="+spaceDetails[i][0]);
-			elem.setAttribute("data-id",spaceDetails[i][0]);
+			elem.setAttribute("src","../place/view?preview=true&placeId="+placeDetails[i][0]);
+			elem.setAttribute("data-id",placeDetails[i][0]);
 			document.getElementById("searchStubsContainer").appendChild(elem);
 		}
 		

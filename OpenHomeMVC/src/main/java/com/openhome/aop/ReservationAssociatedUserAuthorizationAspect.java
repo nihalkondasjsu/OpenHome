@@ -10,22 +10,22 @@ import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
 import com.openhome.aop.helper.ArgsFinder;
-import com.openhome.dao.BookingDAO;
-import com.openhome.data.Booking;
+import com.openhome.dao.ReservationDAO;
+import com.openhome.data.Reservation;
 import com.openhome.session.SessionManager;
 
 @Aspect
 @Component
 @Order(0)
-public class BookingAssociatedUserAuthorizationAspect {
+public class ReservationAssociatedUserAuthorizationAspect {
 
 	@Autowired
-	BookingDAO bookingDao;
+	ReservationDAO reservationDao;
 	
 	@Autowired
 	SessionManager sessionManager;
 
-	@Around("@annotation(com.openhome.aop.helper.annotation.BookingAssociatedUserLoginRequired)")
+	@Around("@annotation(com.openhome.aop.helper.annotation.ReservationAssociatedUserLoginRequired)")
 	public Object rightUserLoginRequired(ProceedingJoinPoint joinPoint) throws Throwable {
 		
 		try {
@@ -34,16 +34,16 @@ public class BookingAssociatedUserAuthorizationAspect {
 				throw new IllegalAccessError("Login Required");
 			}
 
-			Long bookingId = ArgsFinder.findArg(joinPoint.getArgs(), Long.class);
-			Booking booking = bookingDao.getOne(bookingId);
+			Long reservationId = ArgsFinder.findArg(joinPoint.getArgs(), Long.class);
+			Reservation reservation = reservationDao.getOne(reservationId);
 			Long guestId = sessionManager.getGuestId(httpSession);
 			if(guestId != null) {
-				System.out.println(booking.getGuest().getId() +" | "+guestId);
-				if(booking.getGuest().getId().equals(guestId) == false) {
+				System.out.println(reservation.getGuest().getId() +" | "+guestId);
+				if(reservation.getGuest().getId().equals(guestId) == false) {
 					throw new IllegalAccessError("Associated Login Required");
 				}
 			}else {
-				if(booking.getSpace().getHost().getId().equals(sessionManager.getHostId(httpSession)) == false) {
+				if(reservation.getPlace().getHost().getId().equals(sessionManager.getHostId(httpSession)) == false) {
 					throw new IllegalAccessError("Associated Login Required");
 				}
 			}
@@ -57,7 +57,7 @@ public class BookingAssociatedUserAuthorizationAspect {
 	 }
 	
 
-	@Around("@annotation(com.openhome.aop.helper.annotation.BookingAssociatedGuestLoginRequired)")
+	@Around("@annotation(com.openhome.aop.helper.annotation.ReservationAssociatedGuestLoginRequired)")
 	public Object rightGuestLoginRequired(ProceedingJoinPoint joinPoint) throws Throwable {
 		
 		try {
@@ -66,12 +66,12 @@ public class BookingAssociatedUserAuthorizationAspect {
 				throw new IllegalAccessError("Login Required");
 			}
 
-			Long bookingId = ArgsFinder.findArg(joinPoint.getArgs(), Long.class);
-			Booking booking = bookingDao.getOne(bookingId);
+			Long reservationId = ArgsFinder.findArg(joinPoint.getArgs(), Long.class);
+			Reservation reservation = reservationDao.getOne(reservationId);
 			Long guestId = sessionManager.getGuestId(httpSession);
 			if(guestId != null) {
-				System.out.println(booking.getGuest().getId() +" | "+guestId);
-				if(booking.getGuest().getId().equals(guestId) == false) {
+				System.out.println(reservation.getGuest().getId() +" | "+guestId);
+				if(reservation.getGuest().getId().equals(guestId) == false) {
 					throw new IllegalAccessError("Associated Login Required");
 				}
 			}else {

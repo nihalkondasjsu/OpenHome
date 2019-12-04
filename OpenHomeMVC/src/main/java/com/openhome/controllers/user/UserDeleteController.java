@@ -17,9 +17,9 @@ import com.openhome.aop.helper.annotation.UserLoginRequired;
 import com.openhome.controllers.helper.ControllerHelper;
 import com.openhome.dao.GuestDAO;
 import com.openhome.dao.HostDAO;
-import com.openhome.dao.SpaceDAO;
+import com.openhome.dao.PlaceDAO;
 import com.openhome.dao.UserDetailsDAO;
-import com.openhome.data.Booking;
+import com.openhome.data.Reservation;
 import com.openhome.data.Guest;
 import com.openhome.data.Host;
 import com.openhome.data.UserDetails;
@@ -37,7 +37,7 @@ public class UserDeleteController {
 	HostDAO hostDao;
 
 	@Autowired
-	SpaceDAO spaceDao;
+	PlaceDAO placeDao;
 	
 	@Autowired
 	UserDetailsDAO userDetailsDao;
@@ -80,8 +80,8 @@ public class UserDeleteController {
 			
 			host.canAccess(userDetails);
 			
-			if(spaceDao.getSpaceCountOfHost(host.getId()) > 0) {
-				return ControllerHelper.popupMessageAndRedirect("Delete all your spaces before unregistering.", "host/dashboard");
+			if(placeDao.getPlaceCountOfHost(host.getId()) > 0) {
+				return ControllerHelper.popupMessageAndRedirect("Delete all your places before unregistering.", "host/dashboard");
 			}else {
 				sessionManager.logoutUser(httpSession);
 				
@@ -112,11 +112,11 @@ public class UserDeleteController {
 			
 			Date current = timeAdvancementManagement.getCurrentDate();
 			
-			List<Booking> bookings = guest.getBookings();
+			List<Reservation> reservations = guest.getReservations();
 			
-			for (Booking booking : bookings) {
-				if(booking.dateOfCheckOut().after(current)) {
-					return ControllerHelper.popupMessageAndRedirect("Cannot delete Guest.Guest has future booking.", "guest/dashboard");
+			for (Reservation reservation : reservations) {
+				if(reservation.dateOfCheckOut().after(current)) {
+					return ControllerHelper.popupMessageAndRedirect("Cannot delete Guest.Guest has future reservation.", "guest/dashboard");
 				}
 			}
 			

@@ -2,15 +2,15 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Space List</title>
+<title>Place List</title>
 </head>
 <body>
-<h1>Space List</h1>
+<h1>Place List</h1>
 <p style="color:red">[[${errorMessage}]]</p>
-<div th:if="${spaces != null}">
+<div th:if="${places != null}">
     <ul>
-       <li th:each="space : ${spaces}" >
-       		<a th:text="${space.spaceDetails.name}" th:href="@{${op} + '?spaceId=' + ${space.id}}"></a>
+       <li th:each="place : ${places}" >
+       		<a th:text="${place.placeDetails.name}" th:href="@{${op} + '?placeId=' + ${place.id}}"></a>
        </li>
     </ul>
 </div>

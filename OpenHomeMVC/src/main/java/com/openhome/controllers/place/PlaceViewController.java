@@ -1,4 +1,4 @@
-package com.openhome.controllers.space;
+package com.openhome.controllers.place;
 
 import javax.servlet.http.HttpSession;
 
@@ -10,31 +10,31 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.openhome.Json;
-import com.openhome.aop.helper.annotation.ValidSpaceId;
-import com.openhome.dao.SpaceDAO;
+import com.openhome.aop.helper.annotation.ValidPlaceId;
+import com.openhome.dao.PlaceDAO;
 import com.openhome.data.Host;
-import com.openhome.data.Space;
-import com.openhome.data.SpaceDetails;
+import com.openhome.data.Place;
+import com.openhome.data.PlaceDetails;
 import com.openhome.session.SessionManager;
 
 @Controller
-@RequestMapping("/space/view")
-public class SpaceViewController {
+@RequestMapping("/place/view")
+public class PlaceViewController {
 
 	@Autowired
-	SpaceDAO spaceDao;
+	PlaceDAO placeDao;
 	
 	@Autowired
 	SessionManager sessionManager;
 	
 	@RequestMapping(method=RequestMethod.GET)
-	@ValidSpaceId
-	public String viewForm( @RequestParam(value="spaceId",required=false) Long spaceId , @RequestParam(value="preview",required=false) Boolean preview , Model model , HttpSession httpSession ) {
-		System.out.println("SpaceViewController");
+	@ValidPlaceId
+	public String viewForm( @RequestParam(value="placeId",required=false) Long placeId , @RequestParam(value="preview",required=false) Boolean preview , Model model , HttpSession httpSession ) {
+		System.out.println("PlaceViewController");
 		
-		Space s = spaceDao.getOne(spaceId);
+		Place s = placeDao.getOne(placeId);
 		
-		model.addAttribute("space", s );
+		model.addAttribute("place", s );
 		
 		model.addAttribute("hostAccess", false);
 		
@@ -42,7 +42,7 @@ public class SpaceViewController {
 			model.addAttribute("hostAccess", sessionManager.getHostId(httpSession).equals(s.getHost().getId())  );
 		}
 		
-		return preview == null ? "space/view" : "space/preview";
+		return preview == null ? "place/view" : "place/preview";
 	}
 	
 }

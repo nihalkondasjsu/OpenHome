@@ -2,24 +2,24 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Booking Create</title>
+<title>Reservation Create</title>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 </head>
 <body>
-<h1>Booking Create</h1>
-<form th:action="@{'/booking/create?spaceId=' + ${space.id}}" method="POST">
+<h1>Reservation Create</h1>
+<form th:action="@{'/reservation/create?placeId=' + ${place.id}}" method="POST">
 		<input type="date" 
 	       name="checkInDateString" id="checkIn" onchange="dateChanged()"
 	       format-value="yyyy-MM-dd">
 	    <input type="date" 
 	       name="checkOutDateString" id="checkOut" onchange="dateChanged()"
 	       format-value="yyyy-MM-dd">
-	    <p >Price for your booking is : $<input id="estimatePrice" readonly value="0.0"></p>
+	    <p >Price for your reservation is : $<input id="estimatePrice" readonly value="0.0"></p>
 	    <input type="submit">
 	</form>
 	<script>
-		var weekdayPrice = [[${space.spaceDetails.weekdayRentPrice}]] ;
-		var weekendPrice = [[${space.spaceDetails.weekendRentPrice}]] ;
+		var weekdayPrice = [[${place.placeDetails.weekdayRentPrice}]] ;
+		var weekendPrice = [[${place.placeDetails.weekendRentPrice}]] ;
 		
 		console.log(weekdayPrice);
 		console.log(weekendPrice);

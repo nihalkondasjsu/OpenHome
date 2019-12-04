@@ -29,10 +29,10 @@ public class Host {
 			cascade=CascadeType.ALL,
 			orphanRemoval=true,
 			mappedBy = "host")
-	private List<Space> rentingSpaces;
+	private List<Place> rentingPlaces;
 	
 	public Host() {
-		rentingSpaces = new ArrayList<Space>();
+		rentingPlaces = new ArrayList<Place>();
 		userDetails = new UserDetails();
 	}
 
@@ -52,20 +52,20 @@ public class Host {
 		this.userDetails = userDetails;
 	}
 
-	public List<Space> getRentingSpaces() {
-		return rentingSpaces;
+	public List<Place> getRentingPlaces() {
+		return rentingPlaces;
 	}
 
-	public void setRentingSpaces(List<Space> rentingSpaces) {
-		this.rentingSpaces = rentingSpaces;
+	public void setRentingPlaces(List<Place> rentingPlaces) {
+		this.rentingPlaces = rentingPlaces;
 	}
 
-	public void addSpace(Space space) {
+	public void addPlace(Place place) {
 		if(getUserDetails().verifiedEmail() == false)
 			return;
-		rentingSpaces.add(space);
-		System.out.println(this.getId()+" host | space "+space.getId());
-		space.setHost(this);
+		rentingPlaces.add(place);
+		System.out.println(this.getId()+" host | place "+place.getId());
+		place.setHost(this);
 	}
 
 	public boolean canAccess(UserDetails userDetails) throws IllegalAccessException {

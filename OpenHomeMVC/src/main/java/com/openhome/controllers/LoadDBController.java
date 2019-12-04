@@ -23,13 +23,13 @@ import com.openhome.FileSystem;
 import com.openhome.dao.GuestDAO;
 import com.openhome.dao.HostDAO;
 import com.openhome.dao.ImageDAO;
-import com.openhome.dao.SpaceDAO;
+import com.openhome.dao.PlaceDAO;
 import com.openhome.data.Address;
 import com.openhome.data.Guest;
 import com.openhome.data.Host;
 import com.openhome.data.Image;
-import com.openhome.data.Space;
-import com.openhome.data.SpaceDetails;
+import com.openhome.data.Place;
+import com.openhome.data.PlaceDetails;
 import com.openhome.data.UserDetails;
 import com.openhome.data.UserVerifiedDetails;
 import com.openhome.tam.TimeAdvancementManagement;
@@ -44,7 +44,7 @@ public class LoadDBController extends SampleDBData{
 	GuestDAO guestDAO;
 
 	@Autowired
-	SpaceDAO spaceDAO;
+	PlaceDAO placeDAO;
 	
 	@Autowired
 	ImageDAO imageDAO;
@@ -60,7 +60,7 @@ public class LoadDBController extends SampleDBData{
 		
 		hostDAO.deleteAll();
 		guestDAO.deleteAll();
-		spaceDAO.deleteAll();
+		placeDAO.deleteAll();
 		
 		return "index";
 	}
@@ -68,16 +68,16 @@ public class LoadDBController extends SampleDBData{
 	@GetMapping("/test")
 	public String test() {
 
-//		List<Space> spaces = spaceDAO.getSpacesByLocationAndDates(37.336259-0.000010, 37.336259+0.000010, -121.887067-0.000010, -121.887067+0.000010,(long)3,(long)7);
+//		List<Place> places = placeDAO.getPlacesByLocationAndDates(37.336259-0.000010, 37.336259+0.000010, -121.887067-0.000010, -121.887067+0.000010,(long)3,(long)7);
 //		
-//		for (Space space : spaces) {
-//			System.out.printf("%s %s\n", space.getSpaceDetails().getAddress().getAddressLine1() ,space.getSpaceDetails().getAddress().getAddressLine2() );
+//		for (Place place : places) {
+//			System.out.printf("%s %s\n", place.getPlaceDetails().getAddress().getAddressLine1() ,place.getPlaceDetails().getAddress().getAddressLine2() );
 //		}
 //		
-//		spaces = spaceDAO.getSpacesByZipAndDates("95112",(long)3,(long)7);
+//		places = placeDAO.getPlacesByZipAndDates("95112",(long)3,(long)7);
 //		
-//		for (Space space : spaces) {
-//			System.out.printf("%s %s\n", space.getSpaceDetails().getAddress().getAddressLine1() ,space.getSpaceDetails().getAddress().getAddressLine2() );
+//		for (Place place : places) {
+//			System.out.printf("%s %s\n", place.getPlaceDetails().getAddress().getAddressLine1() ,place.getPlaceDetails().getAddress().getAddressLine2() );
 //		}
 		
 		return "index";
@@ -90,7 +90,7 @@ public class LoadDBController extends SampleDBData{
 		
 		hostDAO.deleteAll();
 		guestDAO.deleteAll();
-		spaceDAO.deleteAll();
+		placeDAO.deleteAll();
 		
 		reloadDB1();
 		
@@ -117,11 +117,11 @@ public class LoadDBController extends SampleDBData{
 		
 		
 		for(int i = 0 ; i < 10 ; i++ ) {
-			List<Space> spaces = new ArrayList<Space>();
+			List<Place> places = new ArrayList<Place>();
 			for (int j = 0; j < 5; j++) {
-				Space s = new Space();
+				Place s = new Place();
 				
-				SpaceDetails sd = getRandomSpaceDetails();
+				PlaceDetails sd = getRandomPlaceDetails();
 				
 				sd.setName("place "+k);
 				sd.setDescription(sd.getName()+" is a great place.");
@@ -145,15 +145,15 @@ public class LoadDBController extends SampleDBData{
 				
 				sd.setAddress(a);
 				
-				s.setSpaceDetails(sd);
+				s.setPlaceDetails(sd);
 				
-				spaces.add(s);
+				places.add(s);
 			}
 			UserDetails ud = new UserDetails("a"+i+"@b.c","ab@c*"+i,"00"+i,new UserVerifiedDetails(),"a"+i,"bc"+i);
 			//if(i != 2) {
 				ud.setVerifiedDetails(new UserVerifiedDetails(ud.getEmail(),ud.getPhoneNumber()));
 			//}
-			createHost(ud,spaces);
+			createHost(ud,places);
 			
 			UserDetails udg = new UserDetails("i"+i+"@j.k","ij@k*"+i,"10"+i,new UserVerifiedDetails(),"i"+i,"jk"+i);
 			//if(i != 2) {
@@ -165,18 +165,18 @@ public class LoadDBController extends SampleDBData{
 		
 	}
 
-	private void createHost(UserDetails userDetails, List<Space> rentingSpaces) {
+	private void createHost(UserDetails userDetails, List<Place> rentingPlaces) {
 		Host h = new Host();
 		UserVerifiedDetails userVerifiedDetails = userDetails.getVerifiedDetails();
 		userDetails.prepareForRegistration(timeAdvancementManagement.getCurrentDate());
 		userDetails.setVerifiedDetails(userVerifiedDetails);
 		h.setUserDetails(userDetails);
-		for (Space space : rentingSpaces) {
-			h.addSpace(space);
+		for (Place place : rentingPlaces) {
+			h.addPlace(place);
 		}
 		hostDAO.save(h);
 		System.out.println("=========> host saved"+h.getId());
-		System.out.println("=========> host spaces"+rentingSpaces.size());
+		System.out.println("=========> host places"+rentingPlaces.size());
 	}
 	
 	private void createGuest(UserDetails userDetails) {

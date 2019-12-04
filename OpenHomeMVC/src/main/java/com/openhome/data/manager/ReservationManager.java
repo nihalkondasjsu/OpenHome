@@ -6,15 +6,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.openhome.aop.helper.annotation.Debug;
-import com.openhome.data.Booking;
-import com.openhome.data.Booking.BookingState;
+import com.openhome.data.Reservation;
+import com.openhome.data.Reservation.ReservationState;
 import com.openhome.data.Transaction;
 import com.openhome.data.Transaction.TransactionNature;
 import com.openhome.data.Transaction.TransactionUser;
 import com.openhome.mailer.Mailer;
 
 @Component
-public class BookingManager {
+public class ReservationManager {
 
 	private static final Double SERVICE_CHARGE = 1.00;
 	private static final Long MS_24_HOURS = 24*60*60*1000l;
@@ -27,24 +27,24 @@ public class BookingManager {
 	@Autowired
 	public Mailer mailer;
 	
-	public Booking booking;
+	public Reservation reservation;
 	
-	public BookingManager() {
+	public ReservationManager() {
 		
 	}
 
-	public Booking getBooking() {
-		return booking;
+	public Reservation getReservation() {
+		return reservation;
 	}
 
 	@Debug
-	public void setBooking(Booking booking) {
-		this.booking = booking;
+	public void setReservation(Reservation reservation) {
+		this.reservation = reservation;
 	}
 	
 	@Debug
 	public Transaction getTransactionByNatureUserAndDate(TransactionNature transactionNature, Transaction.TransactionUser transactionUser,Date dateToCharge) {
-		for (Transaction transaction : getBooking().getTransactions()) {
+		for (Transaction transaction : getReservation().getTransactions()) {
 			if(transaction.getTransactionNature().equals(transactionNature) && transaction.getTransactionUser().equals(transactionUser) && compareDMY(dateToCharge, transaction.getDayToChargeFor())) {
 				return transaction;
 			}
@@ -65,11 +65,11 @@ public class BookingManager {
 		Double amount = getPriceForDay(dayToChargeFor);
 		
 		if(amount != 0) {
-			Transaction transaction1 = new Transaction(amount*SERVICE_CHARGE,currentTime,dayToChargeFor,getBooking(),TransactionNature.Charge,Transaction.TransactionUser.Guest);
-			getBooking().addTransaction(transaction1);
+			Transaction transaction1 = new Transaction(amount*SERVICE_CHARGE,currentTime,dayToChargeFor,getReservation(),TransactionNature.Charge,Transaction.TransactionUser.Guest);
+			getReservation().addTransaction(transaction1);
 			
-			Transaction transaction2 = new Transaction(amount,currentTime,dayToChargeFor,getBooking(),TransactionNature.Payment,Transaction.TransactionUser.Host);
-			getBooking().addTransaction(transaction2);
+			Transaction transaction2 = new Transaction(amount,currentTime,dayToChargeFor,getReservation(),TransactionNature.Payment,Transaction.TransactionUser.Host);
+			getReservation().addTransaction(transaction2);
 		}
 		
 	}
@@ -86,11 +86,11 @@ public class BookingManager {
 		Double amount = getGuestCancellationFeeForDay(currentTime,dayToChargeFor);
 		
 		if(amount != 0) {
-			Transaction transaction1 = new Transaction(amount*SERVICE_CHARGE,currentTime,dayToChargeFor,getBooking(),TransactionNature.Fee,Transaction.TransactionUser.Guest);
-			getBooking().addTransaction(transaction1);
+			Transaction transaction1 = new Transaction(amount*SERVICE_CHARGE,currentTime,dayToChargeFor,getReservation(),TransactionNature.Fee,Transaction.TransactionUser.Guest);
+			getReservation().addTransaction(transaction1);
 			
-			Transaction transaction2 = new Transaction(amount,currentTime,dayToChargeFor,getBooking(),TransactionNature.Payment,Transaction.TransactionUser.Host);
-			getBooking().addTransaction(transaction2);
+			Transaction transaction2 = new Transaction(amount,currentTime,dayToChargeFor,getReservation(),TransactionNature.Payment,Transaction.TransactionUser.Host);
+			getReservation().addTransaction(transaction2);
 		}
 		
 	}
@@ -106,11 +106,11 @@ public class BookingManager {
 		
 		Double amount = getHostCancellationFeeForDay(currentTime,dayToChargeFor);
 		if(amount != 0) {
-			Transaction transaction1 = new Transaction(amount*SERVICE_CHARGE,currentTime,dayToChargeFor,getBooking(),TransactionNature.Fee,Transaction.TransactionUser.Host);
-			getBooking().addTransaction(transaction1);
+			Transaction transaction1 = new Transaction(amount*SERVICE_CHARGE,currentTime,dayToChargeFor,getReservation(),TransactionNature.Fee,Transaction.TransactionUser.Host);
+			getReservation().addTransaction(transaction1);
 			
-			Transaction transaction2 = new Transaction(amount,currentTime,dayToChargeFor,getBooking(),TransactionNature.Payment,Transaction.TransactionUser.Guest);
-			getBooking().addTransaction(transaction2);
+			Transaction transaction2 = new Transaction(amount,currentTime,dayToChargeFor,getReservation(),TransactionNature.Payment,Transaction.TransactionUser.Guest);
+			getReservation().addTransaction(transaction2);
 		}
 		
 	}
@@ -129,15 +129,15 @@ public class BookingManager {
 	
 	
 	@Debug
-	public void guestCancelBooking(Date currentTime) {
+	public void guestCancelReservation(Date currentTime) {
 		for (int i = 0 ; i < 2 ; i++) {
 			chargeGuestFeeForDay(currentTime, new Date(currentTime.getTime()+(i*MS_24_HOURS)));
 		}
 	}
 	
 	@Debug
-	public void hostCancelBooking(Date currentTime) {
-		for (int i = getBooking().getBookingState() == BookingState.CheckedIn ? 1 : 0 ; i < 7 ; i++) {
+	public void hostCancelReservation(Date currentTime) {
+		for (int i = getReservation().getReservationState() == ReservationState.CheckedIn ? 1 : 0 ; i < 7 ; i++) {
 			chargeHostFeeForDay(currentTime, new Date(currentTime.getTime()+(i*MS_24_HOURS)));
 		}
 	}
@@ -148,8 +148,8 @@ public class BookingManager {
 	}
 	
 	@Debug
-	public boolean bookingEnded() {
-		return !(getBooking().getBookingState().equals(BookingState.Booked) || getBooking().getBookingState().equals(BookingState.CheckedIn));
+	public boolean reservationEnded() {
+		return !(getReservation().getReservationState().equals(ReservationState.Booked) || getReservation().getReservationState().equals(ReservationState.CheckedIn));
 	}
 	
 	@Debug
@@ -165,25 +165,25 @@ public class BookingManager {
 	private double getPriceForDay(Date date) {
 		date.setHours(0);date.setMinutes(0);date.setSeconds(0);
 		
-		Date checkInDate = new Date(getBooking().getCheckIn());
+		Date checkInDate = new Date(getReservation().getCheckIn());
 
 		checkInDate.setHours(0);checkInDate.setMinutes(0);checkInDate.setSeconds(0);
 		
-		Date checkOutDate = new Date(getBooking().getCheckOut());
+		Date checkOutDate = new Date(getReservation().getCheckOut());
 		
 		checkOutDate.setHours(0);checkOutDate.setMinutes(0);checkOutDate.setSeconds(0);
 		
 		if(date.after(checkOutDate) || date.getTime() == checkOutDate.getTime()) {
-			//date being asked for price is the last day(morning) of the booking (unchargeable) or after the last day
+			//date being asked for price is the last day(morning) of the reservation (unchargeable) or after the last day
 			return 0;
 		}
 		
 		if(date.before(checkInDate)) {
-			//date being asked for price is before the booking begins
+			//date being asked for price is before the reservation begins
 			return 0;
 		}
 		
-		return (date.getDay() == 5 || date.getDay() == 6) ? getBooking().getWeekendRentPrice() : getBooking().getWeekdayRentPrice();
+		return (date.getDay() == 5 || date.getDay() == 6) ? getReservation().getWeekendRentPrice() : getReservation().getWeekdayRentPrice();
 	}
 
 	@Debug
@@ -197,91 +197,91 @@ public class BookingManager {
 	@Debug
 	public void performGuestCheckIn(Date currentDate) throws IllegalAccessException {
 		
-		processBooking(currentDate);
+		processReservation(currentDate);
 		
-		if(getBooking().getBookingState() != BookingState.Booked) {
+		if(getReservation().getReservationState() != ReservationState.Booked) {
 			throw new IllegalAccessException("Check In not Allowed");
 		}
 		
-		if(currentDate.before(new Date(getBooking().getCheckIn()))) {
+		if(currentDate.before(new Date(getReservation().getCheckIn()))) {
 			throw new IllegalAccessException("It is too early to Check In");
 		}
 	
-		getBooking().setActualCheckIn(currentDate.getTime());
+		getReservation().setActualCheckIn(currentDate.getTime());
 		
-		getBooking().setBookingState(BookingState.CheckedIn);
+		getReservation().setReservationState(ReservationState.CheckedIn);
 	}
 	
 	@Debug
 	public void performGuestCheckOut(Date currentDate) throws IllegalAccessException {
 		
-		processBooking(currentDate);
+		processReservation(currentDate);
 		
-		if(getBooking().getBookingState() != BookingState.CheckedIn) {
+		if(getReservation().getReservationState() != ReservationState.CheckedIn) {
 			throw new IllegalAccessException("Check Out is not Allowed");
 		}
 		
-		if(currentDate.after(new Date(getBooking().getCheckOut()))) {
+		if(currentDate.after(new Date(getReservation().getCheckOut()))) {
 			throw new IllegalAccessException("It is too late to Check Out");
 		}
 
 		chargeGuestForDay(currentDate, currentDate);
 	
-		if(currentDate.before(new Date(getBooking().getCheckOut()-MS_24_HOURS))) {
+		if(currentDate.before(new Date(getReservation().getCheckOut()-MS_24_HOURS))) {
 			//early checkout
 			chargeGuestFeeForDay(currentDate, new Date(currentDate.getTime()+MS_24_HOURS));
 		}
 		
-		getBooking().setActualCheckOut(currentDate.getTime());
+		getReservation().setActualCheckOut(currentDate.getTime());
 		
-		getBooking().setBookingState(BookingState.CheckedOut);
+		getReservation().setReservationState(ReservationState.CheckedOut);
 		
 	}
 	
 	@Debug
 	public void performGuestCancel(Date currentDate) throws IllegalAccessException {
 		
-		processBooking(currentDate);
+		processReservation(currentDate);
 		
-		if(getBooking().getBookingState()!=BookingState.Booked) {
+		if(getReservation().getReservationState()!=ReservationState.Booked) {
 			throw new IllegalAccessException("Cancellation is not Allowed.");
 		}
 		
-		guestCancelBooking(currentDate);
+		guestCancelReservation(currentDate);
 		
-		getBooking().setActualCheckOut(currentDate.getTime());
+		getReservation().setActualCheckOut(currentDate.getTime());
 
-		getBooking().setBookingState(BookingState.GuestCancelled);
+		getReservation().setReservationState(ReservationState.GuestCancelled);
 
 	}
 	
 	@Debug
 	public void performHostCancel(Date currentDate) throws IllegalAccessException {
-		processBooking(currentDate);
+		processReservation(currentDate);
 		
-		if(bookingEnded()) {
+		if(reservationEnded()) {
 			throw new IllegalAccessException("Cancellation is not Allowed.");
 		}
 		
-		hostCancelBooking(currentDate);
+		hostCancelReservation(currentDate);
 		
-		//getBooking().setActualCheckOut(currentDate.getTime());
-		getBooking().setBookingState(BookingState.HostCancelled);
+		//getReservation().setActualCheckOut(currentDate.getTime());
+		getReservation().setReservationState(ReservationState.HostCancelled);
 	}
 
 	@Debug
-	public void processBooking(Date currentDate) {
-		if(bookingEnded()) {
-			// booking is either checked-out or cancelled
-			// in that case no need to process this booking
-			System.out.println("Booking Ended");
+	public void processReservation(Date currentDate) {
+		if(reservationEnded()) {
+			// reservation is either checked-out or cancelled
+			// in that case no need to process this reservation
+			System.out.println("Reservation Ended");
 			return;
 		}
 		
-		// booking is not finished
+		// reservation is not finished
 		
-		Date checkInTime = new Date(getBooking().getCheckIn());
-		Date checkOutTime = new Date(getBooking().getCheckOut());
+		Date checkInTime = new Date(getReservation().getCheckIn());
+		Date checkOutTime = new Date(getReservation().getCheckOut());
 		
 		if(currentDate.before(checkInTime)) {
 			// nothing to process before the actual check-in time
@@ -291,14 +291,14 @@ public class BookingManager {
 		
 		// its time for the guest to check-in ( current time is after 3pm of first day )
 		// checkInTime < currentTime < checkOutTime
-		if(getBooking().getActualCheckIn() == null) {
+		if(getReservation().getActualCheckIn() == null) {
 			// no record of guest check-in found
-			if(currentDate.before(new Date(getBooking().getCheckIn()+MS_12_HOURS))) {
+			if(currentDate.before(new Date(getReservation().getCheckIn()+MS_12_HOURS))) {
 				// guest still has 12 hours to check-in
 				System.out.println("Check in day first 12 hours");
 				return;
 			}
-			// guest has not checked in within the first 12 hours of their booking 
+			// guest has not checked in within the first 12 hours of their reservation 
 			performGuestNoShowProtocol(currentDate);
 			System.out.println("Guest no show");
 			return;

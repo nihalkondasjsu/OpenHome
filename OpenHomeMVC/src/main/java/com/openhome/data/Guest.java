@@ -26,11 +26,11 @@ public class Guest {
 	@OneToMany(fetch = FetchType.LAZY,
 			orphanRemoval=true,
 			mappedBy = "guest")
-	private List<Booking> bookings;
+	private List<Reservation> reservations;
 	
 	public Guest() {
 		userDetails = new UserDetails();
-		bookings = new ArrayList<Booking>();
+		reservations = new ArrayList<Reservation>();
 	}
 
 	public Long getId() {
@@ -49,12 +49,12 @@ public class Guest {
 		this.userDetails = userDetails;
 	}
 
-	public List<Booking> getBookings() {
-		return bookings;
+	public List<Reservation> getReservations() {
+		return reservations;
 	}
 
-	public void setBookings(List<Booking> bookings) {
-		this.bookings = bookings;
+	public void setReservations(List<Reservation> reservations) {
+		this.reservations = reservations;
 	}
 	
 	public boolean canAccess(UserDetails userDetails) throws IllegalAccessException {

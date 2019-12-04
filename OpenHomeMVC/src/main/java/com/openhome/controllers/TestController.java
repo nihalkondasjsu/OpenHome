@@ -9,33 +9,33 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 
-import com.openhome.dao.BookingDAO;
+import com.openhome.dao.ReservationDAO;
 import com.openhome.dao.GuestDAO;
-import com.openhome.dao.SpaceDAO;
-import com.openhome.data.Booking;
+import com.openhome.dao.PlaceDAO;
+import com.openhome.data.Reservation;
 import com.openhome.data.Guest;
-import com.openhome.data.Space;
-import com.openhome.data.manager.BookingManager;
+import com.openhome.data.Place;
+import com.openhome.data.manager.ReservationManager;
 import com.openhome.tam.TimeAdvancementManagement;
 
 @Controller
 public class TestController {
 
 	@Autowired
-	BookingManager bookingManager;
+	ReservationManager reservationManager;
 	
 	@Autowired
-	BookingDAO bookingDao;
+	ReservationDAO reservationDao;
 	
 	@Autowired
-	SpaceDAO spaceDao;
+	PlaceDAO placeDao;
 	
 	@Autowired
 	GuestDAO guestDao;
 	
-	Space space;
+	Place place;
 	Guest guest;
-	Booking booking;
+	Reservation reservation;
 	Date currentDate;
 	
 	SimpleDateFormat simpleDateFormat;
@@ -53,56 +53,56 @@ public class TestController {
 	}
 	
 	public void testInit() throws Exception {
-		space = spaceDao.getOne(510l);
+		place = placeDao.getOne(510l);
 		
 		guest = guestDao.getOne(492l);
 		
-		booking = new Booking();
+		reservation = new Reservation();
 
 		currentDate = simpleDateFormat.parse("2020-04-10 10:00");
 		
-		booking.setCheckInDateString("2020-04-20");
-		booking.setCheckOutDateString("2020-04-30");
+		reservation.setCheckInDateString("2020-04-20");
+		reservation.setCheckOutDateString("2020-04-30");
 		
 		try {
-			booking.prepareForRegistration(currentDate, space, guest);
+			reservation.prepareForRegistration(currentDate, place, guest);
 		} catch (ParseException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
-		System.out.println(booking);
+		System.out.println(reservation);
 		
-		bookingManager.setBooking(booking);
+		reservationManager.setReservation(reservation);
 		
 	}
 	
 	public void testNoShow() throws Exception {
 		testInit();
-		bookingManager.processBooking(currentDate);
+		reservationManager.processReservation(currentDate);
 
 		currentDate = simpleDateFormat.parse("2020-04-20 14:59");
 
-		bookingManager.processBooking(currentDate);
+		reservationManager.processReservation(currentDate);
 
-		//bookingManager.performGuestCheckIn(currentDate);
+		//reservationManager.performGuestCheckIn(currentDate);
 		
 		currentDate = simpleDateFormat.parse("2020-04-20 15:01");
 
-		bookingManager.processBooking(currentDate);
+		reservationManager.processReservation(currentDate);
 		
 		currentDate = simpleDateFormat.parse("2020-04-21 02:59");
 		
-		bookingManager.processBooking(currentDate);		
+		reservationManager.processReservation(currentDate);		
 		
 		currentDate = simpleDateFormat.parse("2020-04-21 03:01");
 
-		bookingManager.processBooking(currentDate);
+		reservationManager.processReservation(currentDate);
 		
-		System.out.println(booking);
+		System.out.println(reservation);
 		
-		if(booking.getBookingState() != Booking.BookingState.GuestCancelled) {
-			throw new Exception("Booking was not in GuestCancelled state . No Show did not happen.");
+		if(reservation.getReservationState() != Reservation.ReservationState.GuestCancelled) {
+			throw new Exception("Reservation was not in GuestCancelled state . No Show did not happen.");
 		}
 	}
 	
@@ -111,15 +111,15 @@ public class TestController {
 
 		currentDate = simpleDateFormat.parse("2020-04-30 10:59");
 		
-		bookingManager.processBooking(currentDate);
+		reservationManager.processReservation(currentDate);
 		
 		currentDate = simpleDateFormat.parse("2020-04-30 11:01");
 		
-		bookingManager.processBooking(currentDate);
+		reservationManager.processReservation(currentDate);
 		
-		System.out.println(booking);
+		System.out.println(reservation);
 		
-		if(booking.getBookingState() != Booking.BookingState.CheckedOut) {
+		if(reservation.getReservationState() != Reservation.ReservationState.CheckedOut) {
 			throw new Exception("Auto check out failed");
 		}
 	}
@@ -133,11 +133,11 @@ public class TestController {
 		
 		currentDate = simpleDateFormat.parse("2020-04-20 15:01");
 
-		bookingManager.performGuestCheckIn(currentDate);
+		reservationManager.performGuestCheckIn(currentDate);
 		
-		System.out.println(booking);
+		System.out.println(reservation);
 		
-		if(booking.getBookingState() != Booking.BookingState.CheckedIn) {
+		if(reservation.getReservationState() != Reservation.ReservationState.CheckedIn) {
 			throw new Exception("Guest Could not check in.");
 		}
 	}

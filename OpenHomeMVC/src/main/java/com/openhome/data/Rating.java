@@ -31,7 +31,7 @@ public class Rating {
 	private Date createdDate;
 	
 	@OneToOne(fetch = FetchType.LAZY)
-	private Booking booking;
+	private Reservation reservation;
 	
 	public Rating() {
 		
@@ -125,9 +125,9 @@ public class Rating {
 		this.createdDate = createdDate;
 	}
 	
-	public void prepareForRegistration(Date createdDate,Booking booking) {
+	public void prepareForRegistration(Date createdDate,Reservation reservation) {
 		this.createdDate = createdDate;
-		this.booking = booking;
+		this.reservation = reservation;
 	}
 	
 }

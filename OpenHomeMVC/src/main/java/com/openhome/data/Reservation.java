@@ -29,9 +29,9 @@ import com.openhome.tam.TimeAdvancementManagement;
 
 @Entity
 @Component
-public class Booking {
+public class Reservation {
 	
-	public enum BookingState{
+	public enum ReservationState{
 		Booked,CheckedIn,CheckedOut,GuestCancelled,HostCancelled,HostBlock
 	}
 
@@ -64,12 +64,12 @@ public class Booking {
 	private Long actualCheckOut;
 	
 	@Enumerated(EnumType.STRING)
-	private BookingState bookingState;
+	private ReservationState reservationState;
 	
 	@ManyToOne(fetch = FetchType.LAZY)
-	private Space space;
+	private Place place;
 	
-	@OneToMany(fetch=FetchType.LAZY,orphanRemoval=true,mappedBy = "booking")
+	@OneToMany(fetch=FetchType.LAZY,orphanRemoval=true,mappedBy = "reservation")
 	private List<Transaction> transactions;
 	
 	@OneToOne(orphanRemoval=true)
@@ -84,11 +84,11 @@ public class Booking {
 	@Column(nullable = false)
 	private Double weekendRentPrice = 140.0;
 	
-	public Booking() {
+	public Reservation() {
 		// TODO Auto-generated constructor stub
 		createdDate = new Date();
 		this.transactions = new ArrayList<Transaction>();
-		bookingState = BookingState.Booked;
+		reservationState = ReservationState.Booked;
 	}
 	
 	public Long getId() {
@@ -131,12 +131,12 @@ public class Booking {
 		this.checkOut = checkOut;
 	}
 
-	public Space getSpace() {
-		return space;
+	public Place getPlace() {
+		return place;
 	}
 
-	public void setSpace(Space space) {
-		this.space = space;
+	public void setPlace(Place place) {
+		this.place = place;
 	}
 
 	public List<Transaction> getTransactions() {
@@ -207,12 +207,12 @@ public class Booking {
 		this.actualCheckOut = actualCheckOut;
 	}
 	
-	public BookingState getBookingState() {
-		return bookingState;
+	public ReservationState getReservationState() {
+		return reservationState;
 	}
 
-	public void setBookingState(BookingState bookingState) {
-		this.bookingState = bookingState;
+	public void setReservationState(ReservationState reservationState) {
+		this.reservationState = reservationState;
 	}
 	
 	public String getRequiredDays() {
@@ -239,42 +239,42 @@ public class Booking {
 		this.checkOutDateString = checkOutDateString;
 	}
 	
-	public void prepareForRegistration(Date createdDate,Space space,Guest guest) throws ParseException {
+	public void prepareForRegistration(Date createdDate,Place place,Guest guest) throws ParseException {
 		this.createdDate = createdDate;
 		String pattern = "yyyy-MM-dd HH:mm";
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
 		this.checkIn = simpleDateFormat.parse(checkInDateString+" "+CHECK_IN_TIME).getTime();
 		this.checkOut = simpleDateFormat.parse(checkOutDateString+" "+CHECK_OUT_TIME).getTime();
 		if(this.checkIn<createdDate.getTime() || this.checkOut - this.checkIn < 20 * 60 * 60 * 1000) {
-			throw new IllegalArgumentException("Invalid Booking");
+			throw new IllegalArgumentException("Invalid Reservation");
 		}
 		this.requiredDays = weekDays();
 		this.actualCheckIn = null;
 		this.actualCheckOut = checkOut;
-		this.bookingState = BookingState.Booked;
-		this.space = space;
+		this.reservationState = ReservationState.Booked;
+		this.place = place;
 		this.transactions = new ArrayList<Transaction>();
 		this.rating = null;
 		this.guest = guest;
-		this.weekdayRentPrice = this.space.getSpaceDetails().getWeekdayRentPrice();
-		this.weekendRentPrice = this.space.getSpaceDetails().getWeekendRentPrice();
+		this.weekdayRentPrice = this.place.getPlaceDetails().getWeekdayRentPrice();
+		this.weekendRentPrice = this.place.getPlaceDetails().getWeekendRentPrice();
 	}
 	
-	public void prepareForHostBlock(Date createdDate,Space space) throws ParseException {
+	public void prepareForHostBlock(Date createdDate,Place place) throws ParseException {
 		this.createdDate = createdDate;
 		String pattern = "yyyy-MM-dd HH:mm";
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
 		this.checkIn = simpleDateFormat.parse(checkInDateString+" "+CHECK_IN_TIME).getTime();
 		this.checkOut = simpleDateFormat.parse(checkOutDateString+" "+CHECK_OUT_TIME).getTime();
 		if(this.checkIn<createdDate.getTime() || this.checkOut - this.checkIn < 20 * 60 * 60 * 1000) {
-			throw new IllegalArgumentException("Invalid Booking");
+			throw new IllegalArgumentException("Invalid Reservation");
 		}
-		this.bookingState = BookingState.HostBlock;
-		this.space = space;
+		this.reservationState = ReservationState.HostBlock;
+		this.place = place;
 		this.transactions = new ArrayList<Transaction>();
 		this.rating = null;
-		this.weekdayRentPrice = this.space.getSpaceDetails().getWeekdayRentPrice();
-		this.weekendRentPrice = this.space.getSpaceDetails().getWeekendRentPrice();
+		this.weekdayRentPrice = this.place.getPlaceDetails().getWeekdayRentPrice();
+		this.weekendRentPrice = this.place.getPlaceDetails().getWeekendRentPrice();
 	}
 	
 	public String weekDays() throws ParseException {
@@ -298,13 +298,13 @@ public class Booking {
 	@Override
 	public String toString() {
 		return String.format(
-				"{ createdDate : %s , checkIn : %s , checkOut : %s , actualCheckIn : %s , actualCheckOut : %s , bookingState : %s , transactions: %s , weekdayRentPrice : %f , weekendRentPrice : %f }",
+				"{ createdDate : %s , checkIn : %s , checkOut : %s , actualCheckIn : %s , actualCheckOut : %s , reservationState : %s , transactions: %s , weekdayRentPrice : %f , weekendRentPrice : %f }",
 				createdDate,
 				new Date(checkIn),
 				new Date(checkOut),
 				new Date(actualCheckIn == null ? 0 : actualCheckIn),
 				new Date(actualCheckOut),
-				bookingState,
+				reservationState,
 				transactions,
 				weekdayRentPrice,
 				weekendRentPrice

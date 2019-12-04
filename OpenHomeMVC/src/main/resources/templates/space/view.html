@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Space View</title>
+<title>Place View</title>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 <script>
 	var successLink = "[[${successLink}]]";
@@ -17,29 +17,29 @@ img{
 </style>
 </head>
 <body>
-<h1>Space View</h1>
+<h1>Place View</h1>
 <p style="color:red">[[${errorMessage}]]</p>
 
 <div th:if="${hostAccess == true}">
-	<a th:href="@{'/category/edit/' + ${space.id}}">View Booking Data</a>
-	<a th:href="@{'/space/update?spaceId=' + ${space.id}}">Update Space</a>
-	<a th:href="@{'/space/delete?spaceId=' + ${space.id}}">Delete Space</a>
-	<a th:href="@{'/space/booking/list?spaceId=' + ${space.id}}">Bookings of Space</a>
+	<a th:href="@{'/category/edit/' + ${place.id}}">View Reservation Data</a>
+	<a th:href="@{'/place/update?placeId=' + ${place.id}}">Update Place</a>
+	<a th:href="@{'/place/delete?placeId=' + ${place.id}}">Delete Place</a>
+	<a th:href="@{'/place/reservation/list?placeId=' + ${place.id}}">Reservations of Place</a>
 </div>
 
 <div th:if="${hostAccess == false}">
-	<a th:href="@{'/booking/create?spaceId=' + ${space.id}}">Make Booking</a>
+	<a th:href="@{'/reservation/create?placeId=' + ${place.id}}">Make Reservation</a>
 </div>
 
 <table border="1">
 	<tr>
 		<th>Name</th>
-		<td><input readonly name="name" th:value="${space.spaceDetails.name}" ></td>
+		<td><input readonly name="name" th:value="${place.placeDetails.name}" ></td>
 	</tr>
 	<tr>
 		<th>Property Type</th>
 		<td>
-			<select readonly name='propertyType' th:value="${space.spaceDetails.propertyType}" >
+			<select readonly name='propertyType' th:value="${place.placeDetails.propertyType}" >
 				<option value='House' selected>House</option>
 				<option value='Apartment'>Apartment</option>
 				<option value='Bed and breakfast'>Bed and breakfast</option>
@@ -60,7 +60,7 @@ img{
 	<tr>
 		<th>Room Type</th>
 		<td>
-			<select readonly name='roomType' th:value="${space.spaceDetails.roomType}" >
+			<select readonly name='roomType' th:value="${place.placeDetails.roomType}" >
 				<option value='Entire House' selected>Entire House</option>
 				<option value='Shared Room'>Shared Room</option>
 				<option value='Private Room'>Private Room</option>
@@ -69,43 +69,43 @@ img{
 	</tr>
 	<tr>
 		<th>Accomodates</th>
-		<td><input readonly name='accomodates' th:value="${space.spaceDetails.accomodates}" type='number' ></td>
+		<td><input readonly name='accomodates' th:value="${place.placeDetails.accomodates}" type='number' ></td>
 	</tr>
 	<tr>
 		<th>Amenities</th>
 		<td>
-			<div id='amenities' class='checkBoxContainer' th:attr="svals=${space.spaceDetails.amenities}" vals='Kitchen;Shampoo;Heating;Air conditioning;Washer;Dryer;Wifi;Breakfast;Indoor fireplace;Hangers;Iron;Hair dryer;Laptop friendly workspace;TV;Crib;High chair;Self check-in;Smoke detector;Carbon monoxide detector;Private bathroom;Beachfront;Waterfront'></div>
+			<div id='amenities' class='checkBoxContainer' th:attr="svals=${place.placeDetails.amenities}" vals='Kitchen;Shampoo;Heating;Air conditioning;Washer;Dryer;Wifi;Breakfast;Indoor fireplace;Hangers;Iron;Hair dryer;Laptop friendly workplace;TV;Crib;High chair;Self check-in;Smoke detector;Carbon monoxide detector;Private bathroom;Beachfront;Waterfront'></div>
 		</td>
 	</tr>
 	<tr>
 		<th>Facilities</th>
 		<td>
-			<div id='facilities' class='checkBoxContainer' th:attr="svals=${space.spaceDetails.facilities}" vals='Free parking on premises;Gym;Hot tub;Pool'></div>
+			<div id='facilities' class='checkBoxContainer' th:attr="svals=${place.placeDetails.facilities}" vals='Free parking on premises;Gym;Hot tub;Pool'></div>
 		</td>
 	</tr>
 	<tr>
 		<th>House Rules</th>
 		<td>
-			<div id='houseRules' class='checkBoxContainer' th:attr="svals=${space.spaceDetails.houseRules}" vals='Suitable for events;Pets allowed;Smoking allowed'></div>
+			<div id='houseRules' class='checkBoxContainer' th:attr="svals=${place.placeDetails.houseRules}" vals='Suitable for events;Pets allowed;Smoking allowed'></div>
 		</td>
 	</tr>
 	<tr>
 		<th>Available On</th>
 		<td>
-			<div id='availableWeekDays' class='checkBoxContainer' th:attr="svals=${space.spaceDetails.availableWeekDays}" vals='Sunday;Monday;Tuesday;Wednesday;Thursday;Friday;Saturday'></div>
+			<div id='availableWeekDays' class='checkBoxContainer' th:attr="svals=${place.placeDetails.availableWeekDays}" vals='Sunday;Monday;Tuesday;Wednesday;Thursday;Friday;Saturday'></div>
 		</td>
 	</tr>
 	<tr>
 		<th>Images</th>
 		<td>
 		<div th:if="${hostAccess == true}">
-			<a th:href="@{'/space/updateSpaceImages?op=add&spaceId=' + ${space.id}}" target="_blank">Add Space Images</a>
-			<a th:href="@{'/space/updateSpaceImages?op=delete&spaceId=' + ${space.id}}" target="_blank">Delete Space Images</a>
-			<a th:href="@{'/space/updateSpaceImages?op=rearrange&spaceId=' + ${space.id}}" target="_blank">Rearrange Space Images</a>
+			<a th:href="@{'/place/updatePlaceImages?op=add&placeId=' + ${place.id}}" target="_blank">Add Place Images</a>
+			<a th:href="@{'/place/updatePlaceImages?op=delete&placeId=' + ${place.id}}" target="_blank">Delete Place Images</a>
+			<a th:href="@{'/place/updatePlaceImages?op=rearrange&placeId=' + ${place.id}}" target="_blank">Rearrange Place Images</a>
 		</div>
 			<br>
 			<ul>
-				<li th:each="image : ${space.spaceDetails.images}">
+				<li th:each="image : ${place.placeDetails.images}">
 					<img th:src="${image.url}"/>
 				</li>
 			</ul>
@@ -113,36 +113,36 @@ img{
 	</tr>
 	<tr>
 		<th>No Of Bedrooms</th>
-		<td><input readonly name='noOfBedrooms' th:value="${space.spaceDetails.noOfBedrooms}" type='number' ></td>
+		<td><input readonly name='noOfBedrooms' th:value="${place.placeDetails.noOfBedrooms}" type='number' ></td>
 	</tr>
 	<tr>
 		<th>No Of Bathrooms</th>
-		<td><input readonly name='noOfBathrooms' th:value="${space.spaceDetails.noOfBathrooms}" type='number' ></td>
+		<td><input readonly name='noOfBathrooms' th:value="${place.placeDetails.noOfBathrooms}" type='number' ></td>
 	</tr>
 	<tr>
 		<th>No Of Beds</th>
-		<td><input readonly name='noOfBeds' th:value="${space.spaceDetails.noOfBeds}" type='number' ></td>
+		<td><input readonly name='noOfBeds' th:value="${place.placeDetails.noOfBeds}" type='number' ></td>
 	</tr>
 	<tr>
 		<th>Weekday Rent Price</th>
-		<td><input readonly name='weekdayRentPrice' th:value="${space.spaceDetails.weekdayRentPrice}" type='number' ></td>
+		<td><input readonly name='weekdayRentPrice' th:value="${place.placeDetails.weekdayRentPrice}" type='number' ></td>
 	</tr>
 	<tr>
 		<th>Weekend Rent Price</th>
-		<td><input readonly name='weekendRentPrice' th:value="${space.spaceDetails.weekendRentPrice}" type='number' ></td>
+		<td><input readonly name='weekendRentPrice' th:value="${place.placeDetails.weekendRentPrice}" type='number' ></td>
 	</tr>
 	<tr>
 		<th>SqFt</th>
-		<td><input readonly name='sqft' th:value="${space.spaceDetails.sqft}" type='number' ></td>
+		<td><input readonly name='sqft' th:value="${place.placeDetails.sqft}" type='number' ></td>
 	</tr>
 	<tr>
 		<th>Description</th>
-		<td><textarea readonly name='description' >[[${space.spaceDetails.description}]]</textarea></td>
+		<td><textarea readonly name='description' >[[${place.placeDetails.description}]]</textarea></td>
 	</tr>
 	<tr>
 		<th>Free WiFi</th>
 		<td>
-			<select readonly name='freeWiFi' th:value="${space.spaceDetails.freeWiFi}" required>
+			<select readonly name='freeWiFi' th:value="${place.placeDetails.freeWiFi}" required>
 				<option value='true' selected>Yes</option>
 				<option value='false'>No</option>
 			</select>
@@ -151,7 +151,7 @@ img{
 	<tr>
 		<th>Parking Available</th>
 		<td>
-			<select readonly name='parkingAvailable' th:value="${space.spaceDetails.parkingAvailable}" required>
+			<select readonly name='parkingAvailable' th:value="${place.placeDetails.parkingAvailable}" required>
 				<option value='true' selected>Yes</option>
 				<option value='false'>No</option>
 			</select>
@@ -159,39 +159,39 @@ img{
 	</tr>
 	<tr>
 		<th>Daily Parking Fee</th>
-		<td><input readonly name='dailyParkingFee' th:value="${space.spaceDetails.dailyParkingFee}" type='number' ></td>
+		<td><input readonly name='dailyParkingFee' th:value="${place.placeDetails.dailyParkingFee}" type='number' ></td>
 	</tr>
 	<tr>
 		<th>Latitude</th>
-		<td><input readonly name="address.latitude" th:value="${space.spaceDetails.address.latitude}"  ></td>
+		<td><input readonly name="address.latitude" th:value="${place.placeDetails.address.latitude}"  ></td>
 	</tr>
 	<tr>
 		<th>Longitude</th>
-		<td><input readonly name="address.longitude" th:value="${space.spaceDetails.address.longitude}"  ></td>
+		<td><input readonly name="address.longitude" th:value="${place.placeDetails.address.longitude}"  ></td>
 	</tr>
 	<tr>
 		<th>Address Line 1</th>
-		<td><input readonly name="address.addressLine1" th:value="${space.spaceDetails.address.addressLine1}" ></td>
+		<td><input readonly name="address.addressLine1" th:value="${place.placeDetails.address.addressLine1}" ></td>
 	</tr>
 	<tr>
 		<th>Address Line 2</th>
-		<td><input readonly name="address.addressLine2" th:value="${space.spaceDetails.address.addressLine2}" ></td>
+		<td><input readonly name="address.addressLine2" th:value="${place.placeDetails.address.addressLine2}" ></td>
 	</tr>
 	<tr>
 		<th>City</th>
-		<td><input readonly name="address.city" th:value="${space.spaceDetails.address.city}"  ></td>
+		<td><input readonly name="address.city" th:value="${place.placeDetails.address.city}"  ></td>
 	</tr>
 	<tr>
 		<th>State</th>
-		<td><input readonly name="address.state" th:value="${space.spaceDetails.address.state}"  ></td>
+		<td><input readonly name="address.state" th:value="${place.placeDetails.address.state}"  ></td>
 	</tr>
 	<tr>
 		<th>Zip</th>
-		<td><input readonly name="address.zip" th:value="${space.spaceDetails.address.zip}"  ></td>
+		<td><input readonly name="address.zip" th:value="${place.placeDetails.address.zip}"  ></td>
 	</tr>
 	<tr>
 		<th>Country</th>
-		<td><input readonly name="address.country" th:value="${space.spaceDetails.address.country}"  ></td>
+		<td><input readonly name="address.country" th:value="${place.placeDetails.address.country}"  ></td>
 	</tr>
 </table>
 <script>
@@ -220,7 +220,7 @@ $(function() {
 	
 });
 
-function updateSpaceImages(){
+function updatePlaceImages(){
 	
 }
 
