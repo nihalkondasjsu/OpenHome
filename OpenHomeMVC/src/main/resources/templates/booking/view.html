@@ -6,14 +6,19 @@
 </head>
 <body>
 	<h1>Booking Read</h1>
+	<div th:if="${hostAccess == false}">
+		<div th:if="${booking.bookingState == Booked}">
+			<a th:href="@{'/booking/checkIn?bookingId=' + ${booking.id}}">Check In</a>
+		</div>
+	</div>
 	<table border="1">
 		<tr>
 			<td>Booking Id</td>
 			<td>[[${booking.id}]]</td>
 		</tr>
 		<tr>
-			<td>Booking Created Time</td>
-			<td>[[${booking.createdTime}]]</td>
+			<td>Booking Created Date</td>
+			<td>[[${booking.createdDate}]]</td>
 		</tr>
 		<tr>
 			<td>Booking Check In</td>

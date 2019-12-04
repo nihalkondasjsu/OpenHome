@@ -29,23 +29,41 @@ public class Transaction {
 	@Column(nullable=false,updatable=false)
 	private Date createdDate;
 	
+	@Column(nullable=false,updatable=false)
+	private Date dayToChargeFor;
+	
 	@ManyToOne(fetch = FetchType.LAZY)
 	private Booking booking;
 	
-	enum TransactionNature{
+	public enum TransactionNature{
 		Charge,Fee,Payment
 	}
 	
+	public enum TransactionUser{
+		Guest,Host
+	}
+
 	@Enumerated(EnumType.STRING)
 	TransactionNature transactionNature;
+	
+	@Enumerated(EnumType.STRING)
+	TransactionUser transactionUser;
 	
 	public Transaction() {
 		createdDate = new Date();
 	}
-	
-	public Transaction(Date createdDate) {
-		createdDate = new Date();
+
+	public Transaction(Double amount, Date createdDate, Date dayToChargeFor, Booking booking, TransactionNature transactionNature,
+			TransactionUser transactionUser) {
+		this.amount = amount;
+		this.createdDate = createdDate;
+		this.dayToChargeFor = dayToChargeFor;
+		this.booking = booking;
+		this.transactionNature = transactionNature;
+		this.transactionUser = transactionUser;
 	}
+
+
 
 	public Long getId() {
 		return id;
@@ -69,6 +87,44 @@ public class Transaction {
 
 	public void setCreatedDate(Date createdDate) {
 		this.createdDate = createdDate;
+	}
+	
+	public Date getDayToChargeFor() {
+		return dayToChargeFor;
+	}
+
+	public void setDayToChargeFor(Date dayToChargeFor) {
+		this.dayToChargeFor = dayToChargeFor;
+	}
+
+	public Booking getBooking() {
+		return booking;
+	}
+
+	public void setBooking(Booking booking) {
+		this.booking = booking;
+	}
+
+	public TransactionNature getTransactionNature() {
+		return transactionNature;
+	}
+
+	public void setTransactionNature(TransactionNature transactionNature) {
+		this.transactionNature = transactionNature;
+	}
+
+	public TransactionUser getTransactionUser() {
+		return transactionUser;
+	}
+
+	public void setTransactionUser(TransactionUser transactionUser) {
+		this.transactionUser = transactionUser;
+	}
+	
+	@Override
+	public String toString() {
+		return String.format("{ amount : %f , createdDate : %s , dayToChargeFor : %s , transactionNature : %s , transactionUser : %s }"
+				,amount,createdDate,dayToChargeFor,transactionNature,transactionUser);
 	}
 	
 }

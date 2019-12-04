@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.openhome.aop.helper.annotation.ValidSpaceId;
+import com.openhome.controllers.helper.ControllerHelper;
 import com.openhome.aop.helper.annotation.SpaceHostLoginRequired;
 import com.openhome.dao.SpaceDAO;
 import com.openhome.data.Booking;
@@ -54,15 +55,15 @@ public class SpaceDeleteController {
 		for (Booking booking : bookings) {
 			if(booking.dateOfCheckOut().after(current)) {
 				model.addAttribute("Message", "Cannot delete Space.Space has future booking.");
-				return "redirect";
+				return ControllerHelper.popupMessageAndRedirect("Cannot delete Space.Space has future booking.", "/space/view?spaceId="+spaceId);
 			}
 		}
 		
 		spaceDao.deleteById(spaceId);
 		
 		model.addAttribute("Message", "Deleted Space Successfully.");
-		
-		return "redirect";
+
+		return ControllerHelper.popupMessageAndRedirect("Deleted Space Successfully.", "/host/dashboard");
 	}
 	
 }

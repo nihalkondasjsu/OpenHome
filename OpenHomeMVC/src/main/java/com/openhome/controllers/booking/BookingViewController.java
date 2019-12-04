@@ -15,8 +15,8 @@ import com.openhome.dao.BookingDAO;
 import com.openhome.session.SessionManager;
 
 @Controller
-@RequestMapping("/booking/read")
-public class BookingReadController {
+@RequestMapping("/booking/view")
+public class BookingViewController {
 
 	@Autowired
 	BookingDAO bookingDao;
@@ -30,7 +30,7 @@ public class BookingReadController {
 	public String getBookingCreatePage(@RequestParam(value="bookingId",required=false) Long bookingId, Model model , HttpSession httpSession ) {
 		model.addAttribute("booking", bookingDao.getOne(bookingId));
 		model.addAttribute("hostAccess", sessionManager.getHostId(httpSession) != null );
-		return "booking/read";
+		return "booking/view";
 	}
 	
 }

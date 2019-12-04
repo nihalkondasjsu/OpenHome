@@ -13,6 +13,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.ui.Model;
 
 import com.openhome.aop.helper.ArgsFinder;
+import com.openhome.controllers.helper.ControllerHelper;
 import com.openhome.dao.SpaceDAO;
 import com.openhome.data.Guest;
 import com.openhome.data.Host;
@@ -30,82 +31,28 @@ public class GuestAuthorizationAspect {
 	@Autowired
 	SessionManager sessionManager;
 	
-	public boolean hasGuestLogin(ProceedingJoinPoint joinPoint) {
+	@Around("@annotation(com.openhome.aop.helper.annotation.GuestLoginRequired)")
+	public Object hostLoginRequired(ProceedingJoinPoint joinPoint) throws Throwable {
+		
 		try {
 			System.out.println(Arrays.toString(joinPoint.getArgs()));
 			HttpSession httpSession = ArgsFinder.getHttpSession(joinPoint.getArgs());
 			Model model = ArgsFinder.getModel(joinPoint.getArgs());
 			Guest guest = sessionManager.getGuest(httpSession);
 			if(guest == null) {
-				model.addAttribute("errorMessage", "No Guest Login found in session.");
-				return false;
+				return ControllerHelper.popupMessageAndRedirect("No Guest Login found in session.", "");
 			}
 			if(guest.getUserDetails().verifiedEmail() == false) {
-				model.addAttribute("errorMessage", "Guest is unverified.");
-				return false;
+				return ControllerHelper.popupMessageAndRedirect("Guest is unverified.", "");
 			}
 			System.out.println("============>Has Guest Login");
-			return true;
+			return joinPoint.proceed();
 		} catch (Exception e) {
 			// TODO: handle exception
 			e.printStackTrace();
+			return ControllerHelper.popupMessageAndRedirect(e.getMessage(), "");
 		}
-		return false;
-	}
-	
-//	public boolean hasSpaceHostLogin(ProceedingJoinPoint joinPoint) {
-//		if(hasGuestLogin(joinPoint) == false)
-//			return false;
-//		try {
-//			Long spaceId = ArgsFinder.findArg(joinPoint.getArgs(), Long.class);
-//			Model model = ArgsFinder.getModel(joinPoint.getArgs());
-//			
-//			HttpSession httpSession = ArgsFinder.getHttpSession(joinPoint.getArgs());
-//			
-//			Space s = spaceDao.getOne(spaceId);
-//			
-//			model.addAttribute("space", s);
-//			
-//			Host host = sessionManager.getHost(httpSession);
-//			
-//			if(s.getHost().getId() != host.getId()) {
-//				model.addAttribute("errorMessage", "Wrong Host.");
-//				return false;
-//			}
-//			
-//			return true;
-//		} catch (Exception e) {
-//			
-//		}
-//		return false;
-//	}
-	
-	@Around("@annotation(com.openhome.aop.helper.annotation.GuestLoginRequired)")
-	public Object hostLoginRequired(ProceedingJoinPoint joinPoint) throws Throwable {
-		
-		try {
-			if(hasGuestLogin(joinPoint))
-				return joinPoint.proceed();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		
-		return "index";
 		
 	 }
-	
-//	@Around("@annotation(com.openhome.aop.helper.annotation.SpaceHostLoginRequired)")
-//	public Object rightHostLoginRequired(ProceedingJoinPoint joinPoint) throws Throwable {
-//		
-//		try {
-//			if(hasSpaceHostLogin(joinPoint))
-//				return joinPoint.proceed();
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		}
-//		
-//		return "index";
-//		
-//	 }
 	
 }

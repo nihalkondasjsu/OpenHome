@@ -16,6 +16,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.openhome.FileSystem;
 import com.openhome.Json;
 import com.openhome.aop.helper.annotation.HostLoginRequired;
+import com.openhome.controllers.helper.ControllerHelper;
 import com.openhome.dao.HostDAO;
 import com.openhome.dao.SpaceDAO;
 import com.openhome.dao.SpaceDetailsDAO;
@@ -91,15 +92,12 @@ public class SpaceRegistrationController {
 			
 			space = spaceDao.save(space);
 			
-			model.addAttribute("successLink", "space/view?spaceId="+space.getId());
-			
-			return "redirect";
+			return ControllerHelper.popupMessageAndRedirect("Space Registered Successfully", "space/view?spaceId="+space.getId());
 			
 		} catch (Exception e) {
-			model.addAttribute("errorMessage", e.toString());
+			return ControllerHelper.popupMessageAndRedirect(e.toString(), "space/register");
 		}
 		
-		return "space/register";
 	}
 	
 }

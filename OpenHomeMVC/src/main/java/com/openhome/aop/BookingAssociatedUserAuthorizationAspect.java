@@ -12,7 +12,6 @@ import org.springframework.stereotype.Component;
 import com.openhome.aop.helper.ArgsFinder;
 import com.openhome.dao.BookingDAO;
 import com.openhome.data.Booking;
-import com.openhome.data.Guest;
 import com.openhome.session.SessionManager;
 
 @Aspect
@@ -25,7 +24,7 @@ public class BookingAssociatedUserAuthorizationAspect {
 	
 	@Autowired
 	SessionManager sessionManager;
-	
+
 	@Around("@annotation(com.openhome.aop.helper.annotation.BookingAssociatedUserLoginRequired)")
 	public Object rightUserLoginRequired(ProceedingJoinPoint joinPoint) throws Throwable {
 		
@@ -39,13 +38,44 @@ public class BookingAssociatedUserAuthorizationAspect {
 			Booking booking = bookingDao.getOne(bookingId);
 			Long guestId = sessionManager.getGuestId(httpSession);
 			if(guestId != null) {
-				if(booking.getGuest().getId() != guestId) {
+				System.out.println(booking.getGuest().getId() +" | "+guestId);
+				if(booking.getGuest().getId().equals(guestId) == false) {
 					throw new IllegalAccessError("Associated Login Required");
 				}
 			}else {
-				if(booking.getSpace().getHost().getId() != sessionManager.getHostId(httpSession)) {
+				if(booking.getSpace().getHost().getId().equals(sessionManager.getHostId(httpSession)) == false) {
 					throw new IllegalAccessError("Associated Login Required");
 				}
+			}
+			return joinPoint.proceed();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return "index";
+		
+	 }
+	
+
+	@Around("@annotation(com.openhome.aop.helper.annotation.BookingAssociatedGuestLoginRequired)")
+	public Object rightGuestLoginRequired(ProceedingJoinPoint joinPoint) throws Throwable {
+		
+		try {
+			HttpSession httpSession = ArgsFinder.getHttpSession(joinPoint.getArgs());
+			if(sessionManager.hasUserLogin(httpSession) == false) {
+				throw new IllegalAccessError("Login Required");
+			}
+
+			Long bookingId = ArgsFinder.findArg(joinPoint.getArgs(), Long.class);
+			Booking booking = bookingDao.getOne(bookingId);
+			Long guestId = sessionManager.getGuestId(httpSession);
+			if(guestId != null) {
+				System.out.println(booking.getGuest().getId() +" | "+guestId);
+				if(booking.getGuest().getId().equals(guestId) == false) {
+					throw new IllegalAccessError("Associated Login Required");
+				}
+			}else {
+				throw new IllegalAccessError("Associated Login Required");
 			}
 			return joinPoint.proceed();
 		} catch (Exception e) {

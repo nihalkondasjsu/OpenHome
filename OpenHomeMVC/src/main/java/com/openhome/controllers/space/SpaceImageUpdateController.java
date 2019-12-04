@@ -15,6 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.openhome.FileSystem;
 import com.openhome.aop.helper.annotation.ValidSpaceId;
+import com.openhome.controllers.helper.ControllerHelper;
 import com.openhome.aop.helper.annotation.SpaceHostLoginRequired;
 import com.openhome.dao.ImageDAO;
 import com.openhome.dao.SpaceDAO;
@@ -49,14 +50,6 @@ public class SpaceImageUpdateController {
 	public String updateForm(@RequestParam(value="spaceId",required=false) Long spaceId, @RequestParam(value="op") String op, Model model , HttpSession httpSession ) {
 		System.out.println("SpaceImageUpdateController");
 		Space s = null;
-		
-		try {
-			s = spaceDao.getOne(spaceId);
-			model.addAttribute("space", s);
-		} catch (IllegalArgumentException e ) {
-			model.addAttribute("errorMessage", e.getMessage());
-			return "space/viewall";
-		}
 		
 		if(op.equals("add")) {
 			
@@ -108,8 +101,7 @@ public class SpaceImageUpdateController {
 			model.addAttribute("close", "yes");
 			return "space/imagesUpdateAdd";
 		} catch (Exception e ) {
-			model.addAttribute("errorMessage", e.getMessage());
-			return "space/viewall";
+			return ControllerHelper.popupMessageAndRedirect(e.getMessage(), "");
 		}
 	}
 	
@@ -140,8 +132,7 @@ public class SpaceImageUpdateController {
 			model.addAttribute("close", "yes");
 			return "space/imagesUpdateDelete";
 		} catch (Exception e ) {
-			model.addAttribute("errorMessage", e.getMessage());
-			return "space/viewall";
+			return ControllerHelper.popupMessageAndRedirect(e.getMessage(), "");
 		}
 	}
 	
@@ -183,9 +174,7 @@ public class SpaceImageUpdateController {
 			model.addAttribute("close", "yes");
 			return "space/imagesUpdateRearrange";
 		} catch (Exception e ) {
-			e.printStackTrace();
-			model.addAttribute("errorMessage", e.getMessage());
-			return "space/viewall";
+			return ControllerHelper.popupMessageAndRedirect(e.getMessage(), "");
 		}
 	}
 

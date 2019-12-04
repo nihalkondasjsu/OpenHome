@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.openhome.Json;
 import com.openhome.aop.helper.annotation.ValidSpaceId;
+import com.openhome.controllers.helper.ControllerHelper;
 import com.openhome.aop.helper.annotation.SpaceHostLoginRequired;
 import com.openhome.dao.SpaceDAO;
 import com.openhome.dao.SpaceDetailsDAO;
@@ -37,21 +38,15 @@ public class SpaceUpdateController {
 	@SpaceHostLoginRequired
 	public String updateForm(@RequestParam(value="spaceId",required=false) Long spaceId, Model model , HttpSession httpSession ) {
 		System.out.println("SpaceUpdateController");
+		
 		Space s = null;
 		
-		try {
+		s = spaceDao.getOne(spaceId);
 			
-			s = spaceDao.getOne(spaceId);
-			
-			Host h = sessionManager.getHost(httpSession);
-			
-			model.addAttribute("space", s);
-			
-		} catch (IllegalArgumentException e ) {
-			model.addAttribute("errorMessage", e.getMessage());
-			return "space/viewall";
-		}
+		Host h = sessionManager.getHost(httpSession);
 		
+		model.addAttribute("space", s);
+			
 		return "space/update";
 		
 	}
@@ -75,9 +70,8 @@ public class SpaceUpdateController {
 				System.out.println(e.toString());
 			}
 			
-			if(temp.getSpaceDetails().getId() != s.getSpaceDetails().getId()) {
-				model.addAttribute("errorMessage", "A space with this name is already existing in your account.");
-				return "space/update";
+			if(temp.getSpaceDetails().getId().equals( s.getSpaceDetails().getId() ) == false) {
+				return ControllerHelper.popupMessageAndRedirect("A space with this name is already existing in your account.", "space/update");
 			}
 			
 			spaceDetails.setRegisteredDate(s.getSpaceDetails().getRegisteredDate());
@@ -92,14 +86,13 @@ public class SpaceUpdateController {
 			
 			model.addAttribute("successLink", "space/view?spaceId="+s.getId());
 			
-			return "redirect";
+			return ControllerHelper.popupMessageAndRedirect("Space Updated Successfully.", "space/view?spaceId="+s.getId());
 			
 		} catch (Exception e) {
 			e.printStackTrace();
-			model.addAttribute("errorMessage", e.toString());
+			return ControllerHelper.popupMessageAndRedirect(e.toString(), "space/update");
 		}
 		
-		return "space/update";
 	}
 	
 }

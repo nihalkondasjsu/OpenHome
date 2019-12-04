@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.openhome.Json;
+import com.openhome.controllers.helper.ControllerHelper;
 import com.openhome.dao.GuestDAO;
 import com.openhome.dao.HostDAO;
 import com.openhome.dao.UserDetailsDAO;
@@ -75,7 +76,7 @@ public class UserLoginController {
 			Json.printObject(userDetailsDB);
 			
 			if(userDetailsDB == null) {
-				model.addAttribute("errorMessage", "Invalid Credentials.");
+				return ControllerHelper.popupMessageAndRedirect("Invalid Credentials.", userRole+"/login");
 			} else {
 				if(userDetailsDB.checkPassword(userDetails.getPassword())) {
 					if(userRole.equals("host"))
@@ -83,18 +84,16 @@ public class UserLoginController {
 					else
 						sessionManager.setGuest(httpSession, userId);
 					
-					model.addAttribute("successLink", userRole+"/dashboard");
-					return "redirect";
+					return ControllerHelper.popupMessageAndRedirect("Successful Login", userRole+"/dashboard");
 				}else {
-					model.addAttribute("errorMessage", "Invalid Credentials.");
+					return ControllerHelper.popupMessageAndRedirect("Invalid Credentials.", userRole+"/login");
 				}
 			}
 		} catch (Exception e) {
 			System.out.println(e.toString());
 			e.printStackTrace();
+			return ControllerHelper.popupMessageAndRedirect(e.getMessage(), userRole+"/login");
 		}
-		
-		return userRole+"/login";
 	}
 	
 }

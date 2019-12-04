@@ -8,11 +8,15 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import com.google.auth.oauth2.GoogleCredentials;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
+import com.openhome.dao.BookingDAO;
+import com.openhome.dao.SpaceDAO;
+import com.openhome.data.manager.BookingManager;
 import com.openhome.tam.TimeAdvancementManagement;
 
 @SpringBootApplication
 public class OpenHomeMvcApplication {
 
+	
 	
 	public static void main(String[] args) {
 		SpringApplication.run(OpenHomeMvcApplication.class, args);
@@ -28,11 +32,12 @@ public class OpenHomeMvcApplication {
 			  .build();
 
 			FirebaseApp.initializeApp(options);
-	        
+			
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
+
 
 }

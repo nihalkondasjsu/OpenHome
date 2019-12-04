@@ -16,6 +16,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.openhome.FileSystem;
 import com.openhome.Json;
+import com.openhome.controllers.helper.ControllerHelper;
 import com.openhome.dao.GuestDAO;
 import com.openhome.dao.HostDAO;
 import com.openhome.dao.UserDetailsDAO;
@@ -102,15 +103,16 @@ public class UserRegistrationController {
 					sessionManager.setGuest(httpSession, g.getId());
 				}
 				model.addAttribute("successLink", userRole+"/dashboard");
-				return "redirect";
+
+				return ControllerHelper.popupMessageAndRedirect("Successfully Registered.", userRole+"/dashboard");
 			}else {
-				model.addAttribute("errorMessage", "Email id being used by a existing User.");
+				return ControllerHelper.popupMessageAndRedirect("Email id being used by a existing User.", userRole+"/register");
 			}
 		} catch (Exception e) {
 			System.out.println(e.toString());
+			return ControllerHelper.popupMessageAndRedirect(e.getMessage(), userRole+"/register");
 		}
 		
-		return userRole+"/register";
 	}
 	
 }

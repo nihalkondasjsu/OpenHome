@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.ui.Model;
 
 import com.openhome.aop.helper.ArgsFinder;
+import com.openhome.controllers.helper.ControllerHelper;
 import com.openhome.dao.BookingDAO;
 import com.openhome.data.Booking;
 
@@ -30,13 +31,11 @@ public class BookingIdValidateAspect {
 			Long bookingId = ArgsFinder.findArg(joinPoint.getArgs(), Long.class);
 			Model model = ArgsFinder.getModel(joinPoint.getArgs());
 			if(bookingId == null) {
-				model.addAttribute("errorMessage", "No BookingId provided.");
-				return false;
+				return ControllerHelper.popupMessageAndRedirect("No BookingId provided.", "");
 			}
 			Booking b = bookingDao.getOne(bookingId);
 			if(b == null) {
-				model.addAttribute("errorMessage", "Invalid Booking Id.");
-				return false;
+				return ControllerHelper.popupMessageAndRedirect("Invalid Booking Id.", "");
 			}
 			System.out.println("============>Booking Id is Valid");
 			return joinPoint.proceed();

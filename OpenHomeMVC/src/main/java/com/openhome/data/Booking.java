@@ -3,6 +3,8 @@ package com.openhome.data;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
@@ -22,18 +24,19 @@ import javax.persistence.Transient;
 import org.springframework.stereotype.Component;
 
 import com.openhome.dao.helper.StringListConverter;
+import com.openhome.data.Transaction.TransactionNature;
 import com.openhome.tam.TimeAdvancementManagement;
 
 @Entity
 @Component
 public class Booking {
 	
-	enum BookingState{
-		Booked,CheckedIn,CheckedOut,Cancelled
+	public enum BookingState{
+		Booked,CheckedIn,CheckedOut,GuestCancelled,HostCancelled,HostBlock
 	}
 
-	private static String CHECK_IN_TIME = "15:00";
-	private static String CHECK_OUT_TIME = "11:00";
+	public static String CHECK_IN_TIME = "15:00";
+	public static String CHECK_OUT_TIME = "11:00";
 	
 	@Id
 	@GeneratedValue
@@ -137,6 +140,14 @@ public class Booking {
 	}
 
 	public List<Transaction> getTransactions() {
+		if(transactions != null)
+		Collections.sort(transactions,new Comparator<Transaction>() {
+
+			@Override
+			public int compare(Transaction o1, Transaction o2) {
+				return o1.getCreatedDate().compareTo(o2.getCreatedDate());
+			}
+		});
 		return transactions;
 	}
 
@@ -227,97 +238,6 @@ public class Booking {
 	public void setCheckOutDateString(String checkOutDateString) {
 		this.checkOutDateString = checkOutDateString;
 	}
-
-	public boolean bookingEnded() {
-		return getBookingState().equals(BookingState.CheckedOut) || getBookingState().equals(BookingState.Cancelled) ;
-	}
-	
-	public void processBooking(TimeAdvancementManagement timeAdvancementManagement) {
-		if(bookingEnded()) {
-			// booking is either checked-out or cancelled
-			// in that case no need to process this booking
-			return;
-		}
-		
-		// booking is not finished
-		
-		Date currentTime = timeAdvancementManagement.getCurrentDate();
-		
-		if(getBookingState().equals(BookingState.CheckedIn)) {
-			chargeGuestForPreviousDay(currentTime);
-		}
-		
-		Date checkInTime = new Date(getCheckIn());
-		Date checkOutTime = new Date(getCheckOut());
-		
-		if(currentTime.before(checkInTime)) {
-			// nothing to process before the actual check-in time
-			return;
-		}
-		// its time for the guest to check-in ( current time is after 3pm of first day )
-		if(currentTime.before(checkOutTime)) {
-			// checkInTime < currentTime < checkOutTime
-			if(actualCheckIn == null) {
-				// no record of guest check-in found
-				if(currentTime.before(new Date(getCheckIn()+(12 * 60 * 60 * 1000)))) {
-					// guest still has 12 hours to check-in
-					return;
-				}
-				// guest has not checked in within the first 12 hours of their booking 
-				initiateGuestNoShowProtocol();
-				return;
-			}
-			// record of guest check-in found
-			chargeGuestForPreviousDay(currentTime);
-			return;
-		}
-		// currentTime is after check-out time
-		initiateAutoCheckOutProtocol();
-		return;
-	}
-
-	private void chargeGuestForPreviousDay(Date currentTime) {
-		
-	}
-
-	private void initiateAutoCheckOutProtocol() {
-		
-	}
-
-	private void initiateFullPaymentForTheDay() {
-		
-	}
-
-	private void initiateGuestNoShowProtocol() {
-		
-	}
-
-	public Double getPriceForDay(Date date) {
-		return date.getDay() == 6 ? weekendRentPrice : weekdayRentPrice;
-	}
-	
-	public Double priceForDays() {
-		Double price = 0.0 ;
-		
-		Date start,end;
-		
-		start = new Date(checkIn);
-		end = new Date(checkOut);
-		
-		start.setHours(0);end.setHours(0);
-		
-		start.setMinutes(0);end.setMinutes(0);
-		
-		start.setSeconds(0);end.setSeconds(0);
-		
-		long Start = start.getTime() , End = end.getTime();
-		
-		for (long i = Start; i < End; i += 24*60*60*1000 ) {
-			price += getPriceForDay(new Date(i));
-		}
-		
-		return price;
-	}
 	
 	public void prepareForRegistration(Date createdDate,Space space,Guest guest) throws ParseException {
 		this.createdDate = createdDate;
@@ -340,6 +260,23 @@ public class Booking {
 		this.weekendRentPrice = this.space.getSpaceDetails().getWeekendRentPrice();
 	}
 	
+	public void prepareForHostBlock(Date createdDate,Space space) throws ParseException {
+		this.createdDate = createdDate;
+		String pattern = "yyyy-MM-dd HH:mm";
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
+		this.checkIn = simpleDateFormat.parse(checkInDateString+" "+CHECK_IN_TIME).getTime();
+		this.checkOut = simpleDateFormat.parse(checkOutDateString+" "+CHECK_OUT_TIME).getTime();
+		if(this.checkIn<createdDate.getTime() || this.checkOut - this.checkIn < 20 * 60 * 60 * 1000) {
+			throw new IllegalArgumentException("Invalid Booking");
+		}
+		this.bookingState = BookingState.HostBlock;
+		this.space = space;
+		this.transactions = new ArrayList<Transaction>();
+		this.rating = null;
+		this.weekdayRentPrice = this.space.getSpaceDetails().getWeekdayRentPrice();
+		this.weekendRentPrice = this.space.getSpaceDetails().getWeekendRentPrice();
+	}
+	
 	public String weekDays() throws ParseException {
 		List<String> weekdays = new ArrayList<String>();
 		String pattern = "yyyy-MM-dd HH:mm";
@@ -357,5 +294,20 @@ public class Booking {
 		System.out.println(res);
 		return res;
 	}
-	
+
+	@Override
+	public String toString() {
+		return String.format(
+				"{ createdDate : %s , checkIn : %s , checkOut : %s , actualCheckIn : %s , actualCheckOut : %s , bookingState : %s , transactions: %s , weekdayRentPrice : %f , weekendRentPrice : %f }",
+				createdDate,
+				new Date(checkIn),
+				new Date(checkOut),
+				new Date(actualCheckIn == null ? 0 : actualCheckIn),
+				new Date(actualCheckOut),
+				bookingState,
+				transactions,
+				weekdayRentPrice,
+				weekendRentPrice
+				);
+	}
 }

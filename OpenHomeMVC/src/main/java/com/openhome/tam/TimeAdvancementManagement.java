@@ -18,6 +18,8 @@ public class TimeAdvancementManagement {
 	
 	private static Long timeDelta;
 	
+	private static Boolean CAN_GO_BACK = true;
+	
 	public Date getCurrentDate() {
 		if(TimeAdvancementManagement.timeDelta != null) {
 			return new Date(new Date().getTime()+TimeAdvancementManagement.timeDelta);
@@ -42,7 +44,7 @@ public class TimeAdvancementManagement {
 	}
 	
 	public void setCurrentDate(Date date) {
-		if(getCurrentDate().after(date))
+		if(getCurrentDate().after(date) && !CAN_GO_BACK)
 			return;
 		TimeManagement timeManagement = new TimeManagement(date.getTime() - new Date().getTime());
 		timeManagementDao.deleteAll();

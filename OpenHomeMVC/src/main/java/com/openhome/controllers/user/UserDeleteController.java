@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.openhome.Json;
 import com.openhome.aop.helper.annotation.UserLoginRequired;
+import com.openhome.controllers.helper.ControllerHelper;
 import com.openhome.dao.GuestDAO;
 import com.openhome.dao.HostDAO;
 import com.openhome.dao.SpaceDAO;
@@ -62,7 +63,7 @@ public class UserDeleteController {
 	public String loginFormSubmission(@PathVariable("userRole") String userRole,  UserDetails userDetails , Model model , HttpSession httpSession ) {
 		Json.printObject(userDetails);
 		
-		if(userRole.equals("host")) {
+		if(sessionManager.getHostId(httpSession) != null) {
 			return deleteHost(userRole, userDetails, model, httpSession);
 		}else {
 			return deleteGuest(userRole, userDetails, model, httpSession);
@@ -77,33 +78,27 @@ public class UserDeleteController {
 			
 			Json.printObject(host);
 			
-			if(host == null) {
-				model.addAttribute("errorMessage", "Invalid Credentials.");
-			} else {
-				host.canAccess(userDetails);
+			host.canAccess(userDetails);
+			
+			if(spaceDao.getSpaceCountOfHost(host.getId()) > 0) {
+				return ControllerHelper.popupMessageAndRedirect("Delete all your spaces before unregistering.", "host/dashboard");
+			}else {
+				sessionManager.logoutUser(httpSession);
 				
-				if(spaceDao.getSpaceCountOfHost(host.getId()) > 0) {
-					model.addAttribute("errorMessage", "Delete all your spaces before unregistering.");
-				}else {
-					sessionManager.logoutUser(httpSession);
-					
-					userDetailsDao.deleteById(host.getUserDetails().getId());
-					
-					hostDao.deleteById(host.getId());
-					
-					model.addAttribute("successLink", "");
-					
-					return "redirect";
-				}
+				userDetailsDao.deleteById(host.getUserDetails().getId());
+				
+				hostDao.deleteById(host.getId());
+				
+				return ControllerHelper.popupMessageAndRedirect("Host Unregistered Successfully.", "");
 			}
+			
 		} catch (IllegalAccessException e) {
 			System.out.println(e.toString());
-			model.addAttribute("errorMessage", e.getMessage());
+			return ControllerHelper.popupMessageAndRedirect(e.getMessage(), "");
 		} catch (Exception e) {
 			System.out.println(e.toString());
+			return ControllerHelper.popupMessageAndRedirect(e.getMessage(), "");
 		}
-		
-		return userRole+"/delete";
 	}
 	
 	public String deleteGuest(String userRole,UserDetails userDetails , Model model , HttpSession httpSession) {
@@ -113,40 +108,31 @@ public class UserDeleteController {
 			
 			Json.printObject(guest);
 			
-			if(guest == null) {
-				model.addAttribute("errorMessage", "Invalid Credentials.");
-			} else {
-				guest.canAccess(userDetails);
-					
-				Date current = timeAdvancementManagement.getCurrentDate();
-				
-				List<Booking> bookings = guest.getBookings();
-				
-				for (Booking booking : bookings) {
-					if(booking.dateOfCheckOut().after(current)) {
-						model.addAttribute("Message", "Cannot delete Guest.Guest has future booking.");
-						return "guest/delete";
-					}
+			guest.canAccess(userDetails);
+			
+			Date current = timeAdvancementManagement.getCurrentDate();
+			
+			List<Booking> bookings = guest.getBookings();
+			
+			for (Booking booking : bookings) {
+				if(booking.dateOfCheckOut().after(current)) {
+					return ControllerHelper.popupMessageAndRedirect("Cannot delete Guest.Guest has future booking.", "guest/dashboard");
 				}
-				
-				sessionManager.logoutUser(httpSession);
-				
-				userDetailsDao.deleteById(guest.getUserDetails().getId());
-				
-				guestDao.deleteById(guest.getId());
-				
-				model.addAttribute("successLink", "");
-				
-				return "redirect";
-				
 			}
+			
+			sessionManager.logoutUser(httpSession);
+			
+			userDetailsDao.deleteById(guest.getUserDetails().getId());
+			
+			guestDao.deleteById(guest.getId());
+
+			return ControllerHelper.popupMessageAndRedirect("Guest Unregistered Successfully.", "");
 		} catch (IllegalAccessException e) {
 			System.out.println(e.toString());
-			model.addAttribute("errorMessage", e.getMessage());
+			return ControllerHelper.popupMessageAndRedirect(e.getMessage(), "");
 		} catch (Exception e) {
 			System.out.println(e.toString());
+			return ControllerHelper.popupMessageAndRedirect(e.getMessage(), "");
 		}
-
-		return userRole+"/delete";
 	}
 }

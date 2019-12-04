@@ -14,6 +14,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.ui.Model;
 
 import com.openhome.aop.helper.ArgsFinder;
+import com.openhome.controllers.helper.ControllerHelper;
 import com.openhome.dao.SpaceDAO;
 import com.openhome.dao.SpaceDetailsDAO;
 import com.openhome.data.Host;
@@ -31,31 +32,21 @@ public class HostAuthorizationAspect {
 	@Autowired
 	SessionManager sessionManager;
 	
-	public boolean hasHostLogin(ProceedingJoinPoint joinPoint) {
-		try {
+	public void hasHostLogin(ProceedingJoinPoint joinPoint) throws IllegalAccessException {
 			System.out.println(Arrays.toString(joinPoint.getArgs()));
 			HttpSession httpSession = ArgsFinder.getHttpSession(joinPoint.getArgs());
 			Model model = ArgsFinder.getModel(joinPoint.getArgs());
 			Host host = sessionManager.getHost(httpSession);
 			if(host == null) {
-				model.addAttribute("errorMessage", "No Host Login found in session.");
-				return false;
+				throw new IllegalAccessException("No Host Login found in session.");
 			}
 			if(host.getUserDetails().verifiedEmail() == false) {
-				model.addAttribute("errorMessage", "Host is unverified.");
-				return false;
+				throw new IllegalAccessException("Host is unverified.");
 			}
-			return true;
-		} catch (Exception e) {
-			// TODO: handle exception
-		}
-		return false;
 	}
 	
-	public boolean hasSpaceHostLogin(ProceedingJoinPoint joinPoint) {
-		if(hasHostLogin(joinPoint) == false)
-			return false;
-		try {
+	public void hasSpaceHostLogin(ProceedingJoinPoint joinPoint) throws IllegalAccessException {
+			hasHostLogin(joinPoint);
 			Long spaceId = ArgsFinder.findArg(joinPoint.getArgs(), Long.class);
 			Model model = ArgsFinder.getModel(joinPoint.getArgs());
 			
@@ -67,29 +58,21 @@ public class HostAuthorizationAspect {
 			
 			Host host = sessionManager.getHost(httpSession);
 			
-			if(s.getHost().getId() != host.getId()) {
-				model.addAttribute("errorMessage", "Wrong Host.");
-				return false;
+			if(s.getHost().getId().equals(host.getId()) == false) {
+				throw new IllegalAccessException("Wrong Host.");
 			}
-			
-			return true;
-		} catch (Exception e) {
-			
-		}
-		return false;
 	}
 	
 	@Around("@annotation(com.openhome.aop.helper.annotation.HostLoginRequired)")
 	public Object hostLoginRequired(ProceedingJoinPoint joinPoint) throws Throwable {
 		
 		try {
-			if(hasHostLogin(joinPoint))
-				return joinPoint.proceed();
+			hasHostLogin(joinPoint);
+			return joinPoint.proceed();
 		} catch (Exception e) {
 			e.printStackTrace();
+			return ControllerHelper.popupMessageAndRedirect(e.getMessage(), "");
 		}
-		
-		return "index";
 		
 	 }
 	
@@ -97,13 +80,12 @@ public class HostAuthorizationAspect {
 	public Object rightHostLoginRequired(ProceedingJoinPoint joinPoint) throws Throwable {
 		
 		try {
-			if(hasSpaceHostLogin(joinPoint))
-				return joinPoint.proceed();
+			hasSpaceHostLogin(joinPoint);
+			return joinPoint.proceed();
 		} catch (Exception e) {
 			e.printStackTrace();
+			return ControllerHelper.popupMessageAndRedirect(e.getMessage(), "");
 		}
-		
-		return "index";
 		
 	 }
 	

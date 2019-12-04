@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.openhome.aop.helper.annotation.UserLoginRequired;
+import com.openhome.controllers.helper.ControllerHelper;
 import com.openhome.session.SessionManager;
 
 @Controller
@@ -27,7 +28,7 @@ public class UserLogoutController {
 		
 		model.addAttribute("successLink", "");
 		
-		return "redirect";
+		return ControllerHelper.popupMessageAndRedirect("", "");
 		
 	}
 	

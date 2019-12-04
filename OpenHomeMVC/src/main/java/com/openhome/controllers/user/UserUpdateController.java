@@ -14,6 +14,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.openhome.FileSystem;
 import com.openhome.Json;
 import com.openhome.aop.helper.annotation.UserLoginRequired;
+import com.openhome.controllers.helper.ControllerHelper;
 import com.openhome.dao.HostDAO;
 import com.openhome.dao.UserDetailsDAO;
 import com.openhome.data.Guest;
@@ -97,8 +98,7 @@ public class UserUpdateController {
 				userDetails.updateDetails(userDetailsDB.getEmail(), userDetailsDB.getPassword(),userDetailsDB.getVerifiedDetails());
 				System.out.println("DisplayPictureId : "+userDetails.getDisplayPictureId());
 			} catch (Exception e) {
-				model.addAttribute("errorMessage", "Invalid Credentials.");
-				return "host/update";
+				return ControllerHelper.popupMessageAndRedirect("Invalid Credentials.", userRole+"/update");
 			}
 			
 			userDetails.setRegisteredDate(userDetailsDB.getRegisteredDate());
@@ -107,15 +107,13 @@ public class UserUpdateController {
 			
 			userDetailsDao.save(userDetails);
 			
-			model.addAttribute("successLink", userRole+"/dashboard");
-			
-			return "redirect";
+			return ControllerHelper.popupMessageAndRedirect(userRole + " details updated.", userRole+"/dashboard");
 			
 		} catch (Exception e) {
 			System.out.println(e.toString());
 		}
 		
-		return updateForm(userRole, model, httpSession);
+		return ControllerHelper.popupMessageAndRedirect("", userRole + "/update");
 	}
 	
 }

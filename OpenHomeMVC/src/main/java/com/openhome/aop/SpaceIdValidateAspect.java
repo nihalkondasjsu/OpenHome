@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.ui.Model;
 
 import com.openhome.aop.helper.ArgsFinder;
+import com.openhome.controllers.helper.ControllerHelper;
 import com.openhome.dao.SpaceDAO;
 import com.openhome.data.Space;
 
@@ -30,21 +31,18 @@ public class SpaceIdValidateAspect {
 			Long spaceId = ArgsFinder.findArg(joinPoint.getArgs(), Long.class);
 			Model model = ArgsFinder.getModel(joinPoint.getArgs());
 			if(spaceId == null) {
-				model.addAttribute("errorMessage", "No SpaceId provided.");
-				return false;
+				return ControllerHelper.popupMessageAndRedirect("No SpaceId provided.", "");
 			}
 			Space s = spaceDao.getOne(spaceId);
 			if(s == null) {
-				model.addAttribute("errorMessage", "Invalid Space Id.");
-				return false;
+				return ControllerHelper.popupMessageAndRedirect("Invalid Space Id.", "");
 			}
 			System.out.println("============>Space Id is Valid");
 			return joinPoint.proceed();
 		} catch (Exception e) {
 			System.out.println(e.toString());
+			return ControllerHelper.popupMessageAndRedirect(e.getMessage(), "");
 		}
-		
-		return "index";
 		
 	 }
 	
