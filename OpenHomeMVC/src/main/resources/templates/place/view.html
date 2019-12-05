@@ -21,7 +21,6 @@ img{
 <p style="color:red">[[${errorMessage}]]</p>
 
 <div th:if="${hostAccess == true}">
-	<a th:href="@{'/category/edit/' + ${place.id}}">View Reservation Data</a>
 	<a th:href="@{'/place/update?placeId=' + ${place.id}}">Update Place</a>
 	<a th:href="@{'/place/delete?placeId=' + ${place.id}}">Delete Place</a>
 	<a th:href="@{'/place/reservation/list?placeId=' + ${place.id}}">Reservations of Place</a>
@@ -92,11 +91,11 @@ img{
 			<a th:href="@{'/place/updatePlaceImages?op=rearrange&placeId=' + ${place.id}}" target="_blank">Rearrange Place Images</a>
 		</div>
 			<br>
-			<ul>
-				<li th:each="image : ${place.placeDetails.images}">
+			<div>
+				<span th:each="image : ${place.placeDetails.images}">
 					<img th:src="${image.url}"/>
-				</li>
-			</ul>
+				</span>
+			</div>
 		</td>
 	</tr>
 	<tr>

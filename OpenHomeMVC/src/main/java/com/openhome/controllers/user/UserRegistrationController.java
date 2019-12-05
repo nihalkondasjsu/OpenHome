@@ -66,7 +66,20 @@ public class UserRegistrationController {
 		if(userRole.equals("host")==false)
 			userRole = "guest";
 		
+		if(userDetails.getEmail().endsWith("@sjsu.edu")) {
+			userRole = "host";
+		}else {
+			userRole = "guest";
+		}
+		
 		try {
+			
+			if(userDetails.getCreditCard() == null) {
+				throw new IllegalArgumentException("Invalid Credit Card");
+			}
+			
+			userDetails.getCreditCard().validateCard(timeAdvancementManagement.getCurrentDate());
+			
 			userDetails.prepareForRegistration(timeAdvancementManagement.getCurrentDate());
 			
 			UserDetails userDetailsDB = userDetailsDao.getUserByEmail(userDetails.getEmail());
@@ -75,17 +88,13 @@ public class UserRegistrationController {
 				
 				Image imageObj = null;
 				
-				if(imageUrl == null || imageUrl.equals("")) {
-					if(image == null) {
-						System.out.println("No Image Provided");
-					}else {
-						if(image.getSize()<1000) {
-							System.out.println("No Image Provided");
-						}else
-						imageObj = fileSystem.saveImage(image);
-					}
+				if(image == null || image.getSize()<1000) {
+					if(imageUrl == null || imageUrl.equals("")) {
+						System.out.println("No Image Change");
+					}else
+						imageObj = fileSystem.saveImage(imageUrl);
 				}else {
-					imageObj = fileSystem.saveImage(imageUrl);
+					imageObj = fileSystem.saveImage(image);
 				}
 				
 				if(imageObj != null) {

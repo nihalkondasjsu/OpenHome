@@ -19,6 +19,7 @@
 			<td>State</td>
 			<td>Weekday Rent Price</td>
 			<td>Weekday Rent Price</td>
+			<td>Daily Parking Fee</td>
 		</tr>
 		<tr th:each="reservation : ${reservations}">
 			<td><a th:href="@{'/reservation/view?reservationId=' + ${reservation.id}}">[[${reservation.id}]]</a></td>
@@ -32,6 +33,7 @@
 			<td>[[${reservation.reservationState}]]</td>
 			<td>[[${reservation.weekdayRentPrice}]]</td>
 			<td>[[${reservation.weekendRentPrice}]]</td>
+			<td>[[${reservation.dailyParkingFee}]]</td>
 		</tr>
 	</table>
 	

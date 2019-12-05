@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 import com.openhome.dao.helper.StringListConverter;
 
@@ -139,7 +140,7 @@ public class PlaceSearchQuery {
 	
 	public boolean suitableMatch(PlaceDetails placeDetails) {
 		if(getSharingType().size() > 0) {
-			List<String> eliminateSharingType = new ArrayList<String>(Arrays.asList("Entire House","Shared Room","Private Room"));
+			List<String> eliminateSharingType = new ArrayList<String>(Arrays.asList("Entire House","Private Room"));
 			eliminateSharingType.removeAll(getSharingType());
 			if(eliminateSharingType.contains(placeDetails.getRoomType())) {
 				System.out.println(placeDetails.getName()+" fails at ST");
@@ -156,10 +157,10 @@ public class PlaceSearchQuery {
 		}
 		String[] keywords = getKeywords().toLowerCase().split(" ");
 		String description = placeDetails.getDescription().toLowerCase();
-		boolean temp = false;
+		boolean temp = true;
 		for (String keyword : keywords) {
-			if(description.contains(keyword)) {
-				temp = true;
+			if(description.contains(keyword) == false) {
+				temp = false;
 				break;
 			}
 		}

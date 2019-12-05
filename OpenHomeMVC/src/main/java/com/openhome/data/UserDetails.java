@@ -25,7 +25,7 @@ import com.openhome.tam.TimeAdvancementManagement;
 @Entity
 public class UserDetails {
 
-	enum UserRegistrationType{
+	public enum UserRegistrationType{
 		OpenHome,Facebook,Google
 	}
 	
@@ -199,14 +199,19 @@ public class UserDetails {
 		return Encryption.checkPassword(plainPassword, getPassword());
 	}
 	
-	public void updateDetails(Long id, Date date, UserVerifiedDetails userVerifiedDetails) throws IllegalAccessException {
+	public void updateDetails(UserDetails userDetailsOld) throws IllegalAccessException {
+		
+		if(userRegistrationType == UserRegistrationType.OpenHome)
 		if(getNewPassword().equals("") == false) {
 			setPassword(getNewPassword());
 			encryptPassword();
 		}
-		setId(id);
-		setRegisteredDate(date);
-		setVerifiedDetails(userVerifiedDetails);
+
+		setId(userDetailsOld.getId());
+		setEmail(userDetailsOld.getEmail());
+		setPassword(userDetailsOld.getPassword());
+		setRegisteredDate(userDetailsOld.getRegisteredDate());
+		setVerifiedDetails(userDetailsOld.getVerifiedDetails());
 	}
 
 	public Image getDisplayPictureId() {

@@ -27,7 +27,7 @@ import com.openhome.session.SessionManager;
 import com.openhome.tam.TimeAdvancementManagement;
 
 @Controller
-@RequestMapping("/{userRole}/delete")
+//@RequestMapping("/{userRole}/delete")
 public class UserDeleteController {
 
 	@Autowired
@@ -51,7 +51,7 @@ public class UserDeleteController {
 	
 	@RequestMapping(method=RequestMethod.GET)
 	@UserLoginRequired
-	public String loginForm( @PathVariable("userRole") String userRole, Model model ) {
+	public String loginForm( @PathVariable("userRole") String userRole, Model model , HttpSession httpSession ) {
 		System.out.println("DeleteController");
 		if(userRole.equals("host")==false)
 			userRole = "guest";

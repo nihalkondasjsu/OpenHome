@@ -13,6 +13,7 @@ import com.openhome.dao.ReservationDAO;
 import com.openhome.dao.GuestDAO;
 import com.openhome.dao.PlaceDAO;
 import com.openhome.data.Reservation;
+import com.openhome.data.CreditCard;
 import com.openhome.data.Guest;
 import com.openhome.data.Place;
 import com.openhome.data.manager.ReservationManager;
@@ -45,17 +46,21 @@ public class TestController {
 		
 		simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 		
-		testNoShow();
+		//testNoShow();
 		
 		//testAutoCheckOut();
 		
+		testInit();
+		
+		
+		
 		return "index";
 	}
-	
+
 	public void testInit() throws Exception {
-		place = placeDao.getOne(510l);
+		place = placeDao.getOne(415l);
 		
-		guest = guestDao.getOne(492l);
+		guest = guestDao.getOne(376l);
 		
 		reservation = new Reservation();
 
@@ -75,6 +80,15 @@ public class TestController {
 		
 		reservationManager.setReservation(reservation);
 		
+		reservationManager.showAllCalculations(currentDate);
+
+		currentDate = simpleDateFormat.parse("2020-04-20 10:00");
+		
+		reservationManager.showAllCalculations(currentDate);
+		
+		currentDate = simpleDateFormat.parse("2020-04-21 16:00");
+		
+		reservationManager.showAllCalculations(currentDate);
 	}
 	
 	public void testNoShow() throws Exception {

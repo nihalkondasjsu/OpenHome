@@ -259,7 +259,7 @@ public class PlaceDetails {
 	}
 	
 	public void addRating(Rating rating) {
-		this.averageOverallRating = ((this.totalReviewsCount * this.averageOverallRating)+(rating.getRatingOverall())) 
+		this.averageOverallRating = ((this.totalReviewsCount * this.averageOverallRating)+(rating.getRating())) 
 				/ (this.totalReviewsCount + 1) ;
 		this.totalReviewsCount++;
 	}

@@ -16,18 +16,6 @@
 <form action="/host/update" method="POST" enctype="multipart/form-data">
 	<table border="1">
 		<tr>
-			<th>Email</th>
-			<td><input name="email" th:value="${host.userDetails.email}" required></td>
-		</tr>
-		<tr>
-			<th>Password</th>
-			<td><input name="password" required></td>
-		</tr>
-		<tr>
-			<th>New Email</th>
-			<td><input name="newEmail" ></td>
-		</tr>
-		<tr>
 			<th>New Password</th>
 			<td><input name="newPassword" ></td>
 		</tr>
@@ -50,6 +38,25 @@
 		<tr>
 			<th>Display Picture Change</th>
 			<td><input name="image" type="file" accept="image/*"><input type="text" name="imageUrl" placeholder="img link"></td>
+		</tr>
+		<tr>
+			<th colspan="2">Credit Card Information</th>
+		</tr>
+		<tr>
+			<th>Credit Card Number</th>
+			<td><input name="creditCard.number" th:value="${host.userDetails.creditCard.number}" required></td>
+		</tr>
+		<tr>
+			<th>Credit Card Cvv</th>
+			<td><input name="creditCard.cvv" th:value="${host.userDetails.creditCard.cvv}" required></td>
+		</tr>
+		<tr>
+			<th>Credit Card Expiry Month</th>
+			<td><input name="creditCard.expiryMonth" th:value="${host.userDetails.creditCard.expiryMonth}" required></td>
+		</tr>
+		<tr>
+			<th>Credit Card Expiry Year (YY)</th>
+			<td><input name="creditCard.expiryYear" th:value="${host.userDetails.creditCard.expiryYear}" required></td>
 		</tr>
 		<tr>
 			<td colspan="2"><input type="submit"></td>

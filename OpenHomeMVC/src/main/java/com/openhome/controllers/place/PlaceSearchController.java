@@ -41,7 +41,7 @@ public class PlaceSearchController {
 	}
 	
 	@RequestMapping(method=RequestMethod.POST)
-	public String searchQuery(Model model,PlaceSearchQuery placeSearchQuery) {
+	public String searchQuery(Model model, HttpSession httpSession ,PlaceSearchQuery placeSearchQuery) {
 		
 		System.out.println(placeSearchQuery);
 		

@@ -15,8 +15,13 @@
 		<a href="/verify/phone">Guest Verify Phone</a>
    	</div>
    	
-	<a href="/guest/reservation/list">Reservations of Place</a>
+   	<div th:if="${ guest.userDetails.email == guest.userDetails.verifiedDetails.verifiedEmail }">
+		<a href="/guest/reservation/list">Reservations</a> 
+		<a href="/place/searchresults">Search For Places</a>   	
+   	</div>
 	
+	<a href="/guest/logout">Guest Logout</a>
+		
 	<table border="1">
 		<tr>
 			<th>Email</th>
@@ -39,8 +44,31 @@
 			<td>[[${guest.userDetails.phoneNumber}]]</td>
 		</tr>
 		<tr>
+			<th>User Registration Type</th>
+			<td>[[${guest.userDetails.userRegistrationType}]]</td>
+		</tr>
+		<tr>
 			<th>Display Picture</th>
-			<td><img style="width:200px" th:src="${guest.userDetails.displayPictureId == null ? 'https://vignette.wikia.nocookie.net/made-for-tv-movie/images/6/62/Image_unavailable.png/revision/latest?cb=20171002225603' : guest.userDetails.displayPictureId.url}"></td>
+			<td><img style="width:200px" onerror="this.src='https://vignette.wikia.nocookie.net/made-for-tv-movie/images/6/62/Image_unavailable.png/revision/latest?cb=20171002225603';" th:src="${guest.userDetails.displayPictureId == null ? '' : guest.userDetails.displayPictureId.url}"></td>
+		</tr>
+		<tr>
+			<th colspan="2">Credit Card Information</th>
+		</tr>
+		<tr>
+			<th>Credit Card Number</th>
+			<td>[[${guest.userDetails.creditCard.number}]]</td>
+		</tr>
+		<tr>
+			<th>Credit Card Cvv</th>
+			<td>[[${guest.userDetails.creditCard.cvv}]]</td>
+		</tr>
+		<tr>
+			<th>Credit Card Expiry Month</th>
+			<td>[[${guest.userDetails.creditCard.expiryMonth}]]</td>
+		</tr>
+		<tr>
+			<th>Credit Card Expiry Year (YY)</th>
+			<td>[[${guest.userDetails.creditCard.expiryYear}]]</td>
 		</tr>
 	</table>
 </div>

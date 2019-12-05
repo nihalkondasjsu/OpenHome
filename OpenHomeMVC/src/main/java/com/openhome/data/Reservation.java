@@ -85,7 +85,7 @@ public class Reservation {
 	private Double weekendRentPrice = 140.0;
 	
 	@Column(nullable = false)
-	private Double dailyParkingFee = 140.0;
+	private Double dailyParkingFee = 14.0;
 	
 	public Reservation() {
 		// TODO Auto-generated constructor stub
@@ -338,7 +338,7 @@ public class Reservation {
 	@Override
 	public String toString() {
 		return String.format(
-				"{ createdDate : %s , checkIn : %s , checkOut : %s , actualCheckIn : %s , actualCheckOut : %s , reservationState : %s , transactions: %s , weekdayRentPrice : %f , weekendRentPrice : %f }",
+				"{ createdDate : %s , checkIn : %s , checkOut : %s , actualCheckIn : %s , actualCheckOut : %s , reservationState : %s , transactions: %s , weekdayRentPrice : %f , weekendRentPrice : %f , dailyParkingFee : %f}",
 				createdDate,
 				new Date(checkIn),
 				new Date(checkOut),
@@ -347,7 +347,8 @@ public class Reservation {
 				reservationState,
 				transactions,
 				weekdayRentPrice,
-				weekendRentPrice
+				weekendRentPrice,
+				dailyParkingFee
 				);
 	}
 }

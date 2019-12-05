@@ -59,7 +59,9 @@ public class PlaceDeleteController {
 			}
 		}
 		
-		placeDao.deleteById(placeId);
+		s.setPermanentlyUnavailable(true);
+		
+		placeDao.save(s);
 		
 		model.addAttribute("Message", "Deleted Place Successfully.");
 

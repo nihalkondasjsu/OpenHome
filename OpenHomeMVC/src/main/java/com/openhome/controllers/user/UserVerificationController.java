@@ -94,7 +94,7 @@ public class UserVerificationController {
 	}
 
 	@RequestMapping(value="/forgotpassword" , method = RequestMethod.GET)
-	public String forgotpassword() {
+	public String forgotpassword(Model model, HttpSession httpSession) {
 		return "user/forgotpassword";
 	}
 	
@@ -115,8 +115,10 @@ public class UserVerificationController {
 			UserVerifiedDetails temp = new UserVerifiedDetails(ud.getEmail(), ud.getVerifiedDetails().getVerifiedPhoneNumber());
 			temp.setId(ud.getVerifiedDetails().getId());
 			userVerifiedDetailsDao.save(temp);
-			ud.setPassword(newPassword);
-			ud.encryptPassword();
+			if(ud.getUserRegistrationType() == UserDetails.UserRegistrationType.OpenHome) {
+				ud.setPassword(newPassword);
+				ud.encryptPassword();
+			}
 			userDetailsDao.save(ud);
 			return "index";
 		}

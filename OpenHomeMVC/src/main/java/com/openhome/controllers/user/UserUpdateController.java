@@ -39,6 +39,9 @@ public class UserUpdateController {
 	
 	@Autowired
 	FileSystem fileSystem;
+
+	@Autowired
+	TimeAdvancementManagement timeAdvancementManagement;
 	
 	@RequestMapping(method=RequestMethod.GET)
 	@UserLoginRequired
@@ -66,38 +69,38 @@ public class UserUpdateController {
 		
 		try {
 			
-			UserDetails userDetailsDB = userDetailsDao.getUserByEmail(userDetails.getEmail());
-		
+			UserDetails userDetailsDB = userDetailsDao.getUserByEmail(sessionManager.getSessionUserDetails(httpSession).getEmail());
+			
+			System.out.println("userDetailsDB.email : "+userDetailsDB.getEmail());
+			
 			try {
 				System.out.println("DisplayPictureId : "+userDetails.getDisplayPictureId());
 				
+				if(userDetails.getCreditCard() == null) {
+					throw new IllegalArgumentException("Invalid Credit Card");
+				}
+				
+				userDetails.getCreditCard().validateCard(timeAdvancementManagement.getCurrentDate());
+				
 				Image imageObj=null;
-				if(image == null) {
-					if(imageUrl == null) {
+				if(image == null || image.getSize()<1000) {
+					if(imageUrl == null || imageUrl.equals("")) {
 						System.out.println("No Image Change");
 					}else
-					imageObj = fileSystem.saveImage(imageUrl);
+						imageObj = fileSystem.saveImage(imageUrl);
 				}else {
-					if(image.getSize()<1000) {
-						System.out.println("No Image Change");
-					}else
 					imageObj = fileSystem.saveImage(image);
 				}
 				
-				if(imageObj == null) {
-					userDetails.setDisplayPictureId(userDetailsDB.getDisplayPictureId());
-				}else {
-					System.out.println("Image Change");
-					Image oldDpId = userDetailsDB.getDisplayPictureId();
-					if(oldDpId != null) {
-						fileSystem.deleteImage(oldDpId);
-					}
+				if(imageObj != null) {
+					System.out.println("Image Provided");
 					userDetails.setDisplayPictureId(imageObj);
 				}
 				
-				userDetails.updateDetails(userDetailsDB.getId(),userDetailsDB.getRegisteredDate(),userDetailsDB.getVerifiedDetails());
+				userDetails.updateDetails(userDetailsDB);
 				System.out.println("DisplayPictureId : "+userDetails.getDisplayPictureId());
 			} catch (Exception e) {
+				e.printStackTrace();
 				return ControllerHelper.popupMessageAndRedirect("Invalid Credentials.", userRole+"/update");
 			}
 			
@@ -106,6 +109,7 @@ public class UserUpdateController {
 			return ControllerHelper.popupMessageAndRedirect(userRole + " details updated.", userRole+"/dashboard");
 			
 		} catch (Exception e) {
+			e.printStackTrace();
 			System.out.println(e.toString());
 		}
 		

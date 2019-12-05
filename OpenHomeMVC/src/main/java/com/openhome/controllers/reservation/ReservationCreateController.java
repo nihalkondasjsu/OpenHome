@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.openhome.Json;
 import com.openhome.aop.helper.annotation.GuestLoginRequired;
 import com.openhome.aop.helper.annotation.ValidPlaceId;
+import com.openhome.controllers.helper.ControllerHelper;
 import com.openhome.dao.ReservationDAO;
 import com.openhome.dao.PlaceDAO;
 import com.openhome.data.Reservation;
@@ -63,13 +64,14 @@ public class ReservationCreateController {
 				throw new IllegalArgumentException("Place Unavailable");
 			}
 				
-			reservationDao.save(reservation);
+			reservation = reservationDao.save(reservation);
+			
+			return ControllerHelper.popupMessageAndRedirect("Reservation Successfull", "/reservation/view?reservationId="+reservation.getId());
 			
 		} catch (Exception e) {
 			e.printStackTrace();
+			return ControllerHelper.popupMessageAndRedirect(e.getMessage(), "/guest/dashboard");
 		}
-		
-		return "redirect:/guest/dashboard";
 	}
 	
 }

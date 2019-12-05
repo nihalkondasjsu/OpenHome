@@ -1,5 +1,7 @@
 package com.openhome.data;
 
+import java.util.Date;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -23,6 +25,8 @@ public class CreditCard {
 	
 	@Column(nullable = false)
 	private Integer expiryYear;
+	
+	private Date expiryDate;
 
 	public Long getId() {
 		return id;
@@ -62,6 +66,52 @@ public class CreditCard {
 
 	public void setExpiryYear(Integer expiryYear) {
 		this.expiryYear = expiryYear;
+	}
+	
+	public void validateCard(Date currentDate) {
+		if(this.number == null || this.cvv == null || this.expiryMonth == null || this.expiryYear == null)
+			throw new IllegalArgumentException("Incomplete Credit Card Provided");
+		
+		this.number = number.replace(" ", "").replace("-", "");
+		
+		if(this.number.length() != 16) {
+			throw new IllegalArgumentException("Invalid Credit Card Number");
+		}
+		if(this.cvv.length() != 3) {
+			throw new IllegalArgumentException("Invalid Credit Card Cvv");
+		}else {
+			try {
+				int temp = Integer.parseInt(cvv);
+			} catch (Exception e) {
+				// TODO: handle exception
+				throw new IllegalArgumentException("Invalid Credit Card Cvv");
+			}
+		}
+		if(this.expiryMonth < 1 || this.expiryMonth > 12) {
+			throw new IllegalArgumentException("Invalid Credit Card Expiry Month");
+		}
+		if(this.expiryYear < 1 || this.expiryYear > 99) {
+			throw new IllegalArgumentException("Invalid Credit Card Expiry Year");
+		}
+		this.expiryDate = new Date( (2000+this.expiryYear) -1900 + (this.expiryMonth == 12 ? 1 : 0) ,this.expiryMonth%12,1);
+		
+		System.out.println(expiryDate);
+		
+		if(!cardValidOn(currentDate)) {
+			throw new IllegalArgumentException("Credit Card Expired");
+		}
+	}
+
+	public boolean cardValidOn(Date currentDate) {
+		return currentDate.before(expiryDate);
+	}
+
+	public Date getExpiryDate() {
+		return expiryDate;
+	}
+
+	public void setExpiryDate(Date expiryDate) {
+		this.expiryDate = expiryDate;
 	}
 	
 }

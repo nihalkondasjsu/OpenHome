@@ -35,11 +35,12 @@ public class Transaction {
 		Charge,Fee,Payment
 	}
 	
-	@ManyToOne(fetch = FetchType.LAZY)
-	private UserDetails userDetails;
+	public enum TransactionUser{
+		Guest,Host
+	}
 	
-	@ManyToOne(fetch = FetchType.LAZY)
-	private CreditCard creditCard;
+	@Enumerated(EnumType.STRING)
+	TransactionUser transactionUser;
 
 	@Enumerated(EnumType.STRING)
 	TransactionNature transactionNature;
@@ -48,12 +49,13 @@ public class Transaction {
 		createdDate = new Date();
 	}
 
-	public Transaction(Double amount, Date createdDate, Date dayToChargeFor, Reservation reservation, TransactionNature transactionNature) {
+	public Transaction(Double amount, Date createdDate, Date dayToChargeFor, Reservation reservation, TransactionNature transactionNature, TransactionUser transactionUser) {
 		this.amount = amount;
 		this.createdDate = createdDate;
 		this.dayToChargeFor = dayToChargeFor;
 		this.reservation = reservation;
 		this.transactionNature = transactionNature;
+		this.transactionUser = transactionUser;
 	}
 
 	public Long getId() {
@@ -103,27 +105,19 @@ public class Transaction {
 	public void setTransactionNature(TransactionNature transactionNature) {
 		this.transactionNature = transactionNature;
 	}
-	
-	public UserDetails getUserDetails() {
-		return userDetails;
+
+	public TransactionUser getTransactionUser() {
+		return transactionUser;
 	}
 
-	public void setUserDetails(UserDetails userDetails) {
-		this.userDetails = userDetails;
-	}
-
-	public CreditCard getCreditCard() {
-		return creditCard;
-	}
-
-	public void setCreditCard(CreditCard creditCard) {
-		this.creditCard = creditCard;
+	public void setTransactionUser(TransactionUser transactionUser) {
+		this.transactionUser = transactionUser;
 	}
 
 	@Override
 	public String toString() {
-		return String.format("{ amount : %f , createdDate : %s , dayToChargeFor : %s , transactionNature : %s , userDetails : %s , creditCard : %s }\n"
-				,amount,createdDate,dayToChargeFor,transactionNature,userDetails.getEmail(),creditCard.getNumber());
+		return String.format("{ amount : %f , createdDate : %s , dayToChargeFor : %s , transactionNature : %s , transactionUser : %s }\n"
+				,amount,createdDate,dayToChargeFor,transactionNature,transactionUser);
 	}
 	
 }

@@ -21,7 +21,7 @@ img{
 	<ul>
 		<li th:each="image : ${place.placeDetails.images}">
 			<img th:src="${image.url}"/>
-			<input type="submit" name="deleteImageId" th:value="${image.id}">
+			<button type="submit" name="deleteImageId" th:value="${image.id}">Delete Image</button>
 		</li>
 	</ul>
 </form>

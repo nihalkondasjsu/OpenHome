@@ -80,17 +80,13 @@ public class PlaceImageUpdateController {
 			s = placeDao.getOne(placeId);
 			Image imageObj = null;
 			
-			if(imageUrl == null || imageUrl.equals("")) {
-				if(image == null) {
-					System.out.println("No Image Provided");
-				}else {
-					if(image.getSize()<1000) {
-						System.out.println("No Image Provided");
-					}else
-					imageObj = fileSystem.saveImage(image);
-				}
+			if(image == null || image.getSize()<1000) {
+				if(imageUrl == null || imageUrl.equals("")) {
+					System.out.println("No Image Change");
+				}else
+					imageObj = fileSystem.saveImage(imageUrl);
 			}else {
-				imageObj = fileSystem.saveImage(imageUrl);
+				imageObj = fileSystem.saveImage(image);
 			}
 			
 			if(imageObj == null)
@@ -113,7 +109,7 @@ public class PlaceImageUpdateController {
 	@RequestMapping(value="/place/updatePlaceImagesDelete",method=RequestMethod.POST)
 	@ValidPlaceId
 	@PlaceHostLoginRequired
-	public String updateFormAdd(@RequestParam(value="placeId",required=false) Long placeId, Model model , HttpSession httpSession ,@RequestParam(value="deleteImageName",required=false) Long deleteImageId) {
+	public String updateFormAdd(@RequestParam(value="placeId",required=false) Long placeId, Model model , HttpSession httpSession ,@RequestParam(value="deleteImageId",required=false) Long deleteImageId) {
 		System.out.println("PlaceImageUpdateController");
 		Place s = null;
 		

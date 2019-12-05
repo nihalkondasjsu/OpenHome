@@ -1,6 +1,5 @@
 package com.openhome.dao;
 
-import java.util.Date;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -79,7 +78,7 @@ public interface PlaceDAO extends JpaRepository<Place,Long>{
 
 	*/
 	
-	@Query("select s from Place s where s.placeDetails in (select sd from PlaceDetails sd where "+
+	@Query("select s from Place s where s.permanentlyUnavailable != true AND s.placeDetails in (select sd from PlaceDetails sd where "+
 			"(sd.availableWeekDaysString like :requiredWeekDays) and "+
 			"(sd.weekdayRentPrice between :minPrice and :maxPrice ) and "+
 			"sd.address in (select a from Address a where a.zip = :zip)) "+
@@ -93,7 +92,7 @@ public interface PlaceDAO extends JpaRepository<Place,Long>{
 			@Param("requiredWeekDays")String requiredWeekDays
 			);
 	
-	@Query("select s from Place s where s.placeDetails in (select sd from PlaceDetails sd where "+
+	@Query("select s from Place s where s.permanentlyUnavailable != true AND s.placeDetails in (select sd from PlaceDetails sd where "+
 			"(sd.availableWeekDaysString like :requiredWeekDays) and "+
 			"(sd.weekdayRentPrice between :minPrice and :maxPrice ) and "+
 			"sd.address in (select a from Address a where a.city = :city)) "+
@@ -107,7 +106,7 @@ public interface PlaceDAO extends JpaRepository<Place,Long>{
 			@Param("requiredWeekDays")String requiredWeekDays
 			);
 	
-	@Query("select count(s) from Place s where s.id = :placeId and s.placeDetails in (select sd from PlaceDetails sd where "+
+	@Query("select count(s) from Place s where s.permanentlyUnavailable != true AND s.id = :placeId and s.placeDetails in (select sd from PlaceDetails sd where "+
 			"(sd.availableWeekDaysString like :requiredWeekDays) )"+
 			"and 0 = (select count(*) from Reservation b where b.place = s and b.actualCheckOut >= :startDate and b.checkIn <= :endTime )")
 	public Integer getSpecifiPlacesCountByDates(

@@ -42,6 +42,8 @@ public class Place {
 	@Transient
 	private Boolean bestSuitedSearchResult = false;
 	
+	public Boolean permanentlyUnavailable = false;
+	
 	public Place() {
 		reservations = new ArrayList<Reservation>();
 		placeDetails = new PlaceDetails();
@@ -85,7 +87,13 @@ public class Place {
 	public void setBestSuitedSearchResult(Boolean bestSuitedSearchResult) {
 		this.bestSuitedSearchResult = bestSuitedSearchResult;
 	}
-	
-	
+
+	public Boolean getPermanentlyUnavailable() {
+		return permanentlyUnavailable == null ? false : permanentlyUnavailable;
+	}
+
+	public void setPermanentlyUnavailable(Boolean permanentlyUnavailable) {
+		this.permanentlyUnavailable = permanentlyUnavailable;
+	}
 	
 }

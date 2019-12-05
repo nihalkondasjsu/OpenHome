@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.openhome.aop.helper.annotation.ReservationAssociatedGuestLoginRequired;
 import com.openhome.aop.helper.annotation.ValidReservationId;
+import com.openhome.controllers.helper.ControllerHelper;
 import com.openhome.dao.ReservationDAO;
 import com.openhome.data.Reservation;
 import com.openhome.data.manager.ReservationManager;
@@ -18,8 +19,7 @@ import com.openhome.session.SessionManager;
 import com.openhome.tam.TimeAdvancementManagement;
 
 @Controller
-@RequestMapping("/reservation/checkIn")
-public class ReservationCheckInController {
+public class ReservationActionController {
 
 	@Autowired
 	ReservationDAO reservationDao;
@@ -33,7 +33,7 @@ public class ReservationCheckInController {
 	@Autowired
 	TimeAdvancementManagement timeAdvancementManagement;
 	
-	@RequestMapping(method=RequestMethod.GET)
+	@RequestMapping(value = "/reservation/checkIn" ,method=RequestMethod.GET)
 	@ValidReservationId
 	@ReservationAssociatedGuestLoginRequired
 	public String guestCheckIn(@RequestParam(value="reservationId",required=false) Long reservationId, Model model , HttpSession httpSession ) {
@@ -43,9 +43,10 @@ public class ReservationCheckInController {
 			reservationProcessor.performGuestCheckIn(timeAdvancementManagement.getCurrentDate());
 		} catch (IllegalAccessException e) {
 			e.printStackTrace();
+			return ControllerHelper.popupMessageAndRedirect(e.getMessage(),  "/reservation/view?reservationId="+reservationId);
 		}
 		reservationDao.save(reservation);
-		return "redirect:/guest/dashboard";
+		return ControllerHelper.popupMessageAndRedirect("Check In Successful.", "/reservation/view?reservationId="+reservationId);
 	}
 	
 }

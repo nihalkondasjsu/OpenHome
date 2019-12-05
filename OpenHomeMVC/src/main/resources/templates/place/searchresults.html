@@ -29,12 +29,8 @@
 	    <input type="date" th:value="${placeSearchQuery.reservationEndDateTime}"
 	       name="reservationEndDateTime"
 	       format-value="yyyy-MM-dd">   
-	    <p>Sharing Type : 
-	    	<div id='sharingType' class='checkBoxContainer' th:attr="svals=${placeSearchQuery.sharingType}" vals='Entire House;Shared Room;Private Room'></div>
-		</p>
-	    <p>Property Type : 
-		    <div id='propertyType' class='checkBoxContainer' th:attr="svals=${placeSearchQuery.propertyType}" vals='House;Apartment;Bed and breakfast;Boutique hotel;Bungalow;Cabin;Cottage;Guest suite;Guesthouse;Hotel;Loft;Serviced apartment;Townhouse;Villa'></div>
-		</p>
+	    <p>Sharing Type :<div id='sharingType' class='checkBoxContainer' th:attr="svals=${placeSearchQuery.sharingType}" vals='Entire House;Private Room'></div></p>
+	    <p>Property Type : <div id='propertyType' class='checkBoxContainer' th:attr="svals=${placeSearchQuery.propertyType}" vals='House;Apartment;Townhouse'></div></p>
 	    <input name="minPrice" th:value="${placeSearchQuery.minPrice}" type="number" placeholder="Min Price">
 	    <input name="maxPrice" th:value="${placeSearchQuery.maxPrice}" type="number" placeholder="Max Price">
 	    <label><input type="checkbox" name="internetAvailable" value="Yes" th:checked="${placeSearchQuery.internetAvailable}">Internet</label>

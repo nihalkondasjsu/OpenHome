@@ -47,7 +47,7 @@ public class PlaceRegistrationController {
 	
 	@RequestMapping(method=RequestMethod.GET)
 	@HostLoginRequired
-	public String registerForm( Model model ) {
+	public String registerForm( HttpSession httpSession , Model model ) {
 		System.out.println("PlaceRegistrationController");
 		return "place/register";
 	}
@@ -65,21 +65,17 @@ public class PlaceRegistrationController {
 			placeDetails.prepareForRegistration();
 			
 			Image imageObj = null;
-			if(imageUrl == null || imageUrl.equals("")) {
-				if(image == null) {
-					System.out.println("No Image Provided");
-				}else {
-					if(image.getSize()<1000) {
-						System.out.println("No Image Provided");
-					}else
-					imageObj = fileSystem.saveImage(image);
-				}
+			if(image == null || image.getSize()<1000) {
+				if(imageUrl == null || imageUrl.equals("")) {
+					System.out.println("No Image Change");
+				}else
+					imageObj = fileSystem.saveImage(imageUrl);
 			}else {
-				imageObj = fileSystem.saveImage(imageUrl);
+				imageObj = fileSystem.saveImage(image);
 			}
 			
 			if(imageObj == null) {
-				System.out.println("Image Provided");
+				System.out.println("No Image Provided");
 				throw new IllegalArgumentException("No Image Provided");
 			}
 			
