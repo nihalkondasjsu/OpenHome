@@ -10,7 +10,7 @@ import com.openhome.data.Reservation;
 import com.openhome.data.Reservation.ReservationState;
 import com.openhome.data.Transaction;
 import com.openhome.data.Transaction.TransactionNature;
-import com.openhome.data.Transaction.TransactionUser;
+import com.openhome.data.UserDetails;
 import com.openhome.mailer.Mailer;
 
 @Component
@@ -43,102 +43,16 @@ public class ReservationManager {
 	}
 	
 	@Debug
-	public Transaction getTransactionByNatureUserAndDate(TransactionNature transactionNature, Transaction.TransactionUser transactionUser,Date dateToCharge) {
-		for (Transaction transaction : getReservation().getTransactions()) {
-			if(transaction.getTransactionNature().equals(transactionNature) && transaction.getTransactionUser().equals(transactionUser) && compareDMY(dateToCharge, transaction.getDayToChargeFor())) {
-				return transaction;
-			}
-		}
-		return null;
-	}
-	
-		
-	@Debug
-	public void chargeGuestForDay(Date currentTime,Date dayToChargeFor) {
-		Transaction t = getTransactionByNatureUserAndDate(TransactionNature.Charge,Transaction.TransactionUser.Guest,dayToChargeFor);
-		
-		if(t != null) {
-			// guest already charged for today
-			 return;
-		}
-		
-		Double amount = getPriceForDay(dayToChargeFor);
-		
-		if(amount != 0) {
-			Transaction transaction1 = new Transaction(amount*SERVICE_CHARGE,currentTime,dayToChargeFor,getReservation(),TransactionNature.Charge,Transaction.TransactionUser.Guest);
-			getReservation().addTransaction(transaction1);
-			
-			Transaction transaction2 = new Transaction(amount,currentTime,dayToChargeFor,getReservation(),TransactionNature.Payment,Transaction.TransactionUser.Host);
-			getReservation().addTransaction(transaction2);
-		}
-		
-	}
-
-	@Debug
-	public void chargeGuestFeeForDay(Date currentTime,Date dayToChargeFor) {
-		Transaction t = getTransactionByNatureUserAndDate(TransactionNature.Fee,TransactionUser.Guest,dayToChargeFor);
-		
-		if(t != null) {
-			// guest already charged fee for today
-			 return;
-		}
-		
-		Double amount = getGuestCancellationFeeForDay(currentTime,dayToChargeFor);
-		
-		if(amount != 0) {
-			Transaction transaction1 = new Transaction(amount*SERVICE_CHARGE,currentTime,dayToChargeFor,getReservation(),TransactionNature.Fee,Transaction.TransactionUser.Guest);
-			getReservation().addTransaction(transaction1);
-			
-			Transaction transaction2 = new Transaction(amount,currentTime,dayToChargeFor,getReservation(),TransactionNature.Payment,Transaction.TransactionUser.Host);
-			getReservation().addTransaction(transaction2);
-		}
-		
-	}
-	
-	@Debug
-	public void chargeHostFeeForDay(Date currentTime,Date dayToChargeFor) {
-		Transaction t = getTransactionByNatureUserAndDate(TransactionNature.Fee,TransactionUser.Host,dayToChargeFor);
-		
-		if(t != null) {
-			// host already charged fee for today
-			 return;
-		}
-		
-		Double amount = getHostCancellationFeeForDay(currentTime,dayToChargeFor);
-		if(amount != 0) {
-			Transaction transaction1 = new Transaction(amount*SERVICE_CHARGE,currentTime,dayToChargeFor,getReservation(),TransactionNature.Fee,Transaction.TransactionUser.Host);
-			getReservation().addTransaction(transaction1);
-			
-			Transaction transaction2 = new Transaction(amount,currentTime,dayToChargeFor,getReservation(),TransactionNature.Payment,Transaction.TransactionUser.Guest);
-			getReservation().addTransaction(transaction2);
-		}
-		
-	}
-
-	@Debug
-	public void chargeGuestForPreviousDays(Date currentTime) {
-		
-		Date dayToChargeFor = new Date(currentTime.getTime() - MS_24_HOURS );
-		
-		//was the guest charged before on the same day
-		
-		chargeGuestForDay(currentTime, dayToChargeFor);
-		
-	}
-	
-	
-	
-	@Debug
 	public void guestCancelReservation(Date currentTime) {
 		for (int i = 0 ; i < 2 ; i++) {
-			chargeGuestFeeForDay(currentTime, new Date(currentTime.getTime()+(i*MS_24_HOURS)));
+			//chargeGuestFeeForDay(currentTime, new Date(currentTime.getTime()+(i*MS_24_HOURS)));
 		}
 	}
 	
 	@Debug
 	public void hostCancelReservation(Date currentTime) {
 		for (int i = getReservation().getReservationState() == ReservationState.CheckedIn ? 1 : 0 ; i < 7 ; i++) {
-			chargeHostFeeForDay(currentTime, new Date(currentTime.getTime()+(i*MS_24_HOURS)));
+			//chargeHostFeeForDay(currentTime, new Date(currentTime.getTime()+(i*MS_24_HOURS)));
 		}
 	}
 	
@@ -225,11 +139,11 @@ public class ReservationManager {
 			throw new IllegalAccessException("It is too late to Check Out");
 		}
 
-		chargeGuestForDay(currentDate, currentDate);
+		//chargeGuestForDay(currentDate, currentDate);
 	
 		if(currentDate.before(new Date(getReservation().getCheckOut()-MS_24_HOURS))) {
 			//early checkout
-			chargeGuestFeeForDay(currentDate, new Date(currentDate.getTime()+MS_24_HOURS));
+			//chargeGuestFeeForDay(currentDate, new Date(currentDate.getTime()+MS_24_HOURS));
 		}
 		
 		getReservation().setActualCheckOut(currentDate.getTime());
@@ -311,7 +225,6 @@ public class ReservationManager {
 			return;
 		}else {
 			// record of guest check-in found
-			chargeGuestForPreviousDays(currentDate);
 			System.out.println("Guest charge");
 			return;
 		}

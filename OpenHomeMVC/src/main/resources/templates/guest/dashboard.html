@@ -8,7 +8,6 @@
 <h1>Guest Dashboard</h1>
 <div th:if="${guest != null}">
 	<a href="/guest/update">Guest Update</a>
-	<a href="/guest/delete">Guest Delete</a>
 	<div th:if="${ guest.userDetails.email != guest.userDetails.verifiedDetails.verifiedEmail }">
 		<a href="/verify/email">Guest Verify Email</a>
    	</div>

@@ -84,6 +84,9 @@ public class Reservation {
 	@Column(nullable = false)
 	private Double weekendRentPrice = 140.0;
 	
+	@Column(nullable = false)
+	private Double dailyParkingFee = 140.0;
+	
 	public Reservation() {
 		// TODO Auto-generated constructor stub
 		createdDate = new Date();
@@ -239,59 +242,96 @@ public class Reservation {
 		this.checkOutDateString = checkOutDateString;
 	}
 	
+	public Double getDailyParkingFee() {
+		return dailyParkingFee;
+	}
+
+	public void setDailyParkingFee(Double dailyParkingFee) {
+		this.dailyParkingFee = dailyParkingFee;
+	}
+
 	public void prepareForRegistration(Date createdDate,Place place,Guest guest) throws ParseException {
+		
 		this.createdDate = createdDate;
+		
 		String pattern = "yyyy-MM-dd HH:mm";
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
+		
 		this.checkIn = simpleDateFormat.parse(checkInDateString+" "+CHECK_IN_TIME).getTime();
 		this.checkOut = simpleDateFormat.parse(checkOutDateString+" "+CHECK_OUT_TIME).getTime();
+		
 		if(this.checkIn<createdDate.getTime() || this.checkOut - this.checkIn < 20 * 60 * 60 * 1000) {
 			throw new IllegalArgumentException("Invalid Reservation");
 		}
+		
 		this.requiredDays = weekDays();
+		
 		this.actualCheckIn = null;
 		this.actualCheckOut = checkOut;
+		
 		this.reservationState = ReservationState.Booked;
+		
 		this.place = place;
+		
 		this.transactions = new ArrayList<Transaction>();
+		
 		this.rating = null;
+		
 		this.guest = guest;
+		
 		this.weekdayRentPrice = this.place.getPlaceDetails().getWeekdayRentPrice();
 		this.weekendRentPrice = this.place.getPlaceDetails().getWeekendRentPrice();
+		this.dailyParkingFee = this.place.getPlaceDetails().getDailyParkingFee();
+		
 	}
 	
 	public void prepareForHostBlock(Date createdDate,Place place) throws ParseException {
+		
 		this.createdDate = createdDate;
+		
 		String pattern = "yyyy-MM-dd HH:mm";
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
+		
 		this.checkIn = simpleDateFormat.parse(checkInDateString+" "+CHECK_IN_TIME).getTime();
 		this.checkOut = simpleDateFormat.parse(checkOutDateString+" "+CHECK_OUT_TIME).getTime();
+		
 		if(this.checkIn<createdDate.getTime() || this.checkOut - this.checkIn < 20 * 60 * 60 * 1000) {
 			throw new IllegalArgumentException("Invalid Reservation");
 		}
+		
 		this.reservationState = ReservationState.HostBlock;
+		
 		this.place = place;
+		
 		this.transactions = new ArrayList<Transaction>();
+		
 		this.rating = null;
-		this.weekdayRentPrice = this.place.getPlaceDetails().getWeekdayRentPrice();
-		this.weekendRentPrice = this.place.getPlaceDetails().getWeekendRentPrice();
+		
 	}
 	
 	public String weekDays() throws ParseException {
+		
 		List<String> weekdays = new ArrayList<String>();
+		
 		String pattern = "yyyy-MM-dd HH:mm";
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
+		
 		long start = simpleDateFormat.parse(checkInDateString+" 00:00").getTime();
 		long end = simpleDateFormat.parse(checkOutDateString+" 00:00").getTime();
+		
 		String[] week = "Sunday;Monday;Tuesday;Wednesday;Thursday;Friday;Saturday".split(";");
+		
 		for (long i = start; i <= end; i+= 24*60*60*1000) {
 			String weekS = week[new Date(i).getDay()];
 			if(weekdays.contains(weekS) == false)
 				weekdays.add(weekS);
 			else break;
 		}
+		
 		String res = "%"+StringListConverter.listToString(weekdays).replace(";;",";%;")+"%";
+		
 		System.out.println(res);
+		
 		return res;
 	}
 
@@ -302,7 +342,7 @@ public class Reservation {
 				createdDate,
 				new Date(checkIn),
 				new Date(checkOut),
-				new Date(actualCheckIn == null ? 0 : actualCheckIn),
+				actualCheckIn == null ? "No Record" : new Date(actualCheckIn),
 				new Date(actualCheckOut),
 				reservationState,
 				transactions,

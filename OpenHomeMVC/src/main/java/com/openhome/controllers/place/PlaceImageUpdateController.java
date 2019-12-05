@@ -78,18 +78,23 @@ public class PlaceImageUpdateController {
 		
 		try {
 			s = placeDao.getOne(placeId);
-			Image imageObj;
-			if(image == null) {
-				if(imageUrl == null) {
-					throw new IllegalArgumentException("No Image Provided");
+			Image imageObj = null;
+			
+			if(imageUrl == null || imageUrl.equals("")) {
+				if(image == null) {
+					System.out.println("No Image Provided");
+				}else {
+					if(image.getSize()<1000) {
+						System.out.println("No Image Provided");
+					}else
+					imageObj = fileSystem.saveImage(image);
 				}
-				imageObj = fileSystem.saveImage(imageUrl);
 			}else {
-				if(image.getSize()<1000) {
-					throw new IllegalArgumentException("No Image Provided");
-				}
-				imageObj = fileSystem.saveImage(image);
+				imageObj = fileSystem.saveImage(imageUrl);
 			}
+			
+			if(imageObj == null)
+				throw new IllegalArgumentException("No Image Provided");
 			
 			PlaceDetails sd = s.getPlaceDetails();
 			

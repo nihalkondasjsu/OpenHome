@@ -42,18 +42,7 @@ img{
 			<select readonly name='propertyType' th:value="${place.placeDetails.propertyType}" >
 				<option value='House' selected>House</option>
 				<option value='Apartment'>Apartment</option>
-				<option value='Bed and breakfast'>Bed and breakfast</option>
-				<option value='Boutique hotel'>Boutique hotel</option>
-				<option value='Bungalow'>Bungalow</option>
-				<option value='Cabin'>Cabin</option>
-				<option value='Cottage'>Cottage</option>
-				<option value='Guest suite'>Guest suite</option>
-				<option value='Guesthouse'>Guesthouse</option>
-				<option value='Hotel'>Hotel</option>
-				<option value='Loft'>Loft</option>
-				<option value='Serviced apartment'>Serviced apartment</option>
 				<option value='Townhouse'>Townhouse</option>
-				<option value='Villa'>Villa</option>
 			</select>
 		</td>
 	</tr>
@@ -62,7 +51,6 @@ img{
 		<td>
 			<select readonly name='roomType' th:value="${place.placeDetails.roomType}" >
 				<option value='Entire House' selected>Entire House</option>
-				<option value='Shared Room'>Shared Room</option>
 				<option value='Private Room'>Private Room</option>
 			</select>
 		</td>
@@ -135,6 +123,24 @@ img{
 		<th>SqFt</th>
 		<td><input readonly name='sqft' th:value="${place.placeDetails.sqft}" type='number' ></td>
 	</tr>
+	<tr>
+		<th>Private Bathroom</th>
+		<td>
+			<select name='privateBathroom' th:field="*{place.placeDetails.privateBathroom}" required>
+				<option value='true' selected>Yes</option>
+				<option value='false'>No</option>
+			</select>
+		</td>
+	</tr>
+	<tr>
+		<th>Private Shower</th>
+		<td>
+			<select name='privateShower' th:field="*{place.placeDetails.privateShower}" required>
+				<option value='true' selected>Yes</option>
+				<option value='false'>No</option>
+			</select>
+		</td>
+	</tr>			
 	<tr>
 		<th>Description</th>
 		<td><textarea readonly name='description' >[[${place.placeDetails.description}]]</textarea></td>

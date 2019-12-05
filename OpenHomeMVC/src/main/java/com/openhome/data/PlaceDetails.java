@@ -76,6 +76,12 @@ public class PlaceDetails {
 	
 	@Column(nullable = false)
 	private Double sqft = 400.0;
+
+	private String contactPhoneNumber = "";
+	
+	private Boolean privateBathroom = true;
+
+	private Boolean privateShower = true;
 	
 	@Column(length=512,nullable = false)
 	private String description = "Good Place";
@@ -293,6 +299,30 @@ public class PlaceDetails {
 		this.images = new ArrayList<Image>();
 		this.averageOverallRating = 0.0;
 		this.totalReviewsCount = 0;
+	}
+
+	public Boolean getPrivateBathroom() {
+		return privateBathroom;
+	}
+
+	public void setPrivateBathroom(Boolean privateBathroom) {
+		this.privateBathroom = privateBathroom;
+	}
+
+	public Boolean getPrivateShower() {
+		return privateShower;
+	}
+
+	public void setPrivateShower(Boolean privateShower) {
+		this.privateShower = privateShower;
+	}
+
+	public String getContactPhoneNumber() {
+		return contactPhoneNumber;
+	}
+
+	public void setContactPhoneNumber(String contactPhoneNumber) {
+		this.contactPhoneNumber = contactPhoneNumber;
 	}
 	
 }

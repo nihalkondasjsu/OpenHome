@@ -6,6 +6,8 @@ import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -23,8 +25,9 @@ import com.openhome.tam.TimeAdvancementManagement;
 @Entity
 public class UserDetails {
 
-	@Transient
-	public static final boolean canEmailBeChanged = false;
+	enum UserRegistrationType{
+		OpenHome,Facebook,Google
+	}
 	
 	@Id
 	@GeneratedValue
@@ -37,17 +40,22 @@ public class UserDetails {
 	private String password;
 	
 	@Transient
-	private String newEmail;
-	
-	@Transient
 	private String newPassword;
 	
 	private String phoneNumber = "";
+
+	@Enumerated(EnumType.STRING)
+	private UserRegistrationType userRegistrationType = UserRegistrationType.OpenHome;
 	
 	@OneToOne(fetch=FetchType.EAGER,
 			orphanRemoval=true,
 			cascade=CascadeType.ALL)
 	private Image displayPictureId;
+	
+	@OneToOne(fetch=FetchType.EAGER,
+			orphanRemoval=true,
+			cascade=CascadeType.ALL)
+	private CreditCard creditCard;
 	
 	@JoinColumn(updatable=false)
 	@OneToOne(fetch=FetchType.EAGER,
@@ -67,6 +75,7 @@ public class UserDetails {
 	public UserDetails() {
 		registeredDate = new Date();
 		verifiedDetails = new UserVerifiedDetails();
+		userRegistrationType = UserRegistrationType.OpenHome;
 	}
 	
 	public UserDetails(String email, String password, String phoneNumber, UserVerifiedDetails verifiedDetails,
@@ -113,14 +122,6 @@ public class UserDetails {
 	public void setPhoneNumber(String phoneNumber) {
 		this.phoneNumber = phoneNumber;
 	}
-	
-	public String getNewEmail() {
-		return newEmail;
-	}
-
-	public void setNewEmail(String newEmail) {
-		this.newEmail = newEmail;
-	}
 
 	public String getNewPassword() {
 		return newPassword;
@@ -138,6 +139,14 @@ public class UserDetails {
 		this.verifiedDetails = verifiedDetails;
 	}
 	
+	public CreditCard getCreditCard() {
+		return creditCard;
+	}
+
+	public void setCreditCard(CreditCard creditCard) {
+		this.creditCard = creditCard;
+	}
+
 	public boolean verifiedEmail() {
 		try {
 			return this.verifiedDetails.getVerifiedEmail().equals(this.email);
@@ -190,22 +199,14 @@ public class UserDetails {
 		return Encryption.checkPassword(plainPassword, getPassword());
 	}
 	
-	public void updateDetails(String sessionEmail,String sessionPassword, UserVerifiedDetails userVerifiedDetails) throws IllegalAccessException {
-		if(sessionEmail.equals(getEmail()) == false || Encryption.checkPassword(getPassword(), sessionPassword) == false) {
-			throw new IllegalAccessException("Mismatched credentials with the user in Session.");
-		}
-		
-		if(canEmailBeChanged)
-		if(getNewEmail().equals("") == false) {
-			setEmail(getNewEmail());
-		}
-		
+	public void updateDetails(Long id, Date date, UserVerifiedDetails userVerifiedDetails) throws IllegalAccessException {
 		if(getNewPassword().equals("") == false) {
 			setPassword(getNewPassword());
+			encryptPassword();
 		}
-		prepareForRegistration(getRegisteredDate());
+		setId(id);
+		setRegisteredDate(date);
 		setVerifiedDetails(userVerifiedDetails);
-		
 	}
 
 	public Image getDisplayPictureId() {
@@ -218,5 +219,13 @@ public class UserDetails {
 
 	public void encryptPassword() {
 		setPassword(Encryption.encryptPassword(getPassword()));
+	}
+
+	public UserRegistrationType getUserRegistrationType() {
+		return userRegistrationType;
+	}
+
+	public void setUserRegistrationType(UserRegistrationType userRegistrationType) {
+		this.userRegistrationType = userRegistrationType;
 	}
 }

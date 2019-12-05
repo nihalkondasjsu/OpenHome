@@ -9,24 +9,17 @@
 		window.location = "/"+successLink;
 	}
 </script>
+<link href="/basic.css" rel="stylesheet" type="text/css">
 </head>
 <body>
 <h1>Guest Login Form</h1>
 <p style="color:red">[[${errorMessage}]]</p>
 <form action="/guest/login" method="POST">
-	<table border="1">
-		<tr>
-			<th>Email</th>
-			<td><input name="email" required></td>
-		</tr>
-		<tr>
-			<th>Password</th>
-			<td><input name="password" required></td>
-		</tr>
-		<tr>
-			<td colspan="2"><input type="submit"></td>
-		</tr>
-	</table>
+	<input type="text" name="email" placeholder="Email" required>
+	<br>
+	<input type="password" name="password" placeholder="Password" required>
+	<br>
+	<input type="submit" value="Login">
 </form>
 </body>
 </html>

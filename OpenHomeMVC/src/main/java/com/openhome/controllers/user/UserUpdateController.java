@@ -95,15 +95,11 @@ public class UserUpdateController {
 					userDetails.setDisplayPictureId(imageObj);
 				}
 				
-				userDetails.updateDetails(userDetailsDB.getEmail(), userDetailsDB.getPassword(),userDetailsDB.getVerifiedDetails());
+				userDetails.updateDetails(userDetailsDB.getId(),userDetailsDB.getRegisteredDate(),userDetailsDB.getVerifiedDetails());
 				System.out.println("DisplayPictureId : "+userDetails.getDisplayPictureId());
 			} catch (Exception e) {
 				return ControllerHelper.popupMessageAndRedirect("Invalid Credentials.", userRole+"/update");
 			}
-			
-			userDetails.setRegisteredDate(userDetailsDB.getRegisteredDate());
-			
-			userDetails.setId(userDetailsDB.getId());
 			
 			userDetailsDao.save(userDetails);
 			

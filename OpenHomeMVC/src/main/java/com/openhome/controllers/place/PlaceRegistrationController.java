@@ -65,16 +65,17 @@ public class PlaceRegistrationController {
 			placeDetails.prepareForRegistration();
 			
 			Image imageObj = null;
-			if(image == null) {
-				if(imageUrl == null) {
+			if(imageUrl == null || imageUrl.equals("")) {
+				if(image == null) {
 					System.out.println("No Image Provided");
-				}else
-				imageObj = fileSystem.saveImage(imageUrl);
+				}else {
+					if(image.getSize()<1000) {
+						System.out.println("No Image Provided");
+					}else
+					imageObj = fileSystem.saveImage(image);
+				}
 			}else {
-				if(image.getSize()<1000) {
-					System.out.println("No Image Provided");
-				}else
-				imageObj = fileSystem.saveImage(image);
+				imageObj = fileSystem.saveImage(imageUrl);
 			}
 			
 			if(imageObj == null) {

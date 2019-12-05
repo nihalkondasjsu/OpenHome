@@ -1,0 +1,30 @@
+body{
+	font-family:fantasy;
+}
+
+h1{
+	color:#B22222;
+	font-size:32pt;
+}
+
+input[type="text"],input[type="password"],input[type="date"],input[type="date-time"]{
+	font-size:16pt;
+    padding:7.5px;
+    color:	#B22222;
+    border : 1px solid #B22222;
+    margin: 2.5px;
+    border-radius:10px;
+    width:250px;
+}
+::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
+  color: #F08080;
+  opacity: 0.75; /* Firefox */
+}
+
+:-ms-input-placeholder { /* Internet Explorer 10-11 */
+  color: #F08080;
+}
+
+::-ms-input-placeholder { /* Microsoft Edge */
+  color: #F08080;
+}
