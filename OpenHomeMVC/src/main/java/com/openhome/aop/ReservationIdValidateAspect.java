@@ -20,7 +20,7 @@ import com.openhome.data.Reservation;
 @Order(1)
 public class ReservationIdValidateAspect {
 
-	@Autowired
+	@Autowired(required=true)
 	ReservationDAO reservationDao;
 	
 	@Around("@annotation(com.openhome.aop.helper.annotation.ValidReservationId)")

@@ -14,23 +14,23 @@ import com.openhome.aop.helper.annotation.ValidReservationId;
 import com.openhome.controllers.helper.ControllerHelper;
 import com.openhome.dao.ReservationDAO;
 import com.openhome.data.Reservation;
-import com.openhome.data.manager.ReservationManager;
+import com.openhome.data.helper.ReservationProcessor;
 import com.openhome.session.SessionManager;
 import com.openhome.tam.TimeAdvancementManagement;
 
 @Controller
 public class ReservationActionController {
 
-	@Autowired
+	@Autowired(required=true)
 	ReservationDAO reservationDao;
 
-	@Autowired
-	ReservationManager reservationProcessor;
+	@Autowired(required=true)
+	ReservationProcessor reservationProcessor;
 	
-	@Autowired
+	@Autowired(required=true)
 	SessionManager sessionManager;
 	
-	@Autowired
+	@Autowired(required=true)
 	TimeAdvancementManagement timeAdvancementManagement;
 	
 	@RequestMapping(value = "/reservation/checkIn" ,method=RequestMethod.GET)
@@ -41,12 +41,48 @@ public class ReservationActionController {
 		try {
 			reservationProcessor.setReservation(reservation);
 			reservationProcessor.performGuestCheckIn(timeAdvancementManagement.getCurrentDate());
-		} catch (IllegalAccessException e) {
+			reservationDao.save(reservation);
+		} catch (Exception e) {
 			e.printStackTrace();
 			return ControllerHelper.popupMessageAndRedirect(e.getMessage(),  "/reservation/view?reservationId="+reservationId);
 		}
-		reservationDao.save(reservation);
 		return ControllerHelper.popupMessageAndRedirect("Check In Successful.", "/reservation/view?reservationId="+reservationId);
+	}
+	
+	@RequestMapping(value = "/reservation/checkOut" ,method=RequestMethod.GET)
+	@ValidReservationId
+	@ReservationAssociatedGuestLoginRequired
+	public String guestCheckOut(@RequestParam(value="reservationId",required=false) Long reservationId, Model model , HttpSession httpSession ) {
+		Reservation reservation = reservationDao.getOne(reservationId);
+		try {
+			reservationProcessor.setReservation(reservation);
+			reservationProcessor.performGuestCheckOut(timeAdvancementManagement.getCurrentDate());
+			reservationDao.save(reservation);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return ControllerHelper.popupMessageAndRedirect(e.getMessage(),  "/reservation/view?reservationId="+reservationId);
+		}
+		return ControllerHelper.popupMessageAndRedirect("Check Out Successful.", "/reservation/view?reservationId="+reservationId);
+	}	
+	
+	@RequestMapping(value = "/reservation/cancel" ,method=RequestMethod.GET)
+	@ValidReservationId
+	@ReservationAssociatedGuestLoginRequired
+	public String cancelReservation(@RequestParam(value="reservationId",required=false) Long reservationId, Model model , HttpSession httpSession ) {
+		Reservation reservation = reservationDao.getOne(reservationId);
+		try {
+			reservationProcessor.setReservation(reservation);
+			
+			if(sessionManager.getGuestId(httpSession) != null)
+				reservationProcessor.performGuestCancel(timeAdvancementManagement.getCurrentDate());
+			else
+				reservationProcessor.performHostCancel(timeAdvancementManagement.getCurrentDate());
+			reservationDao.save(reservation);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return ControllerHelper.popupMessageAndRedirect(e.getMessage(),  "/reservation/view?reservationId="+reservationId);
+		}
+		return ControllerHelper.popupMessageAndRedirect("Cancellation Successful.", "/reservation/view?reservationId="+reservationId);
 	}
 	
 }

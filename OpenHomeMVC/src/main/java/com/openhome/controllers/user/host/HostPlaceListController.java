@@ -15,7 +15,7 @@ import com.openhome.session.SessionManager;
 @RequestMapping("/host/place/list")
 public class HostPlaceListController {
 
-	@Autowired
+	@Autowired(required=true)
 	SessionManager sessionManager;
 	
 	@RequestMapping(method=RequestMethod.GET)

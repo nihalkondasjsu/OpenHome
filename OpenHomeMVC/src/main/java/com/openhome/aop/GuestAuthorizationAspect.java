@@ -25,10 +25,10 @@ import com.openhome.session.SessionManager;
 @Order(0)
 public class GuestAuthorizationAspect {
 
-	@Autowired
+	@Autowired(required=true)
 	PlaceDAO placeDao;
 	
-	@Autowired
+	@Autowired(required=true)
 	SessionManager sessionManager;
 	
 	@Around("@annotation(com.openhome.aop.helper.annotation.GuestLoginRequired)")

@@ -18,10 +18,10 @@ import com.openhome.session.SessionManager;
 @RequestMapping("/reservation/view")
 public class ReservationViewController {
 
-	@Autowired
+	@Autowired(required=true)
 	ReservationDAO reservationDao;
 
-	@Autowired
+	@Autowired(required=true)
 	SessionManager sessionManager;
 	
 	@RequestMapping(method=RequestMethod.GET)
@@ -30,6 +30,8 @@ public class ReservationViewController {
 	public String getReservationCreatePage(@RequestParam(value="reservationId",required=false) Long reservationId, Model model , HttpSession httpSession ) {
 		model.addAttribute("reservation", reservationDao.getOne(reservationId));
 		model.addAttribute("hostAccess", sessionManager.getHostId(httpSession) != null );
+		model.addAttribute("guestAccess", sessionManager.getGuestId(httpSession) != null );
+		System.out.println(model.getAttribute("hostAccess") +" | "+model.getAttribute("guestAccess"));
 		return "reservation/view";
 	}
 	

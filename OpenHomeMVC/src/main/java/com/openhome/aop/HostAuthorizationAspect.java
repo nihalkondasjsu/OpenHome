@@ -19,6 +19,7 @@ import com.openhome.dao.PlaceDAO;
 import com.openhome.dao.PlaceDetailsDAO;
 import com.openhome.data.Host;
 import com.openhome.data.Place;
+import com.openhome.exception.CustomException;
 import com.openhome.session.SessionManager;
 
 @Aspect
@@ -26,26 +27,26 @@ import com.openhome.session.SessionManager;
 @Order(0)
 public class HostAuthorizationAspect {
 
-	@Autowired
+	@Autowired(required=true)
 	PlaceDAO placeDao;
 	
-	@Autowired
+	@Autowired(required=true)
 	SessionManager sessionManager;
 	
-	public void hasHostLogin(ProceedingJoinPoint joinPoint) throws IllegalAccessException {
+	public void hasHostLogin(ProceedingJoinPoint joinPoint) throws CustomException {
 			System.out.println(Arrays.toString(joinPoint.getArgs()));
 			HttpSession httpSession = ArgsFinder.getHttpSession(joinPoint.getArgs());
 			Model model = ArgsFinder.getModel(joinPoint.getArgs());
 			Host host = sessionManager.getHost(httpSession);
 			if(host == null) {
-				throw new IllegalAccessException("No Host Login found in session.");
+				throw new CustomException("No Host Login found in session.");
 			}
 			if(host.getUserDetails().verifiedEmail() == false) {
-				throw new IllegalAccessException("Host is unverified.");
+				throw new CustomException("Host is unverified.");
 			}
 	}
 	
-	public void hasPlaceHostLogin(ProceedingJoinPoint joinPoint) throws IllegalAccessException {
+	public void hasPlaceHostLogin(ProceedingJoinPoint joinPoint) throws CustomException {
 			hasHostLogin(joinPoint);
 			Long placeId = ArgsFinder.findArg(joinPoint.getArgs(), Long.class);
 			Model model = ArgsFinder.getModel(joinPoint.getArgs());
@@ -59,7 +60,7 @@ public class HostAuthorizationAspect {
 			Host host = sessionManager.getHost(httpSession);
 			
 			if(s.getHost().getId().equals(host.getId()) == false) {
-				throw new IllegalAccessException("Wrong Host.");
+				throw new CustomException("Wrong Host.");
 			}
 	}
 	

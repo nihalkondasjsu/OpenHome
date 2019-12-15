@@ -1,6 +1,6 @@
 package com.openhome.controllers.reservation;
 
-import java.text.ParseException;
+import java.text.SimpleDateFormat;
 
 import javax.servlet.http.HttpSession;
 
@@ -12,13 +12,17 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.openhome.Json;
+import com.openhome.OpenHomeMvcApplication;
 import com.openhome.aop.helper.annotation.GuestLoginRequired;
 import com.openhome.aop.helper.annotation.ValidPlaceId;
 import com.openhome.controllers.helper.ControllerHelper;
-import com.openhome.dao.ReservationDAO;
+import com.openhome.controllers.helper.Mail;
 import com.openhome.dao.PlaceDAO;
-import com.openhome.data.Reservation;
+import com.openhome.dao.ReservationDAO;
 import com.openhome.data.Place;
+import com.openhome.data.Reservation;
+import com.openhome.data.helper.ReservationManager;
+import com.openhome.exception.CustomException;
 import com.openhome.session.SessionManager;
 import com.openhome.tam.TimeAdvancementManagement;
 
@@ -26,17 +30,16 @@ import com.openhome.tam.TimeAdvancementManagement;
 @RequestMapping("/reservation/create")
 public class ReservationCreateController {
 
-	@Autowired
+	@Autowired(required=true)
 	PlaceDAO placeDao;
 	
-	@Autowired
-	ReservationDAO reservationDao;
-
+	@Autowired(required=true)
+	ReservationManager reservationManager;
 	
-	@Autowired
+	@Autowired(required=true)
 	SessionManager sessionManager;
 
-	@Autowired
+	@Autowired(required=true)
 	TimeAdvancementManagement timeAdvancementManagement;
 	
 	@RequestMapping(method=RequestMethod.GET)
@@ -57,16 +60,13 @@ public class ReservationCreateController {
 			Json.printObject(reservation);
 			
 			Place place = placeDao.getOne(placeId);
-			
-			reservation.prepareForRegistration(timeAdvancementManagement.getCurrentDate(), place, sessionManager.getGuest(httpSession));
-			
-			if(placeDao.getSpecifiPlacesCountByDates(placeId, reservation.getCheckIn(), reservation.getCheckOut(), reservation.getRequiredDays()) == 0) {
-				throw new IllegalArgumentException("Place Unavailable");
-			}
 				
-			reservation = reservationDao.save(reservation);
+			reservation = reservationManager.createReservation(timeAdvancementManagement.getCurrentDate(), place, reservation, sessionManager.getGuest(httpSession));
 			
-			return ControllerHelper.popupMessageAndRedirect("Reservation Successfull", "/reservation/view?reservationId="+reservation.getId());
+			return ControllerHelper.popupMessageAndRedirect("Reservation Successfull", "/reservation/view?reservationId="+reservation.getId(),
+					new Mail(place.getHost().getUserDetails().getEmail(),"OpenHome: A Reservation has been made on your place '"+place.getPlaceDetails().getName()+"'","Link to view reservation : "+OpenHomeMvcApplication.baseUrl+"/reservation/view?reservationId="+reservation.getId()),
+					new Mail(sessionManager.getGuest(httpSession).getUserDetails().getEmail(),"OpenHome: Reservation successfull on '"+place.getPlaceDetails().getName()+"'","Link to view reservation : "+OpenHomeMvcApplication.baseUrl+"/reservation/view?reservationId="+reservation.getId())
+					);
 			
 		} catch (Exception e) {
 			e.printStackTrace();

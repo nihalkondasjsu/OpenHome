@@ -21,11 +21,6 @@ public class FileSystem {
 	@Autowired(required=true)
 	private ImageDAO imageDao;
 	
-//	@Autowired(required=true)
-//	public void setImageDao(ImageDAO imageDao) {
-//		System.out.println("imageDao set");
-//		this.imageDao = imageDao;
-//	}
 
 	public Image saveImage(MultipartFile image) {
 

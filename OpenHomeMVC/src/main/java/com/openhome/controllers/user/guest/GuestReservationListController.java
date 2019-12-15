@@ -15,7 +15,7 @@ import com.openhome.session.SessionManager;
 @RequestMapping("/guest/reservation/list")
 public class GuestReservationListController {
 	
-	@Autowired
+	@Autowired(required=true)
 	SessionManager sessionManager;
 	
 	@RequestMapping(method=RequestMethod.GET)

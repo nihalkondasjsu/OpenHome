@@ -6,9 +6,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
-import java.util.Set;
 
 import com.openhome.dao.helper.StringListConverter;
+import com.openhome.exception.CustomException;
 
 public class PlaceSearchQuery {
 
@@ -31,29 +31,29 @@ public class PlaceSearchQuery {
 		this.keywords = keywords;
 	}
 	
-	public String getReservationStartDateTime() {
+	public String getReservationStartDateTime() throws CustomException {
 		if(reservationStartDateTime == null)
-			throw new IllegalArgumentException("reservationStartDateTime not provided");
+			throw new CustomException("reservationStartDateTime not provided");
 		return reservationStartDateTime;
 	}
 	public void setReservationStartDateTime(String reservationStartDateTime) {
 		this.reservationStartDateTime = reservationStartDateTime;
 	}
-	public String getReservationEndDateTime() {
+	public String getReservationEndDateTime() throws CustomException {
 		if(reservationEndDateTime == null)
-			throw new IllegalArgumentException("reservationEndDateTime not provided");
+			throw new CustomException("reservationEndDateTime not provided");
 		return reservationEndDateTime;
 	}
 
-	public Date getReservationStartDateTimeObj() throws ParseException {
+	public Date getReservationStartDateTimeObj() throws ParseException, CustomException {
 		return stringToDate(getReservationStartDateTime());
 	}
 	
-	public Date getReservationEndDateTimeObj() throws ParseException {
+	public Date getReservationEndDateTimeObj() throws ParseException, CustomException {
 		return stringToDate(getReservationEndDateTime());
 	}
 	
-	public String getWeekDays() throws ParseException {
+	public String getWeekDays() throws ParseException, CustomException {
 		List<String> weekdays = new ArrayList<String>();
 		long start = getReservationStartDateTimeObj().getTime();
 		long end = getReservationEndDateTimeObj().getTime();
@@ -121,10 +121,10 @@ public class PlaceSearchQuery {
 		this.internetAvailable = internetAvailable;
 	}
 	
-	public boolean isCityQuery() {
+	public boolean isCityQuery() throws CustomException {
 		cityOrZip = cityOrZip.trim();
 		if(cityOrZip.length() == 0)
-			throw new IllegalArgumentException("No City or Zip provided");
+			throw new CustomException("No City or Zip provided");
 		if(cityOrZip.matches("[0-9]+")) {
 			return false;
 		}

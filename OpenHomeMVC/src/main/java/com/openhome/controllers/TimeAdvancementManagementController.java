@@ -17,7 +17,7 @@ import com.openhome.tam.TimeAdvancementManagement;
 @RequestMapping("/timeDelta")
 public class TimeAdvancementManagementController {
 
-	@Autowired
+	@Autowired(required=true)
 	TimeAdvancementManagement timeAdvancementManagement;
 	
 	@RequestMapping(method=RequestMethod.GET)

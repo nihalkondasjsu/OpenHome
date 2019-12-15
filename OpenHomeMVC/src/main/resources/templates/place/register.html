@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <title>Place Registration</title>
+<link href="/basic.css" rel="stylesheet" type="text/css">
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 <script>
 	var successLink = "[[${successLink}]]";
@@ -10,6 +11,29 @@
 		window.location = "/"+successLink;
 	}
 </script>
+<style>
+.select-style {
+    border: 1px solid #ccc;
+    width: 120px;
+    border-radius: 3px;
+    overflow: hidden;
+    background: #fafafa url("img/icon-select.png") no-repeat 90% 50%;
+}
+
+.select-style select {
+    padding: 5px 8px;
+    width: 130%;
+    border: none;
+    box-shadow: none;
+    background: transparent;
+    background-image: none;
+    -webkit-appearance: none;
+}
+
+.select-style select:focus {
+    outline: none;
+}
+</style>
 </head>
 <body>
 <h1>Place Registration Form</h1>
@@ -23,11 +47,11 @@
 		<tr>
 			<th>Property Type</th>
 			<td>
-				<select name='propertyType' required>
+				<div class="select-style"><select name='propertyType' required>
 					<option value='House' selected>House</option>
 					<option value='Apartment'>Apartment</option>
 					<option value='Townhouse'>Townhouse</option>
-				</select>
+				</select></div>
 			</td>
 		</tr>
 		<tr>

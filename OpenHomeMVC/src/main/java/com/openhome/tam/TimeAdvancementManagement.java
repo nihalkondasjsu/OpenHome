@@ -10,8 +10,9 @@ import org.springframework.stereotype.Component;
 import com.openhome.dao.ReservationDAO;
 import com.openhome.dao.TimeManagementDAO;
 import com.openhome.data.Reservation;
+import com.openhome.data.Reservation.ReservationState;
+import com.openhome.data.helper.ReservationProcessor;
 import com.openhome.data.TimeManagement;
-import com.openhome.data.manager.ReservationManager;
 
 @Component
 @Configurable
@@ -23,8 +24,8 @@ public class TimeAdvancementManagement {
 	@Autowired(required=true)
 	private ReservationDAO reservationDao;
 
-	@Autowired
-	ReservationManager reservationManager;
+	@Autowired(required=true)
+	ReservationProcessor reservationManager;
 	
 	private static Long timeDelta;
 	
@@ -66,8 +67,12 @@ public class TimeAdvancementManagement {
 	private void processAllReservations() {
 		List<Reservation> reservations = reservationDao.getAllRunningReservations();
 		for (Reservation reservation : reservations) {
+			ReservationState temp = reservation.getReservationState();
 			reservationManager.setReservation(reservation);
 			reservationManager.processReservation(getCurrentDate());
+			if(reservation.getReservationState() != temp) {
+				reservationDao.save(reservation);
+			}
 		}
 	}
 	

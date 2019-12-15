@@ -13,10 +13,10 @@ import com.openhome.session.SessionManager;
 @RestController
 public class BasicRestController {
 
-	@Autowired
+	@Autowired(required=true)
 	SessionManager sessionManager;
 	
-	@Autowired
+	@Autowired(required=true)
 	Mailer mailer;
 	
 	@RequestMapping(value="/sendVerificationToken" , method = RequestMethod.GET)

@@ -1,35 +1,37 @@
-package com.openhome.data.manager;
+package com.openhome.data.helper;
 
 import java.util.ArrayList;
 import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
+import com.openhome.OpenHomeMvcApplication;
 import com.openhome.aop.helper.annotation.Debug;
+import com.openhome.dao.TransactionDAO;
 import com.openhome.data.Reservation;
 import com.openhome.data.Reservation.ReservationState;
+import com.openhome.data.Transaction;
 import com.openhome.data.Transaction.TransactionNature;
 import com.openhome.data.Transaction.TransactionUser;
+import com.openhome.exception.CustomException;
 import com.openhome.mailer.Mailer;
 
 @Component
-public class ReservationManager {
+public class ReservationProcessor {
 
 	private static final Double SERVICE_CHARGE = 1.00;
 	private static final Long MS_24_HOURS = 24*60*60*1000l;
 	private static final Long MS_12_HOURS = 12*60*60*1000l;
-	private static final Long MS_11_HOURS = 11*60*60*1000l;
-	private static final Long MS_15_HOURS = 15*60*60*1000l;
 	private static final Long MS_4_HOURS = 4*60*60*1000l;
 
 	private static final Long CHECK_IN_TIME = 15*60*60*1000l;//3 pm
 	private static final Long CHECK_OUT_TIME = 11*60*60*1000l;//11 am
 
-	@Autowired
+	@Autowired(required=true)
 	public Mailer mailer;
 	
-	TransactionManager transactionManager;
 	
 	public Reservation reservation;
 	
@@ -90,8 +92,7 @@ public class ReservationManager {
 	
 	private ArrayList<MicroReservation> microReservations ;
 	
-	public ReservationManager() {
-		transactionManager = new TransactionManager();
+	public ReservationProcessor() {
 	}
 
 	public Reservation getReservation() {
@@ -106,7 +107,7 @@ public class ReservationManager {
 	}
 	
 	private void microReservationsReset() {
-		microReservations = new ArrayList<ReservationManager.MicroReservation>();
+		microReservations = new ArrayList<ReservationProcessor.MicroReservation>();
 		Double amount = 0.0;
 		try{
 			Long checkIn = getReservation().getCheckIn();
@@ -122,7 +123,7 @@ public class ReservationManager {
 			
 			if(checkOut - checkIn >= MS_24_HOURS){
 				while(checkIn < checkOut){
-					double temp = (new Date(checkIn).getDay() == 6 ? weekendPrice : weekdayPrice) + dailyParkingFee;
+					double temp = ((new Date(checkIn).getDay() == 6 || new Date(checkIn).getDay() == 0) ? weekendPrice : weekdayPrice) + dailyParkingFee;
 					microReservations.add(
 							new MicroReservation(new Date(checkIn ), new Date(checkIn + MS_24_HOURS - MS_4_HOURS), temp)
 							);
@@ -286,36 +287,40 @@ public class ReservationManager {
 	}
 	
 	@Debug
-	public void performGuestCheckIn(Date currentTime) throws IllegalAccessException {
+	public void performGuestCheckIn(Date currentTime) throws CustomException {
 		
 		processReservation(currentTime);
 		
 		if(getReservation().getReservationState() != ReservationState.Booked) {
-			throw new IllegalAccessException("Check In not Allowed");
+			throw new CustomException("Check In not Allowed");
 		}
 		
 		if(currentTime.before(new Date(getReservation().getCheckIn()))) {
-			throw new IllegalAccessException("It is too early to Check In");
+			throw new CustomException("It is too early to Check In");
 		}
 	
 		getReservation().setActualCheckIn(currentTime.getTime());
 		
-		transactionManager.createTransaction(currentTime, new Date(getReservation().getCheckIn()), getTotalPrice(), reservation, TransactionNature.Charge, TransactionUser.Guest);
+		createTransaction(currentTime, new Date(getReservation().getCheckIn()), getTotalPrice(), reservation, TransactionNature.Charge, TransactionUser.Guest);
 		
 		getReservation().setReservationState(ReservationState.CheckedIn);
+		
+		mailer.sendMail(getReservation().getGuest().getUserDetails().getEmail(), "OpenHome: Guest Checked In of Reservation "+getReservation().getId(), "Link to view reservation : "+OpenHomeMvcApplication.baseUrl+"/reservation/view?reservationId="+reservation.getId());
+		mailer.sendMail(getReservation().getPlace().getHost().getUserDetails().getEmail(), "OpenHome: Guest Checked In of Reservation "+getReservation().getId(), "Link to view reservation : "+OpenHomeMvcApplication.baseUrl+"/reservation/view?reservationId="+reservation.getId());
+	
 	}
 	
 	@Debug
-	public void performGuestCheckOut(Date currentTime) throws IllegalAccessException {
+	public void performGuestCheckOut(Date currentTime) throws CustomException {
 		
 		processReservation(currentTime);
 		
 		if(getReservation().getReservationState() != ReservationState.CheckedIn) {
-			throw new IllegalAccessException("Check Out is not Allowed");
+			throw new CustomException("Check Out is not Allowed");
 		}
 		
 		if(currentTime.after(new Date(getReservation().getCheckOut()))) {
-			throw new IllegalAccessException("It is too late to Check Out");
+			throw new CustomException("It is too late to Check Out");
 		}
 
 		//chargeGuestForDay(currentDate, currentDate);
@@ -324,41 +329,47 @@ public class ReservationManager {
 			//early checkout
 			//chargeGuestFeeForDay(currentDate, new Date(currentDate.getTime()+MS_24_HOURS));
 			Double amount = getGuestCancellationFee(currentTime);
-			transactionManager.createTransaction(currentTime, currentTime, amount, reservation, TransactionNature.Fee, TransactionUser.Guest);
+			createTransaction(currentTime, currentTime, amount, reservation, TransactionNature.Fee, TransactionUser.Guest);
 			amount = getTotalPrice() - getGuestUsagePrice(currentTime);
-			transactionManager.createTransaction(currentTime, currentTime, amount, reservation, TransactionNature.Charge, TransactionUser.Host);
+			createTransaction(currentTime, currentTime, amount, reservation, TransactionNature.Charge, TransactionUser.Host);
 		}
 		
 		getReservation().setActualCheckOut(currentTime.getTime());
 		
 		getReservation().setReservationState(ReservationState.CheckedOut);
 		
+		mailer.sendMail(getReservation().getGuest().getUserDetails().getEmail(), "OpenHome: Guest Checked Out of Reservation "+getReservation().getId(), "Link to view reservation : "+OpenHomeMvcApplication.baseUrl+"/reservation/view?reservationId="+reservation.getId());
+		mailer.sendMail(getReservation().getPlace().getHost().getUserDetails().getEmail(), "OpenHome: Guest Checked Out of Reservation "+getReservation().getId(), "Link to view reservation : "+OpenHomeMvcApplication.baseUrl+"/reservation/view?reservationId="+reservation.getId());
+	
 	}
 	
 	@Debug
-	public void performGuestCancel(Date currentTime) throws IllegalAccessException {
+	public void performGuestCancel(Date currentTime) throws CustomException {
 		
 		processReservation(currentTime);
 		
 		if(getReservation().getReservationState()!=ReservationState.Booked) {
-			throw new IllegalAccessException("Cancellation is not Allowed.");
+			throw new CustomException("Cancellation is not Allowed.");
 		}
 		
 		Double amount = getGuestCancellationFee(currentTime);
-		transactionManager.createTransaction(currentTime, currentTime, amount, reservation, TransactionNature.Fee, TransactionUser.Guest);
+		createTransaction(currentTime, currentTime, amount, reservation, TransactionNature.Fee, TransactionUser.Guest);
 		
 		getReservation().setActualCheckOut(currentTime.getTime());
 
 		getReservation().setReservationState(ReservationState.GuestCancelled);
 
+		mailer.sendMail(getReservation().getGuest().getUserDetails().getEmail(), "OpenHome: Guest Cancellation of Reservation "+getReservation().getId(), "Link to view reservation : "+OpenHomeMvcApplication.baseUrl+"/reservation/view?reservationId="+reservation.getId());
+		mailer.sendMail(getReservation().getPlace().getHost().getUserDetails().getEmail(), "OpenHome: Guest Cancellation of Reservation "+getReservation().getId(), "Link to view reservation : "+OpenHomeMvcApplication.baseUrl+"/reservation/view?reservationId="+reservation.getId());
+	
 	}
 	
 	@Debug
-	public void performHostCancel(Date currentTime) throws IllegalAccessException {
+	public void performHostCancel(Date currentTime) throws CustomException {
 		processReservation(currentTime);
 		
 		if(reservationEnded()) {
-			throw new IllegalAccessException("Cancellation is not Allowed.");
+			throw new CustomException("Cancellation is not Allowed.");
 		}
 		
 		//hostCancelReservation(currentDate);
@@ -366,11 +377,11 @@ public class ReservationManager {
 		Double amount = getHostCancellationFee(currentTime);
 		
 		if(currentTime.getTime() < getReservation().getCheckIn()) {
-			transactionManager.createTransaction(currentTime, currentTime, amount, reservation, TransactionNature.Fee, TransactionUser.Host);
+			createTransaction(currentTime, currentTime, amount, reservation, TransactionNature.Fee, TransactionUser.Host);
 			getReservation().setActualCheckOut(getReservation().getCheckIn());
 		}else {
 			amount += getTotalPrice() - getGuestUsagePrice(currentTime);
-			transactionManager.createTransaction(currentTime, currentTime, amount, reservation, TransactionNature.Fee, TransactionUser.Host);
+			createTransaction(currentTime, currentTime, amount, reservation, TransactionNature.Fee, TransactionUser.Host);
 			
 			Date today11 = new Date(currentTime.getTime());
 			Date tommorow11 = new Date(currentTime.getTime()+MS_24_HOURS);
@@ -386,6 +397,10 @@ public class ReservationManager {
 		}
 		
 		getReservation().setReservationState(ReservationState.HostCancelled);
+	
+		mailer.sendMail(getReservation().getGuest().getUserDetails().getEmail(), "OpenHome: Host Cancellation of Reservation "+getReservation().getId(), "Link to view reservation : "+OpenHomeMvcApplication.baseUrl+"/reservation/view?reservationId="+reservation.getId());
+		mailer.sendMail(getReservation().getPlace().getHost().getUserDetails().getEmail(), "OpenHome: Host Cancellation of Reservation "+getReservation().getId(), "Link to view reservation : "+OpenHomeMvcApplication.baseUrl+"/reservation/view?reservationId="+reservation.getId());
+	
 	}
 
 	@Debug
@@ -439,17 +454,24 @@ public class ReservationManager {
 	@Debug
 	private void performGuestNoShowProtocol(Date currentTime) {
 		Double amount = microReservations.get(0).getTotalPrice()*0.30;
-		if(microReservations.get(1) != null) {
+		if(microReservations.size()>1) {
 			amount += microReservations.get(1).getTotalPrice()*0.30;
 		}
+		
 		Date dayToChargeFor = new Date(microReservations.get(0).getCheckIn().getTime() + MS_12_HOURS);
-		transactionManager.createTransaction(currentTime, 
+		
+		createTransaction(currentTime, 
 				dayToChargeFor
 				, amount, reservation, TransactionNature.Fee, TransactionUser.Guest);
 		
 		getReservation().setActualCheckOut(dayToChargeFor.getTime());
 
 		getReservation().setReservationState(ReservationState.GuestCancelled);
+		
+		mailer.sendMail(getReservation().getGuest().getUserDetails().getEmail(), "OpenHome: Guest NoShow of Reservation "+getReservation().getId(), "Link to view reservation : "+OpenHomeMvcApplication.baseUrl+"/reservation/view?reservationId="+reservation.getId());
+		
+		mailer.sendMail(getReservation().getPlace().getHost().getUserDetails().getEmail(), "OpenHome: Guest NoShow of Reservation "+getReservation().getId(), "Link to view reservation : "+OpenHomeMvcApplication.baseUrl+"/reservation/view?reservationId="+reservation.getId());
+	
 		
 	}
 	
@@ -459,5 +481,33 @@ public class ReservationManager {
 		getReservation().setActualCheckOut(getReservation().getCheckOut());
 
 		getReservation().setReservationState(ReservationState.CheckedOut);
+		
+		mailer.sendMail(getReservation().getGuest().getUserDetails().getEmail(), "OpenHome: Auto Checkout of Reservation "+getReservation().getId(), "Link to view reservation : "+OpenHomeMvcApplication.baseUrl+"/reservation/view?reservationId="+reservation.getId());
+		mailer.sendMail(getReservation().getPlace().getHost().getUserDetails().getEmail(), "OpenHome: Auto Checkout of Reservation "+getReservation().getId(), "Link to view reservation : "+OpenHomeMvcApplication.baseUrl+"/reservation/view?reservationId="+reservation.getId());
+	}
+	
+	
+	@Autowired(required=true)
+	private TransactionDAO transactionDao;
+	
+	@Transactional
+	public void createTransaction(Date createdDate,
+			Date dayToChargeFor,
+			Double amount,
+			Reservation reservation,
+			TransactionNature transactionNature,
+			TransactionUser transactionUser) {
+		Transaction t1 = new Transaction(amount * SERVICE_CHARGE, createdDate, dayToChargeFor, reservation, transactionNature, transactionUser);
+		if(transactionNature == TransactionNature.Charge || transactionNature == TransactionNature.Fee) {
+			transactionNature = TransactionNature.Payment;
+		}
+		if(transactionUser == TransactionUser.Guest) {	
+			transactionUser = TransactionUser.Host;
+		}else if(transactionUser == TransactionUser.Host) {	
+			transactionUser = TransactionUser.Guest;
+		}
+		Transaction t2 = new Transaction(amount, createdDate, dayToChargeFor, reservation, transactionNature, transactionUser);
+		transactionDao.save(t1);
+		transactionDao.save(t2);
 	}
 }

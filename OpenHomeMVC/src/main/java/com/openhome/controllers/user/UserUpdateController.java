@@ -21,6 +21,9 @@ import com.openhome.data.Guest;
 import com.openhome.data.Host;
 import com.openhome.data.Image;
 import com.openhome.data.UserDetails;
+import com.openhome.data.helper.UserManager;
+import com.openhome.exception.CustomException;
+import com.openhome.exception.ExceptionManager;
 import com.openhome.session.SessionManager;
 import com.openhome.tam.TimeAdvancementManagement;
 
@@ -28,20 +31,17 @@ import com.openhome.tam.TimeAdvancementManagement;
 @RequestMapping("/{userRole}/update")
 public class UserUpdateController {
 
-	@Autowired
-	HostDAO hostDao;
-	
-	@Autowired
-	UserDetailsDAO userDetailsDao;
-	
-	@Autowired
+	@Autowired(required=true)
 	SessionManager sessionManager;
-	
-	@Autowired
-	FileSystem fileSystem;
 
-	@Autowired
+	@Autowired(required=true)
 	TimeAdvancementManagement timeAdvancementManagement;
+	
+	@Autowired(required=true)
+	UserManager userManager;
+	
+	@Autowired(required=true)
+	ExceptionManager exceptionManager;
 	
 	@RequestMapping(method=RequestMethod.GET)
 	@UserLoginRequired
@@ -69,51 +69,18 @@ public class UserUpdateController {
 		
 		try {
 			
-			UserDetails userDetailsDB = userDetailsDao.getUserByEmail(sessionManager.getSessionUserDetails(httpSession).getEmail());
-			
-			System.out.println("userDetailsDB.email : "+userDetailsDB.getEmail());
-			
-			try {
-				System.out.println("DisplayPictureId : "+userDetails.getDisplayPictureId());
-				
-				if(userDetails.getCreditCard() == null) {
-					throw new IllegalArgumentException("Invalid Credit Card");
-				}
-				
-				userDetails.getCreditCard().validateCard(timeAdvancementManagement.getCurrentDate());
-				
-				Image imageObj=null;
-				if(image == null || image.getSize()<1000) {
-					if(imageUrl == null || imageUrl.equals("")) {
-						System.out.println("No Image Change");
-					}else
-						imageObj = fileSystem.saveImage(imageUrl);
-				}else {
-					imageObj = fileSystem.saveImage(image);
-				}
-				
-				if(imageObj != null) {
-					System.out.println("Image Provided");
-					userDetails.setDisplayPictureId(imageObj);
-				}
-				
-				userDetails.updateDetails(userDetailsDB);
-				System.out.println("DisplayPictureId : "+userDetails.getDisplayPictureId());
-			} catch (Exception e) {
-				e.printStackTrace();
-				return ControllerHelper.popupMessageAndRedirect("Invalid Credentials.", userRole+"/update");
-			}
-			
-			userDetailsDao.save(userDetails);
+			userManager.updateUserDetails(
+					sessionManager.getSessionUserDetails(httpSession).getEmail()
+					, timeAdvancementManagement.getCurrentDate() 
+					, userDetails, image, imageUrl);
 			
 			return ControllerHelper.popupMessageAndRedirect(userRole + " details updated.", userRole+"/dashboard");
 			
 		} catch (Exception e) {
-			e.printStackTrace();
-			System.out.println(e.toString());
+			exceptionManager.reportException(e);
+			return ControllerHelper.popupMessageAndRedirect(e.getMessage(), userRole + "/update");
 		}
 		
-		return ControllerHelper.popupMessageAndRedirect("", userRole + "/update");
 	}
 	
 }

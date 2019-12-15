@@ -19,7 +19,7 @@ import org.apache.catalina.session.StandardSessionFacade;
 @Component
 public class UserAuthorizationAspect {
 
-	@Autowired
+	@Autowired(required=true)
 	SessionManager sessionManager;
 	
 	@Around("@annotation(com.openhome.aop.helper.annotation.UserLoginRequired)")

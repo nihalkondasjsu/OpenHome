@@ -24,16 +24,16 @@ import com.openhome.session.SessionManager;
 import com.openhome.tam.TimeAdvancementManagement;
 
 @Controller
-@RequestMapping("/place/delete")
+//@RequestMapping("/place/delete")
 public class PlaceDeleteController {
 
-	@Autowired
+	@Autowired(required=true)
 	PlaceDAO placeDao;
 	
-	@Autowired
+	@Autowired(required=true)
 	SessionManager sessionManager;
 
-	@Autowired
+	@Autowired(required=true)
 	TimeAdvancementManagement timeAdvancementManagement;
 	
 	@RequestMapping(method=RequestMethod.GET)

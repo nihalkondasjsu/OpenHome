@@ -5,18 +5,21 @@ import java.io.FileInputStream;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+
 import com.google.auth.oauth2.GoogleCredentials;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
-import com.openhome.dao.ReservationDAO;
-import com.openhome.dao.PlaceDAO;
-import com.openhome.data.manager.ReservationManager;
-import com.openhome.tam.TimeAdvancementManagement;
+import com.openhome.controllers.helper.ControllerHelper;
+import com.openhome.mailer.Mailer;
 
 @SpringBootApplication
 public class OpenHomeMvcApplication {
 
+	public static boolean automaticUserVerified = true;
+	public static boolean debugMailBody = true;
+	public static boolean reportOnlyUnexpectedExceptions = false;
 	
+	public static String baseUrl = "http://0b5dc0b3.ngrok.io/";
 	
 	public static void main(String[] args) {
 		SpringApplication.run(OpenHomeMvcApplication.class, args);

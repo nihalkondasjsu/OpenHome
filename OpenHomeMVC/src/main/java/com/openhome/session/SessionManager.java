@@ -16,10 +16,10 @@ import com.openhome.data.UserDetails;
 @Component
 public class SessionManager {
 
-	@Autowired
+	@Autowired(required=true)
 	HostDAO hostDao;
 
-	@Autowired
+	@Autowired(required=true)
 	GuestDAO guestDao;
 
 	public Host getHost(HttpSession httpSession) {

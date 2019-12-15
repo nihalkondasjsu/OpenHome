@@ -19,6 +19,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.stereotype.Component;
 
+import com.openhome.OpenHomeMvcApplication;
+import com.openhome.exception.CustomException;
 import com.openhome.security.Encryption;
 import com.openhome.tam.TimeAdvancementManagement;
 
@@ -193,13 +195,19 @@ public class UserDetails {
 		this.registeredDate = registeredDate;
 		encryptPassword();
 		setVerifiedDetails(new UserVerifiedDetails());
+		
+		if(OpenHomeMvcApplication.automaticUserVerified) {
+			getVerifiedDetails().setVerifiedEmail(getEmail());
+			getVerifiedDetails().setVerifiedPhoneNumber(getPhoneNumber());
+		}
+		
 	}
 	
 	public boolean checkPassword(String plainPassword) {
 		return Encryption.checkPassword(plainPassword, getPassword());
 	}
 	
-	public void updateDetails(UserDetails userDetailsOld) throws IllegalAccessException {
+	public void updateDetails(UserDetails userDetailsOld) throws CustomException {
 		
 		if(userRegistrationType == UserRegistrationType.OpenHome)
 		if(getNewPassword().equals("") == false) {

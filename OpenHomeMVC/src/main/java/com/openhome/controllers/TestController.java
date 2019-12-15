@@ -13,25 +13,26 @@ import com.openhome.dao.ReservationDAO;
 import com.openhome.dao.GuestDAO;
 import com.openhome.dao.PlaceDAO;
 import com.openhome.data.Reservation;
+import com.openhome.data.helper.ReservationProcessor;
 import com.openhome.data.CreditCard;
 import com.openhome.data.Guest;
 import com.openhome.data.Place;
-import com.openhome.data.manager.ReservationManager;
+import com.openhome.exception.CustomException;
 import com.openhome.tam.TimeAdvancementManagement;
 
 @Controller
 public class TestController {
 
-	@Autowired
-	ReservationManager reservationManager;
+	@Autowired(required=true)
+	ReservationProcessor reservationManager;
 	
-	@Autowired
+	@Autowired(required=true)
 	ReservationDAO reservationDao;
 	
-	@Autowired
+	@Autowired(required=true)
 	PlaceDAO placeDao;
 	
-	@Autowired
+	@Autowired(required=true)
 	GuestDAO guestDao;
 	
 	Place place;
@@ -116,7 +117,7 @@ public class TestController {
 		System.out.println(reservation);
 		
 		if(reservation.getReservationState() != Reservation.ReservationState.GuestCancelled) {
-			throw new Exception("Reservation was not in GuestCancelled state . No Show did not happen.");
+			throw new CustomException("Reservation was not in GuestCancelled state . No Show did not happen.");
 		}
 	}
 	
@@ -134,7 +135,7 @@ public class TestController {
 		System.out.println(reservation);
 		
 		if(reservation.getReservationState() != Reservation.ReservationState.CheckedOut) {
-			throw new Exception("Auto check out failed");
+			throw new CustomException("Auto check out failed");
 		}
 	}
 
@@ -152,7 +153,7 @@ public class TestController {
 		System.out.println(reservation);
 		
 		if(reservation.getReservationState() != Reservation.ReservationState.CheckedIn) {
-			throw new Exception("Guest Could not check in.");
+			throw new CustomException("Guest Could not check in.");
 		}
 	}
 

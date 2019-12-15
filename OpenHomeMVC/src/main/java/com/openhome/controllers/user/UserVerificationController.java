@@ -25,16 +25,16 @@ import com.openhome.session.SessionManager;
 @Controller
 public class UserVerificationController {
 
-	@Autowired
+	@Autowired(required=true)
 	SessionManager sessionManager;
 	
-	@Autowired
+	@Autowired(required=true)
 	Mailer mailer;
 
-	@Autowired
+	@Autowired(required=true)
 	UserDetailsDAO userDetailsDao;
 	
-	@Autowired
+	@Autowired(required=true)
 	UserVerifiedDetailsDAO userVerifiedDetailsDao;
 	
 	@RequestMapping(value="/verify/{credential}" , method = RequestMethod.GET)

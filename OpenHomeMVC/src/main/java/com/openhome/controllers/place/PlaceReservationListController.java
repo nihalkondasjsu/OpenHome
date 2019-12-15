@@ -18,10 +18,10 @@ import com.openhome.session.SessionManager;
 @RequestMapping("/place/reservation/list")
 public class PlaceReservationListController {
 
-	@Autowired
+	@Autowired(required=true)
 	PlaceDAO placeDao;
 	
-	@Autowired
+	@Autowired(required=true)
 	SessionManager sessionManager;
 	
 	@RequestMapping(method=RequestMethod.GET)

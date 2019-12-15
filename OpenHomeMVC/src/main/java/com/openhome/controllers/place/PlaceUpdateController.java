@@ -18,20 +18,25 @@ import com.openhome.dao.PlaceDetailsDAO;
 import com.openhome.data.Host;
 import com.openhome.data.Place;
 import com.openhome.data.PlaceDetails;
+import com.openhome.data.helper.PlaceManager;
+import com.openhome.exception.ExceptionManager;
 import com.openhome.session.SessionManager;
 
 @Controller
 @RequestMapping("/place/update")
 public class PlaceUpdateController {
 
-	@Autowired
+	@Autowired(required=true)
 	PlaceDAO placeDao;
 	
-	@Autowired
-	PlaceDetailsDAO placeDetailsDao;
-	
-	@Autowired
+	@Autowired(required=true)
 	SessionManager sessionManager;
+
+	@Autowired(required=true)
+	PlaceManager placeManager;
+	
+	@Autowired(required=true)
+	ExceptionManager exceptionManager;
 	
 	@RequestMapping(method=RequestMethod.GET)
 	@ValidPlaceId
@@ -57,39 +62,11 @@ public class PlaceUpdateController {
 	public String updateFormSubmission(@RequestParam(value="placeId",required=false) Long placeId, PlaceDetails placeDetails , Model model , HttpSession httpSession ) {
 		System.out.println("HaPPY");
 		try {
-			Place s = placeDao.getOne(placeId);
-			model.addAttribute("place", s);
+			Place p = placeManager.updatePlace(placeId,placeDetails);
 			
-			Host host = sessionManager.getHost(httpSession);
-			
-			Place temp =null;
-			
-			try {
-				temp = placeDao.getOne(placeDao.getPlaceByHostAndName(host.getId(), placeDetails.getName()));
-			} catch (Exception e) {
-				System.out.println(e.toString());
-			}
-			
-			if(temp.getPlaceDetails().getId().equals( s.getPlaceDetails().getId() ) == false) {
-				return ControllerHelper.popupMessageAndRedirect("A place with this name is already existing in your account.", "place/update");
-			}
-			
-			placeDetails.setRegisteredDate(s.getPlaceDetails().getRegisteredDate());
-			
-			placeDetails.setImages(s.getPlaceDetails().getImages());
-			
-			placeDetails.setAddress(s.getPlaceDetails().getAddress());
-			
-			placeDetails.setId(s.getPlaceDetails().getId());
-			
-			placeDetailsDao.save(placeDetails);
-			
-			model.addAttribute("successLink", "place/view?placeId="+s.getId());
-			
-			return ControllerHelper.popupMessageAndRedirect("Place Updated Successfully.", "place/view?placeId="+s.getId());
-			
+			return ControllerHelper.popupMessageAndRedirect("Place Updated Successfully.", "place/view?placeId="+p.getId());
 		} catch (Exception e) {
-			e.printStackTrace();
+			exceptionManager.reportException(e);
 			return ControllerHelper.popupMessageAndRedirect(e.toString(), "place/update");
 		}
 		

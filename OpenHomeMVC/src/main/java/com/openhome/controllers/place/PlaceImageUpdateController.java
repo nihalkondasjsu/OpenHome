@@ -13,36 +13,36 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.openhome.FileSystem;
+import com.openhome.aop.helper.annotation.PlaceHostLoginRequired;
 import com.openhome.aop.helper.annotation.ValidPlaceId;
 import com.openhome.controllers.helper.ControllerHelper;
-import com.openhome.aop.helper.annotation.PlaceHostLoginRequired;
 import com.openhome.dao.ImageDAO;
 import com.openhome.dao.PlaceDAO;
 import com.openhome.dao.PlaceDetailsDAO;
-import com.openhome.data.Host;
 import com.openhome.data.Image;
 import com.openhome.data.Place;
 import com.openhome.data.PlaceDetails;
+import com.openhome.data.helper.ImageManager;
+import com.openhome.exception.CustomException;
 import com.openhome.session.SessionManager;
 
 @Controller
 public class PlaceImageUpdateController {
 
-	@Autowired
+	@Autowired(required=true)
 	PlaceDAO placeDao;
 	
-	@Autowired
+	@Autowired(required=true)
 	PlaceDetailsDAO placeDetailsDao;
 	
-	@Autowired
+	@Autowired(required=true)
 	SessionManager sessionManager;
 	
-	@Autowired
+	@Autowired(required=true)
 	public ImageDAO imageDao;
 	
-	@Autowired
-	FileSystem fileSystem;
+	@Autowired(required=true)
+	ImageManager imageManager;
 	
 	@RequestMapping(value="/place/updatePlaceImages",method=RequestMethod.GET)
 	@ValidPlaceId
@@ -78,19 +78,11 @@ public class PlaceImageUpdateController {
 		
 		try {
 			s = placeDao.getOne(placeId);
-			Image imageObj = null;
 			
-			if(image == null || image.getSize()<1000) {
-				if(imageUrl == null || imageUrl.equals("")) {
-					System.out.println("No Image Change");
-				}else
-					imageObj = fileSystem.saveImage(imageUrl);
-			}else {
-				imageObj = fileSystem.saveImage(image);
-			}
+			Image imageObj = imageManager.getImage(image, imageUrl);
 			
 			if(imageObj == null)
-				throw new IllegalArgumentException("No Image Provided");
+				throw new CustomException("No Image Provided");
 			
 			PlaceDetails sd = s.getPlaceDetails();
 			
@@ -116,16 +108,18 @@ public class PlaceImageUpdateController {
 		try {
 			s = placeDao.getOne(placeId);
 			
-			if(deleteImageId == null) {
-				throw new IllegalArgumentException("No Image Provided");
-			}
+			if(s.getPlaceDetails().getImages().size() <= 1)
+				throw new CustomException("Image Delete failed.(Not enough images to delete)");
+			
+			if(deleteImageId == null) 
+				throw new CustomException("No Image Provided");
 			
 			Image image = imageDao.getOne(deleteImageId);
 			
 			PlaceDetails sd = s.getPlaceDetails();
 			
 			if(sd.deleteImage(image)) {
-				fileSystem.deleteImage(image);
+				imageManager.deleteImage(image);
 				placeDetailsDao.save(sd);
 			}
 

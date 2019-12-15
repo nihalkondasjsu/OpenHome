@@ -3,6 +3,7 @@
 <meta charset="UTF-8">
 <title>Place Preview</title>
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<link href="/basic.css" rel="stylesheet" type="text/css">
 <style>
 	body{
 		margin:0;
@@ -77,7 +78,7 @@
 	}
 </style>
 </head>
-<body th:attr="data-id=${place.id}">
+<body th:attr="data-id=${place.id}" onclick="bodyClicked()">
 
 	<div id="previewContainer">
 		<div id="imageContainer">
@@ -93,6 +94,13 @@
 
 	<script>
 		
+	function bodyClicked(){
+		
+		var id = [[${place.id}]];
+		window.open("../place/view?placeId="+id,"_blank");
+		
+	}
+	
 		function addStars(rating=4.5){
 	        stars = "";
 	        count = 0;

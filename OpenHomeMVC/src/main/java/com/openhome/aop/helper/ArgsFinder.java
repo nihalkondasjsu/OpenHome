@@ -6,9 +6,11 @@ import org.apache.catalina.session.StandardSessionFacade;
 import org.springframework.ui.Model;
 import org.springframework.validation.support.BindingAwareModelMap;
 
+import com.openhome.exception.CustomException;
+
 public class ArgsFinder {
 
-	public static <T extends Object> T findArg(Object[] args, Class<T> cls) {
+	public static <T extends Object> T findArg(Object[] args, Class<T> cls) throws CustomException {
 		System.out.println("Looking for "+cls.toString());
 		for (Object object : args) {
 			if(object == null)
@@ -17,7 +19,7 @@ public class ArgsFinder {
 			if(object.getClass() == cls)
 				return cls.cast(object);
 		}
-		throw new IllegalArgumentException("No Argument of "+cls.getName()+" type");
+		throw new CustomException("No Argument of "+cls.getName()+" type");
 	}
 
 	public static Model getModel(Object[] args) {

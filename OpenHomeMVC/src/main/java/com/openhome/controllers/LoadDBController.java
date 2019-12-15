@@ -37,22 +37,22 @@ import com.openhome.tam.TimeAdvancementManagement;
 @Controller
 public class LoadDBController extends SampleDBData{
 
-	@Autowired
+	@Autowired(required=true)
 	HostDAO hostDAO;
 	
-	@Autowired
+	@Autowired(required=true)
 	GuestDAO guestDAO;
 
-	@Autowired
+	@Autowired(required=true)
 	PlaceDAO placeDAO;
 	
-	@Autowired
+	@Autowired(required=true)
 	ImageDAO imageDAO;
 	
-	@Autowired
+	@Autowired(required=true)
 	FileSystem fileSystem;
 
-	@Autowired
+	@Autowired(required=true)
 	TimeAdvancementManagement timeAdvancementManagement;
 	
 	@GetMapping("/resetDB")

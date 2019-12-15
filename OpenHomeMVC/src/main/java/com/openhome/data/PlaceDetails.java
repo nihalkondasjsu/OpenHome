@@ -20,6 +20,7 @@ import javax.persistence.Transient;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.openhome.dao.helper.StringListConverter;
+import com.openhome.exception.CustomException;
 import com.openhome.tam.TimeAdvancementManagement;
 
 @Entity
@@ -295,7 +296,8 @@ public class PlaceDetails {
 		this.availableWeekDays = (StringListConverter.stringToList(availableWeekDaysString));
 	}
 	
-	public void prepareForRegistration() {
+	public void prepareForRegistration(Date registeredDate) {
+		this.registeredDate = registeredDate;
 		this.images = new ArrayList<Image>();
 		this.averageOverallRating = 0.0;
 		this.totalReviewsCount = 0;
@@ -323,6 +325,16 @@ public class PlaceDetails {
 
 	public void setContactPhoneNumber(String contactPhoneNumber) {
 		this.contactPhoneNumber = contactPhoneNumber;
+	}
+	
+	public void updateDetails(PlaceDetails placeDetailsOld) throws CustomException {
+		setRegisteredDate(placeDetailsOld.getRegisteredDate());
+		
+		setImages(placeDetailsOld.getImages());
+		
+		setAddress(placeDetailsOld.getAddress());
+		
+		setId(placeDetailsOld.getId());
 	}
 	
 }

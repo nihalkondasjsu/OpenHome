@@ -22,13 +22,13 @@ import com.openhome.session.SessionManager;
 @RequestMapping("/{userRole}/dashboard")
 public class UserDashboardController {
 
-	@Autowired
+	@Autowired(required=true)
 	GuestDAO guestDao;
 	
-	@Autowired
+	@Autowired(required=true)
 	UserDetailsDAO userDetailsDao;
 	
-	@Autowired
+	@Autowired(required=true)
 	SessionManager sessionManager;
 	
 	@RequestMapping(method=RequestMethod.GET)

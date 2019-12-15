@@ -20,7 +20,7 @@ import com.openhome.data.Place;
 @Order(1)
 public class PlaceIdValidateAspect {
 
-	@Autowired
+	@Autowired(required=true)
 	PlaceDAO placeDao;
 	
 	@Around("@annotation(com.openhome.aop.helper.annotation.ValidPlaceId)")

@@ -19,10 +19,10 @@ import com.openhome.session.SessionManager;
 @Order(0)
 public class ReservationAssociatedUserAuthorizationAspect {
 
-	@Autowired
+	@Autowired(required=true)
 	ReservationDAO reservationDao;
 	
-	@Autowired
+	@Autowired(required=true)
 	SessionManager sessionManager;
 
 	@Around("@annotation(com.openhome.aop.helper.annotation.ReservationAssociatedUserLoginRequired)")

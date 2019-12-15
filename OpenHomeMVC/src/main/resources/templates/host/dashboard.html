@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <title>Host Dashboard</title>
+<link href="/basic.css" rel="stylesheet" type="text/css">
 </head>
 <body>
 <h1>Host Dashboard</h1>
@@ -20,14 +21,10 @@
 		<a href="/place/register">Register Place</a>
 		<a href="/host/place/list">Places List</a>
    	</div>	
-	<table border="1">
+	<table border="1" cellspacing="0">
 		<tr>
 			<th>Email</th>
 			<td>[[${host.userDetails.email}]]</td>
-		</tr>
-		<tr>
-			<th>Password</th>
-			<td>[[${host.userDetails.password}]]</td>
 		</tr>
 		<tr>
 			<th>First Name</th>

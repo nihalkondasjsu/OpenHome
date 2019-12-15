@@ -15,7 +15,7 @@ import com.openhome.session.SessionManager;
 @Controller
 public class UserLogoutController {
 	
-	@Autowired
+	@Autowired(required=true)
 	SessionManager sessionManager;
 
 	@RequestMapping("/{userRole}/logout")

@@ -19,10 +19,11 @@ import com.openhome.dao.GuestDAO;
 import com.openhome.dao.HostDAO;
 import com.openhome.dao.PlaceDAO;
 import com.openhome.dao.UserDetailsDAO;
-import com.openhome.data.Reservation;
 import com.openhome.data.Guest;
 import com.openhome.data.Host;
+import com.openhome.data.Reservation;
 import com.openhome.data.UserDetails;
+import com.openhome.exception.CustomException;
 import com.openhome.session.SessionManager;
 import com.openhome.tam.TimeAdvancementManagement;
 
@@ -30,23 +31,23 @@ import com.openhome.tam.TimeAdvancementManagement;
 //@RequestMapping("/{userRole}/delete")
 public class UserDeleteController {
 
-	@Autowired
+	@Autowired(required=true)
 	GuestDAO guestDao;
 
-	@Autowired
+	@Autowired(required=true)
 	HostDAO hostDao;
 
-	@Autowired
+	@Autowired(required=true)
 	PlaceDAO placeDao;
 	
-	@Autowired
+	@Autowired(required=true)
 	UserDetailsDAO userDetailsDao;
 	
-	@Autowired
+	@Autowired(required=true)
 	SessionManager sessionManager;
 	
 
-	@Autowired
+	@Autowired(required=true)
 	TimeAdvancementManagement timeAdvancementManagement;
 	
 	@RequestMapping(method=RequestMethod.GET)
@@ -92,7 +93,7 @@ public class UserDeleteController {
 				return ControllerHelper.popupMessageAndRedirect("Host Unregistered Successfully.", "");
 			}
 			
-		} catch (IllegalAccessException e) {
+		} catch (CustomException e) {
 			System.out.println(e.toString());
 			return ControllerHelper.popupMessageAndRedirect(e.getMessage(), "");
 		} catch (Exception e) {
@@ -127,7 +128,7 @@ public class UserDeleteController {
 			guestDao.deleteById(guest.getId());
 
 			return ControllerHelper.popupMessageAndRedirect("Guest Unregistered Successfully.", "");
-		} catch (IllegalAccessException e) {
+		} catch (CustomException e) {
 			System.out.println(e.toString());
 			return ControllerHelper.popupMessageAndRedirect(e.getMessage(), "");
 		} catch (Exception e) {

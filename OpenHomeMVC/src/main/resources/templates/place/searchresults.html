@@ -5,7 +5,7 @@
 <title>Search Results</title>
 <style>
 	#searchStubsContainer{
-		width:1330px;
+		width:1385px;
 		margin:0 auto;
 	}
 	.searchStubs{
@@ -17,6 +17,7 @@
 		margin:10px;
 	}
 </style>
+<link href="/basic.css" rel="stylesheet" type="text/css">
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 </head>
 <body>
@@ -60,7 +61,7 @@
 			$('IFRAME').on('load', function () {
 				var dataid = $(this).attr("data-id");
 			   $(this).contents().on('click', function () {
-				   window.location = "../place/view?placeId="+dataid;
+				   //window.location = "../place/view?placeId="+dataid;
 			   })
 			});
 		}
@@ -75,10 +76,13 @@
 					document.getElementById("searchStubsContainer").appendChild(document.createElement("hr"));
 				}
 			}
+			//var a = document.createElement("a");
 			var elem = document.createElement("iframe");
 			elem.setAttribute("class","searchStubs");
 			elem.setAttribute("src","../place/view?preview=true&placeId="+placeDetails[i][0]);
 			elem.setAttribute("data-id",placeDetails[i][0]);
+			//a.setAttribute("href","../place/view?preview=true&placeId="+placeDetails[i][0]);
+			//a.appendChild(elem);
 			document.getElementById("searchStubsContainer").appendChild(elem);
 		}
 		

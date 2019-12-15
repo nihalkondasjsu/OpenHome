@@ -116,6 +116,8 @@ public interface PlaceDAO extends JpaRepository<Place,Long>{
 			@Param("requiredWeekDays")String requiredWeekDays
 			);
 	
+	
+	
 //	@Query("select s from Place s where s.placeDetails = (select sd from PlaceDetails sd where )")
 //	public Integer getReservationsOfPlaceByTime(@Param("placeId")Long placeId,@Param("checkIn")Long checkIn,@Param("checkOut")Long checkOut);
 	

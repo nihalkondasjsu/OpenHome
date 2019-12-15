@@ -11,6 +11,8 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
+import com.openhome.exception.CustomException;
+
 @Entity
 public class Guest {
 	
@@ -57,11 +59,11 @@ public class Guest {
 		this.reservations = reservations;
 	}
 	
-	public boolean canAccess(UserDetails userDetails) throws IllegalAccessException {
+	public boolean canAccess(UserDetails userDetails) throws CustomException {
 		if(getUserDetails().getEmail().equals(userDetails.getEmail()) == false)
-			throw new IllegalAccessException("Invalid Credentials");
+			throw new CustomException("Invalid Credentials");
 		if(getUserDetails().checkPassword(userDetails.getPassword()) == false)
-			throw new IllegalAccessException("Invalid Credentials");
+			throw new CustomException("Invalid Credentials");
 		return true;	
 	}
 	

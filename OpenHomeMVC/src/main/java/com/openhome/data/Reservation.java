@@ -24,8 +24,7 @@ import javax.persistence.Transient;
 import org.springframework.stereotype.Component;
 
 import com.openhome.dao.helper.StringListConverter;
-import com.openhome.data.Transaction.TransactionNature;
-import com.openhome.tam.TimeAdvancementManagement;
+import com.openhome.exception.CustomException;
 
 @Entity
 @Component
@@ -250,7 +249,7 @@ public class Reservation {
 		this.dailyParkingFee = dailyParkingFee;
 	}
 
-	public void prepareForRegistration(Date createdDate,Place place,Guest guest) throws ParseException {
+	public void prepareForRegistration(Date createdDate,Place place,Guest guest) throws ParseException, CustomException {
 		
 		this.createdDate = createdDate;
 		
@@ -261,7 +260,7 @@ public class Reservation {
 		this.checkOut = simpleDateFormat.parse(checkOutDateString+" "+CHECK_OUT_TIME).getTime();
 		
 		if(this.checkIn<createdDate.getTime() || this.checkOut - this.checkIn < 20 * 60 * 60 * 1000) {
-			throw new IllegalArgumentException("Invalid Reservation");
+			throw new CustomException("Invalid Reservation");
 		}
 		
 		this.requiredDays = weekDays();
@@ -285,7 +284,7 @@ public class Reservation {
 		
 	}
 	
-	public void prepareForHostBlock(Date createdDate,Place place) throws ParseException {
+	public void prepareForHostBlock(Date createdDate,Place place) throws ParseException, CustomException {
 		
 		this.createdDate = createdDate;
 		
@@ -296,7 +295,7 @@ public class Reservation {
 		this.checkOut = simpleDateFormat.parse(checkOutDateString+" "+CHECK_OUT_TIME).getTime();
 		
 		if(this.checkIn<createdDate.getTime() || this.checkOut - this.checkIn < 20 * 60 * 60 * 1000) {
-			throw new IllegalArgumentException("Invalid Reservation");
+			throw new CustomException("Invalid Reservation");
 		}
 		
 		this.reservationState = ReservationState.HostBlock;
@@ -337,18 +336,23 @@ public class Reservation {
 
 	@Override
 	public String toString() {
-		return String.format(
-				"{ createdDate : %s , checkIn : %s , checkOut : %s , actualCheckIn : %s , actualCheckOut : %s , reservationState : %s , transactions: %s , weekdayRentPrice : %f , weekendRentPrice : %f , dailyParkingFee : %f}",
-				createdDate,
-				new Date(checkIn),
-				new Date(checkOut),
-				actualCheckIn == null ? "No Record" : new Date(actualCheckIn),
-				new Date(actualCheckOut),
-				reservationState,
-				transactions,
-				weekdayRentPrice,
-				weekendRentPrice,
-				dailyParkingFee
-				);
+		try {
+			return String.format(
+					"{ createdDate : %s , checkIn : %s , checkOut : %s , actualCheckIn : %s , actualCheckOut : %s , reservationState : %s , transactions: %s , weekdayRentPrice : %f , weekendRentPrice : %f , dailyParkingFee : %f}",
+					createdDate,
+					new Date(checkIn),
+					new Date(checkOut),
+					actualCheckIn == null ? "No Record" : new Date(actualCheckIn),
+					new Date(actualCheckOut),
+					reservationState,
+					transactions,
+					weekdayRentPrice,
+					weekendRentPrice,
+					dailyParkingFee
+					);
+		} catch (Exception e) {
+			// TODO: handle exception
+			return super.toString();
+		}
 	}
 }
