@@ -3,12 +3,12 @@ package com.openhome.data;
 import java.util.Date;
 
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.OneToOne;
-
-import com.openhome.tam.TimeAdvancementManagement;
+import javax.persistence.ManyToOne;
 
 @Entity
 public class Rating {
@@ -23,8 +23,15 @@ public class Rating {
 
 	private Date createdDate;
 	
-	@OneToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.LAZY)
 	private Reservation reservation;
+	
+	public enum RatingTarget{
+		HOST,PLACE,GUEST
+	}
+	
+	@Enumerated(EnumType.STRING)
+	private RatingTarget target;
 	
 	public Rating() {
 		
@@ -70,6 +77,22 @@ public class Rating {
 		this.createdDate = createdDate;
 	}
 	
+	public Reservation getReservation() {
+		return reservation;
+	}
+
+	public void setReservation(Reservation reservation) {
+		this.reservation = reservation;
+	}
+
+	public RatingTarget getTarget() {
+		return target;
+	}
+
+	public void setTarget(RatingTarget target) {
+		this.target = target;
+	}
+
 	public void prepareForRegistration(Date createdDate,Reservation reservation) {
 		this.createdDate = createdDate;
 		this.reservation = reservation;

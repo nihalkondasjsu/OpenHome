@@ -106,15 +106,15 @@ public interface PlaceDAO extends JpaRepository<Place,Long>{
 			@Param("requiredWeekDays")String requiredWeekDays
 			);
 	
-	@Query("select count(s) from Place s where s.permanentlyUnavailable != true AND s.id = :placeId and s.placeDetails in (select sd from PlaceDetails sd where "+
-			"(sd.availableWeekDaysString like :requiredWeekDays) )"+
-			"and 0 = (select count(*) from Reservation b where b.place = s and b.actualCheckOut >= :startDate and b.checkIn <= :endTime )")
-	public Integer getSpecifiPlacesCountByDates(
-			@Param("placeId")Long placeId,
-			@Param("startDate")Long startDate,
-			@Param("endTime")Long endTime,
-			@Param("requiredWeekDays")String requiredWeekDays
-			);
+//	@Query("select count(s) from Place s where s.permanentlyUnavailable != true AND s.id = :placeId and s.placeDetails in (select sd from PlaceDetails sd where "+
+//			"(sd.availableWeekDaysString like :requiredWeekDays) )"+
+//			"and 0 = (select count(*) from Reservation b where b.place = s and b.actualCheckOut >= :startDate and b.checkIn <= :endTime )")
+//	public Integer getSpecifiPlacesCountByDates(
+//			@Param("placeId")Long placeId,
+//			@Param("startDate")Long startDate,
+//			@Param("endTime")Long endTime,
+//			@Param("requiredWeekDays")String requiredWeekDays
+//			);
 	
 	
 	

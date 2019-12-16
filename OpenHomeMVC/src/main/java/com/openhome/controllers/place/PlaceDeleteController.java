@@ -24,7 +24,7 @@ import com.openhome.session.SessionManager;
 import com.openhome.tam.TimeAdvancementManagement;
 
 @Controller
-//@RequestMapping("/place/delete")
+@RequestMapping("/place/delete")
 public class PlaceDeleteController {
 
 	@Autowired(required=true)

@@ -45,6 +45,14 @@
 			<td>[[${guest.userDetails.userRegistrationType}]]</td>
 		</tr>
 		<tr>
+			<th>Avg Rating</th>
+			<td>[[${guest.userDetails.averageRating}]]</td>
+		</tr>
+		<tr>
+			<th>Total Ratings Count</th>
+			<td>[[${guest.userDetails.totalReviewsCount}]]</td>
+		</tr>
+		<tr>
 			<th>Display Picture</th>
 			<td><img style="width:200px" onerror="this.src='https://vignette.wikia.nocookie.net/made-for-tv-movie/images/6/62/Image_unavailable.png/revision/latest?cb=20171002225603';" th:src="${guest.userDetails.displayPictureId == null ? '' : guest.userDetails.displayPictureId.url}"></td>
 		</tr>

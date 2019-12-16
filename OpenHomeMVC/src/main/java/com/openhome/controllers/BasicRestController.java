@@ -1,11 +1,14 @@
 package com.openhome.controllers;
 
+import java.util.Date;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.openhome.cronjob.ApplicationCronJobManager;
 import com.openhome.mailer.Mailer;
 import com.openhome.security.Encryption;
 import com.openhome.session.SessionManager;
@@ -19,6 +22,10 @@ public class BasicRestController {
 	@Autowired(required=true)
 	Mailer mailer;
 	
+	@Autowired(required=true)
+	ApplicationCronJobManager acjm;
+
+	
 	@RequestMapping(value="/sendVerificationToken" , method = RequestMethod.GET)
 	public String sendVerificationToken(@RequestParam("email") String email) {
 		try {
@@ -29,6 +36,14 @@ public class BasicRestController {
 		}
 
 		return "failed";
+	}
+	
+	@RequestMapping(value="/setup" , method = RequestMethod.GET)
+	public String setup() {
+		acjm.addJob(new Date(3*60*60*1000));
+		acjm.addJob(new Date(11*60*60*1000));
+		acjm.keepRunning();
+		return "good";
 	}
 
 }

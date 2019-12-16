@@ -88,7 +88,7 @@
 		<div id="infoContainer">
 			<p id="name">[[${place.placeDetails.name}]]</p>
 			<p class="info">[[${place.placeDetails.propertyType}]]&#8729;[[${place.placeDetails.roomType}]]&#8729;[[${place.placeDetails.accomodates}]] Guests&#8729;[[${place.placeDetails.address.addressLine1}]]</p>
-			<p class="info"><span class="info" id="stars" th:attr="stars=${place.placeDetails.averageOverallRating}"></span>&#8729;[[${place.placeDetails.totalReviewsCount == null ? 10 : place.placeDetails.totalReviewsCount}]] Reviews</p>
+			<p class="info"><span class="info" id="stars" th:attr="stars=${place.placeDetails.averageRating}"></span>&#8729;[[${place.placeDetails.totalReviewsCount == null ? 10 : place.placeDetails.totalReviewsCount}]] Reviews</p>
 		</div>
 	</div>
 
@@ -121,7 +121,7 @@
 	
 	        return stars;
 	    }
-		document.getElementById("stars").innerHTML += addStars([[${place.placeDetails.averageOverallRating}]]);
+		document.getElementById("stars").innerHTML += addStars([[${place.placeDetails.averageRating}]]);
 	</script>
 
 </body>

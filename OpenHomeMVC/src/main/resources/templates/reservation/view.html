@@ -53,7 +53,7 @@
 		</tr>
 		<tr>
 			<td>Reservation Guest</td>
-			<td>[[${reservation.guest.userDetails.email}]]</td>
+			<td><a th:href="@{'/guest/view?guestId=' + ${reservation.guest.id}}">[[${reservation.guest.userDetails.email}]]</a></td>
 		</tr>
 		<tr>
 			<td>Reservation State</td>
@@ -68,5 +68,98 @@
 			<td>[[${reservation.weekendRentPrice}]]</td>
 		</tr>
 	</table>
+	<div th:if="${reservation.hostRating != null}">
+		<table border='1'>
+			<tr>
+				<th>Review Title</th>
+				<td>[[${reservation.hostRating.title}]]</td>
+			</tr>
+			<tr>
+				<th>Review Body</th>
+				<td>[[${reservation.hostRating.review}]]</td>
+			</tr>
+			<tr>
+				<th>Review Rating</th>
+				<td>[[${reservation.hostRating.rating}]]</td>
+			</tr>
+			<tr>
+				<th>Review To</th>
+				<td>[[${reservation.hostRating.target}]]</td>
+			</tr>
+		</table>
+	</div>
+	<div th:if="${reservation.guestRating != null}">
+		<table border='1'>
+			<tr>
+				<th>Review Title</th>
+				<td>[[${reservation.guestRating.title}]]</td>
+			</tr>
+			<tr>
+				<th>Review Body</th>
+				<td>[[${reservation.guestRating.review}]]</td>
+			</tr>
+			<tr>
+				<th>Review Rating</th>
+				<td>[[${reservation.guestRating.rating}]]</td>
+			</tr>
+			<tr>
+				<th>Review To</th>
+				<td>[[${reservation.guestRating.target}]]</td>
+			</tr>
+		</table>
+	</div>
+	<div th:if="${reservation.placeRating != null}">
+		<table border='1'>
+			<tr>
+				<th>Review Title</th>
+				<td>[[${reservation.placeRating.title}]]</td>
+			</tr>
+			<tr>
+				<th>Review Body</th>
+				<td>[[${reservation.placeRating.review}]]</td>
+			</tr>
+			<tr>
+				<th>Review Rating</th>
+				<td>[[${reservation.placeRating.rating}]]</td>
+			</tr>
+			<tr>
+				<th>Review To</th>
+				<td>[[${reservation.placeRating.target}]]</td>
+			</tr>
+		</table>
+	</div>
+	<form th:action="@{'/rating/create?reservationId=' + ${reservation.id}}" method="POST">
+		<table border="1">
+			<tr>
+				<th>Review Title</th>
+				<td><input name="title" placeholder="Title"></td>
+			</tr>
+			<tr>
+				<th>Review Body</th>
+				<td><textarea name="review" placeholder="Review"></textarea></td>
+			</tr>
+			<tr>
+				<th>Review Rating</th>
+				<td>
+					<label><input type='radio' name='rating' value='1'>1</label>
+					<label><input type='radio' name='rating' value='2'>2</label>
+					<label><input type='radio' name='rating' value='3'>3</label>
+					<label><input type='radio' name='rating' value='4'>4</label>
+					<label><input type='radio' name='rating' value='5'>5</label>
+				</td>
+			</tr>
+			<tr>
+				<th>Review To</th>
+				<td>
+					<label><input type='radio' name='target' value='GUEST'>GUEST</label>
+					<label><input type='radio' name='target' value='PLACE'>PLACE</label>
+					<label><input type='radio' name='target' value='HOST'>HOST</label>
+				</td>
+			</tr>
+			<tr>
+				<th colspan="2"><input type="submit"></th>
+			</tr>
+		</table>
+	</form>
 </body>
 </html>

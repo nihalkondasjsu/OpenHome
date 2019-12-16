@@ -73,6 +73,10 @@ public class UserDetails {
 
 	@Column(nullable=false,updatable=false)
 	private Date registeredDate;
+
+	private Integer totalReviewsCount = 0;
+	
+	private Double averageRating = 0.0;
 	
 	public UserDetails() {
 		registeredDate = new Date();
@@ -189,6 +193,33 @@ public class UserDetails {
 
 	public void setLastName(String lastName) {
 		this.lastName = lastName;
+	}
+	
+	public Integer getTotalReviewsCount() {
+		return totalReviewsCount;
+	}
+
+	public void setTotalReviewsCount(Integer totalReviewsCount) {
+		this.totalReviewsCount = totalReviewsCount;
+	}
+
+	public Double getAverageRating() {
+		return averageRating;
+	}
+
+	public void setAverageRating(Double averageRating) {
+		this.averageRating = averageRating;
+	}
+	
+	public void addRating(Rating rating) {
+		this.averageRating = ((this.totalReviewsCount * this.averageRating)+(rating.getRating())) 
+				/ (this.totalReviewsCount + 1) ;
+		this.totalReviewsCount++;
+	}
+	
+	public void removeRating(Rating rating) {
+		this.averageRating = (((this.totalReviewsCount*this.averageRating)-rating.getRating())/(this.totalReviewsCount-1));
+		this.totalReviewsCount--;
 	}
 	
 	public void prepareForRegistration(Date registeredDate) {

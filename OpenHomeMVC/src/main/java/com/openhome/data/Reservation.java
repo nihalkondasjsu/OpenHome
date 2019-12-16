@@ -9,6 +9,7 @@ import java.util.Date;
 import java.util.List;
 
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -70,9 +71,15 @@ public class Reservation {
 	
 	@OneToMany(fetch=FetchType.LAZY,orphanRemoval=true,mappedBy = "reservation")
 	private List<Transaction> transactions;
+
+	@OneToOne(orphanRemoval=true,cascade=CascadeType.ALL)
+	private Rating guestRating;
 	
-	@OneToOne(orphanRemoval=true)
-	private Rating rating;
+	@OneToOne(orphanRemoval=true,cascade=CascadeType.ALL)
+	private Rating hostRating;
+	
+	@OneToOne(orphanRemoval=true,cascade=CascadeType.ALL)
+	private Rating placeRating;
 	
 	@ManyToOne
 	private Guest guest;
@@ -160,13 +167,29 @@ public class Reservation {
 	public void addTransaction(Transaction transaction) {
 		this.transactions.add(transaction);
 	}
-	
-	public Rating getRating() {
-		return rating;
+
+	public Rating getGuestRating() {
+		return guestRating;
 	}
 
-	public void setRating(Rating rating) {
-		this.rating = rating;
+	public void setGuestRating(Rating guestRating) {
+		this.guestRating = guestRating;
+	}
+
+	public Rating getHostRating() {
+		return hostRating;
+	}
+
+	public void setHostRating(Rating hostRating) {
+		this.hostRating = hostRating;
+	}
+
+	public Rating getPlaceRating() {
+		return placeRating;
+	}
+
+	public void setPlaceRating(Rating placeRating) {
+		this.placeRating = placeRating;
 	}
 
 	public Guest getGuest() {
@@ -274,7 +297,9 @@ public class Reservation {
 		
 		this.transactions = new ArrayList<Transaction>();
 		
-		this.rating = null;
+		this.guestRating = null;
+		this.hostRating = null;
+		this.placeRating = null;
 		
 		this.guest = guest;
 		
@@ -304,7 +329,9 @@ public class Reservation {
 		
 		this.transactions = new ArrayList<Transaction>();
 		
-		this.rating = null;
+		this.guestRating = null;
+		this.hostRating = null;
+		this.placeRating = null;
 		
 	}
 	

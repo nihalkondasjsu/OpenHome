@@ -19,6 +19,7 @@ import com.openhome.exception.CustomException;
 import com.openhome.mailer.Mailer;
 
 @Component
+@Transactional
 public class ReservationProcessor {
 
 	private static final Double SERVICE_CHARGE = 1.00;
@@ -384,10 +385,8 @@ public class ReservationProcessor {
 			createTransaction(currentTime, currentTime, amount, reservation, TransactionNature.Fee, TransactionUser.Host);
 			
 			Date today11 = new Date(currentTime.getTime());
-			Date tommorow11 = new Date(currentTime.getTime()+MS_24_HOURS);
-
 			today11.setHours(11);today11.setMinutes(0);today11.setSeconds(0);
-			tommorow11.setHours(11);tommorow11.setMinutes(0);tommorow11.setSeconds(0);
+			Date tommorow11 = new Date(today11.getTime()+MS_24_HOURS);
 			
 			if(today11.getTime() > currentTime.getTime()) {
 				getReservation().setActualCheckOut(today11.getTime());
@@ -490,7 +489,7 @@ public class ReservationProcessor {
 	@Autowired(required=true)
 	private TransactionDAO transactionDao;
 	
-	@Transactional
+	//@Transactional
 	public void createTransaction(Date createdDate,
 			Date dayToChargeFor,
 			Double amount,

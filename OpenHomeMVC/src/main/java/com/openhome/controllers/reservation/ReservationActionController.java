@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.openhome.aop.helper.annotation.ReservationAssociatedGuestLoginRequired;
+import com.openhome.aop.helper.annotation.ReservationAssociatedUserLoginRequired;
 import com.openhome.aop.helper.annotation.ValidReservationId;
 import com.openhome.controllers.helper.ControllerHelper;
 import com.openhome.dao.ReservationDAO;
@@ -67,7 +68,7 @@ public class ReservationActionController {
 	
 	@RequestMapping(value = "/reservation/cancel" ,method=RequestMethod.GET)
 	@ValidReservationId
-	@ReservationAssociatedGuestLoginRequired
+	@ReservationAssociatedUserLoginRequired
 	public String cancelReservation(@RequestParam(value="reservationId",required=false) Long reservationId, Model model , HttpSession httpSession ) {
 		Reservation reservation = reservationDao.getOne(reservationId);
 		try {

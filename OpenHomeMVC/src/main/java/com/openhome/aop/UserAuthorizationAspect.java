@@ -11,9 +11,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.openhome.aop.helper.ArgsFinder;
+import com.openhome.dao.GuestDAO;
+import com.openhome.dao.HostDAO;
 import com.openhome.session.SessionManager;
-
-import org.apache.catalina.session.StandardSessionFacade;
 
 @Aspect
 @Component
@@ -21,6 +21,12 @@ public class UserAuthorizationAspect {
 
 	@Autowired(required=true)
 	SessionManager sessionManager;
+
+	@Autowired(required=true)
+	HostDAO hostDao;
+	
+	@Autowired(required=true)
+	GuestDAO guestDao;
 	
 	@Around("@annotation(com.openhome.aop.helper.annotation.UserLoginRequired)")
 	public Object userLoginRequired(ProceedingJoinPoint joinPoint) throws Throwable {
@@ -39,5 +45,29 @@ public class UserAuthorizationAspect {
 		return "index";
 		
 	 }
+	
+	@Around("@annotation(com.openhome.aop.helper.annotation.ValidHostId)")
+	public Object validHostId(ProceedingJoinPoint joinPoint) throws Throwable {
+		try {
+			if(hostDao.getOne(ArgsFinder.findArg(joinPoint.getArgs(), Long.class)) != null) {
+				return joinPoint.proceed();
+			}
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+		return "index";
+	}
+	
+	@Around("@annotation(com.openhome.aop.helper.annotation.ValidGuestId)")
+	public Object validGuestId(ProceedingJoinPoint joinPoint) throws Throwable {
+		try {
+			if(guestDao.getOne(ArgsFinder.findArg(joinPoint.getArgs(), Long.class)) != null) {
+				return joinPoint.proceed();
+			}
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+		return "index";
+	}
 	
 }

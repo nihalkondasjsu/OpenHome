@@ -96,7 +96,7 @@ public class PlaceDetails {
 	
 	private Integer totalReviewsCount = 0;
 	
-	private Double averageOverallRating = 0.0;
+	private Double averageRating = 0.0;
 	
 	@Transient
 	private List<String> availableWeekDays = Arrays.asList("Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday");
@@ -251,20 +251,25 @@ public class PlaceDetails {
 		this.totalReviewsCount = totalReviewsCount;
 	}
 
-	public Double getAverageOverallRating() {
-		return averageOverallRating;
+	public Double getAverageRating() {
+		return averageRating;
 	}
 
-	public void setAverageOverallRating(Double averageOverallRating) {
-		this.averageOverallRating = averageOverallRating;
+	public void setAverageRating(Double averageRating) {
+		this.averageRating = averageRating;
 	}
 	
 	public void addRating(Rating rating) {
-		this.averageOverallRating = ((this.totalReviewsCount * this.averageOverallRating)+(rating.getRating())) 
+		this.averageRating = ((this.totalReviewsCount * this.averageRating)+(rating.getRating())) 
 				/ (this.totalReviewsCount + 1) ;
 		this.totalReviewsCount++;
 	}
 
+	public void removeRating(Rating rating) {
+		this.averageRating = (((this.totalReviewsCount*this.averageRating)-rating.getRating())/(this.totalReviewsCount-1));
+		this.totalReviewsCount--;
+	}
+	
 	public List<String> getAvailableWeekDays() {
 		try {
 			this.availableWeekDays = (StringListConverter.stringToList(availableWeekDaysString));
@@ -299,7 +304,7 @@ public class PlaceDetails {
 	public void prepareForRegistration(Date registeredDate) {
 		this.registeredDate = registeredDate;
 		this.images = new ArrayList<Image>();
-		this.averageOverallRating = 0.0;
+		this.averageRating = 0.0;
 		this.totalReviewsCount = 0;
 	}
 

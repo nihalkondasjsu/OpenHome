@@ -12,6 +12,7 @@ import org.springframework.stereotype.Component;
 import com.openhome.aop.helper.ArgsFinder;
 import com.openhome.dao.ReservationDAO;
 import com.openhome.data.Reservation;
+import com.openhome.exception.CustomException;
 import com.openhome.session.SessionManager;
 
 @Aspect
@@ -31,7 +32,7 @@ public class ReservationAssociatedUserAuthorizationAspect {
 		try {
 			HttpSession httpSession = ArgsFinder.getHttpSession(joinPoint.getArgs());
 			if(sessionManager.hasUserLogin(httpSession) == false) {
-				throw new IllegalAccessError("Login Required");
+				throw new CustomException("Login Required");
 			}
 
 			Long reservationId = ArgsFinder.findArg(joinPoint.getArgs(), Long.class);
@@ -40,11 +41,11 @@ public class ReservationAssociatedUserAuthorizationAspect {
 			if(guestId != null) {
 				System.out.println(reservation.getGuest().getId() +" | "+guestId);
 				if(reservation.getGuest().getId().equals(guestId) == false) {
-					throw new IllegalAccessError("Associated Login Required");
+					throw new CustomException("Associated Login Required");
 				}
 			}else {
 				if(reservation.getPlace().getHost().getId().equals(sessionManager.getHostId(httpSession)) == false) {
-					throw new IllegalAccessError("Associated Login Required");
+					throw new CustomException("Associated Login Required");
 				}
 			}
 			return joinPoint.proceed();
@@ -63,7 +64,7 @@ public class ReservationAssociatedUserAuthorizationAspect {
 		try {
 			HttpSession httpSession = ArgsFinder.getHttpSession(joinPoint.getArgs());
 			if(sessionManager.hasUserLogin(httpSession) == false) {
-				throw new IllegalAccessError("Login Required");
+				throw new CustomException("Login Required");
 			}
 
 			Long reservationId = ArgsFinder.findArg(joinPoint.getArgs(), Long.class);
@@ -72,10 +73,10 @@ public class ReservationAssociatedUserAuthorizationAspect {
 			if(guestId != null) {
 				System.out.println(reservation.getGuest().getId() +" | "+guestId);
 				if(reservation.getGuest().getId().equals(guestId) == false) {
-					throw new IllegalAccessError("Associated Login Required");
+					throw new CustomException("Associated Login Required");
 				}
 			}else {
-				throw new IllegalAccessError("Associated Login Required");
+				throw new CustomException("Associated Login Required");
 			}
 			return joinPoint.proceed();
 		} catch (Exception e) {

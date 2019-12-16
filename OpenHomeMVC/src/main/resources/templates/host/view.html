@@ -2,25 +2,12 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Host Dashboard</title>
+<title>Host View</title>
 <link href="/basic.css" rel="stylesheet" type="text/css">
 </head>
 <body>
-<h1>Host Dashboard</h1>
+<h1>Host View</h1>
 <div th:if="${host != null}">
-	<a href="/host/update">Host Update</a>
-	
-	<div th:if="${ host.userDetails.email != host.userDetails.verifiedDetails.verifiedEmail }">
-		<a href="/verify/email">Host Verify Email</a>
-   	</div>
-   	<div th:if="${ host.userDetails.phoneNumber != '' && host.userDetails.phoneNumber != host.userDetails.verifiedDetails.verifiedPhoneNumber }">
-		<a href="/verify/phone">Host Verify Phone</a>
-   	</div>
-		<a href="/host/logout">Host Logout</a>
-	<div th:if="${ host.userDetails.email == host.userDetails.verifiedDetails.verifiedEmail }">
-		<a href="/place/register">Register Place</a>
-		<a href="/host/place/list">Places List</a>
-   	</div>	
 	<table border="1" cellspacing="0">
 		<tr>
 			<th>Email</th>
@@ -53,25 +40,6 @@
 		<tr>
 			<th>Display Picture</th>
 			<td><img style="width:200px" onerror="this.src='https://vignette.wikia.nocookie.net/made-for-tv-movie/images/6/62/Image_unavailable.png/revision/latest?cb=20171002225603';" th:src="${host.userDetails.displayPictureId == null ? '' : host.userDetails.displayPictureId.url}"></td>
-		</tr>
-		<tr>
-			<th colspan="2">Credit Card Information</th>
-		</tr>
-		<tr>
-			<th>Credit Card Number</th>
-			<td>[[${host.userDetails.creditCard.number}]]</td>
-		</tr>
-		<tr>
-			<th>Credit Card Cvv</th>
-			<td>[[${host.userDetails.creditCard.cvv}]]</td>
-		</tr>
-		<tr>
-			<th>Credit Card Expiry Month</th>
-			<td>[[${host.userDetails.creditCard.expiryMonth}]]</td>
-		</tr>
-		<tr>
-			<th>Credit Card Expiry Year (YY)</th>
-			<td>[[${host.userDetails.creditCard.expiryYear}]]</td>
 		</tr>
 	</table>
 </div>	

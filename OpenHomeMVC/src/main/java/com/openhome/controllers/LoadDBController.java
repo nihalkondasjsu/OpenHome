@@ -1,30 +1,22 @@
 package com.openhome.controllers;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
 import java.util.List;
-import java.util.Random;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.thymeleaf.templateresolver.ClassLoaderTemplateResolver;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.openhome.FileSystem;
 import com.openhome.dao.GuestDAO;
 import com.openhome.dao.HostDAO;
 import com.openhome.dao.ImageDAO;
 import com.openhome.dao.PlaceDAO;
 import com.openhome.data.Address;
+import com.openhome.data.CreditCard;
 import com.openhome.data.Guest;
 import com.openhome.data.Host;
 import com.openhome.data.Image;
@@ -149,16 +141,43 @@ public class LoadDBController extends SampleDBData{
 				
 				places.add(s);
 			}
+			
+			CreditCard cc = new CreditCard();
+
+			cc.setNumber(("0000000000000000"+i));
+			
+			cc.setNumber(cc.getNumber().substring(cc.getNumber().length()-16));
+			
+			cc.setCvv("111");
+			
+			cc.setExpiryMonth(04);
+			
+			cc.setExpiryYear(25);
+			
 			UserDetails ud = new UserDetails("a"+i+"@b.c","ab@c*"+i,"00"+i,new UserVerifiedDetails(),"a"+i,"bc"+i);
 			//if(i != 2) {
 				ud.setVerifiedDetails(new UserVerifiedDetails(ud.getEmail(),ud.getPhoneNumber()));
 			//}
+				ud.setCreditCard(cc);
 			createHost(ud,places);
+			
+			cc = new CreditCard();
+
+			cc.setNumber(("0000000000000001"+i));
+			
+			cc.setNumber(cc.getNumber().substring(cc.getNumber().length()-16));
+			
+			cc.setCvv("111");
+			
+			cc.setExpiryMonth(04);
+			
+			cc.setExpiryYear(25);
 			
 			UserDetails udg = new UserDetails("i"+i+"@j.k","ij@k*"+i,"10"+i,new UserVerifiedDetails(),"i"+i,"jk"+i);
 			//if(i != 2) {
 				udg.setVerifiedDetails(new UserVerifiedDetails(udg.getEmail(),udg.getPhoneNumber()));
 			//}
+				udg.setCreditCard(cc);
 			createGuest(udg);
 		}
 		//createHost(new UserDetails("", password, phoneNumber, verifiedDetails, firstName, lastName));

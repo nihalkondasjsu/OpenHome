@@ -5,6 +5,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import com.openhome.dao.PlaceDAO;
 import com.openhome.dao.ReservationDAO;
@@ -13,6 +14,7 @@ import com.openhome.data.Place;
 import com.openhome.data.Reservation;
 import com.openhome.exception.CustomException;
 
+@Component
 public class ReservationManager {
 	
 	@Autowired(required=true)
@@ -38,7 +40,7 @@ public class ReservationManager {
 			throw new CustomException("Reservation failed.Reservation contains more than 14 days.");
 		}
 		
-		if(placeDao.getSpecifiPlacesCountByDates(place.getId(), reservation.getCheckIn(), reservation.getCheckOut(), reservation.getRequiredDays()) == 0) {
+		if(reservationDao.getUnCancelledReservationsOnPlaceBetweenDates(place.getId(), reservation.getCheckIn(), reservation.getCheckOut()).size() > 0) {
 			throw new CustomException("Place Unavailable");
 		}
 			

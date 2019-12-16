@@ -29,7 +29,12 @@ public class TimeAdvancementManagement {
 	
 	private static Long timeDelta;
 	
-	private static Boolean CAN_GO_BACK = true;
+	private static Boolean CAN_GO_BACK = false;
+	
+	public TimeAdvancementManagement() {
+		// TODO Auto-generated constructor stub
+		System.out.println("TimeAdvancementManagement created");
+	}
 	
 	public Date getCurrentDate() {
 		if(TimeAdvancementManagement.timeDelta != null) {
@@ -64,7 +69,7 @@ public class TimeAdvancementManagement {
 		processAllReservations();
 	}
 
-	private void processAllReservations() {
+	public void processAllReservations() {
 		List<Reservation> reservations = reservationDao.getAllRunningReservations();
 		for (Reservation reservation : reservations) {
 			ReservationState temp = reservation.getReservationState();
