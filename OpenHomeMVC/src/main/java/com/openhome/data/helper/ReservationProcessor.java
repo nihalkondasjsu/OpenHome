@@ -124,7 +124,7 @@ public class ReservationProcessor {
 			
 			if(checkOut - checkIn >= MS_24_HOURS){
 				while(checkIn < checkOut){
-					double temp = ((new Date(checkIn).getDay() == 6 || new Date(checkIn).getDay() == 0) ? weekendPrice : weekdayPrice) + dailyParkingFee;
+					double temp = ((new Date(checkIn).getDay() == 5 || new Date(checkIn).getDay() == 6) ? weekendPrice : weekdayPrice) + dailyParkingFee;
 					microReservations.add(
 							new MicroReservation(new Date(checkIn ), new Date(checkIn + MS_24_HOURS - MS_4_HOURS), temp)
 							);

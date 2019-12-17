@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.openhome.aop.helper.annotation.PlaceHostLoginRequired;
+import com.openhome.aop.helper.annotation.ValidAlivePlaceId;
 import com.openhome.aop.helper.annotation.ValidPlaceId;
 import com.openhome.controllers.helper.ControllerHelper;
 import com.openhome.dao.ImageDAO;
@@ -45,7 +46,7 @@ public class PlaceImageUpdateController {
 	ImageManager imageManager;
 	
 	@RequestMapping(value="/place/updatePlaceImages",method=RequestMethod.GET)
-	@ValidPlaceId
+	@ValidAlivePlaceId
 	@PlaceHostLoginRequired
 	public String updateForm(@RequestParam(value="placeId",required=false) Long placeId, @RequestParam(value="op") String op, Model model , HttpSession httpSession ) {
 		System.out.println("PlaceImageUpdateController");
@@ -70,7 +71,7 @@ public class PlaceImageUpdateController {
 	}
 	
 	@RequestMapping(value="/place/updatePlaceImagesAdd",method=RequestMethod.POST)
-	@ValidPlaceId
+	@ValidAlivePlaceId
 	@PlaceHostLoginRequired
 	public String updateFormAdd(@RequestParam(value="placeId",required=false) Long placeId, Model model , HttpSession httpSession ,@RequestParam(value="image",required=false) MultipartFile image, @RequestParam(value="imageUrl",required=false) String imageUrl) {
 		System.out.println("PlaceImageUpdateController");
@@ -99,7 +100,7 @@ public class PlaceImageUpdateController {
 	}
 	
 	@RequestMapping(value="/place/updatePlaceImagesDelete",method=RequestMethod.POST)
-	@ValidPlaceId
+	@ValidAlivePlaceId
 	@PlaceHostLoginRequired
 	public String updateFormAdd(@RequestParam(value="placeId",required=false) Long placeId, Model model , HttpSession httpSession ,@RequestParam(value="deleteImageId",required=false) Long deleteImageId) {
 		System.out.println("PlaceImageUpdateController");
@@ -132,7 +133,7 @@ public class PlaceImageUpdateController {
 	}
 	
 	@RequestMapping(value="/place/updatePlaceImagesRearrange",method=RequestMethod.POST)
-	@ValidPlaceId
+	@ValidAlivePlaceId
 	@PlaceHostLoginRequired
 	public String updateFormAdd(@RequestParam(value="placeId",required=false) Long placeId, Model model , HttpSession httpSession ,@RequestParam(value="images[]",required=false) List<Long> images) {
 		System.out.println("PlaceImageUpdateController");

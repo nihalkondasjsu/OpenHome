@@ -13,6 +13,7 @@ import com.openhome.Json;
 import com.openhome.aop.helper.annotation.ValidPlaceId;
 import com.openhome.controllers.helper.ControllerHelper;
 import com.openhome.aop.helper.annotation.PlaceHostLoginRequired;
+import com.openhome.aop.helper.annotation.ValidAlivePlaceId;
 import com.openhome.dao.PlaceDAO;
 import com.openhome.dao.PlaceDetailsDAO;
 import com.openhome.data.Host;
@@ -39,7 +40,7 @@ public class PlaceUpdateController {
 	ExceptionManager exceptionManager;
 	
 	@RequestMapping(method=RequestMethod.GET)
-	@ValidPlaceId
+	@ValidAlivePlaceId
 	@PlaceHostLoginRequired
 	public String updateForm(@RequestParam(value="placeId",required=false) Long placeId, Model model , HttpSession httpSession ) {
 		System.out.println("PlaceUpdateController");
@@ -57,7 +58,7 @@ public class PlaceUpdateController {
 	}
 
 	@RequestMapping(method=RequestMethod.POST)
-	@ValidPlaceId
+	@ValidAlivePlaceId
 	@PlaceHostLoginRequired
 	public String updateFormSubmission(@RequestParam(value="placeId",required=false) Long placeId, PlaceDetails placeDetails , Model model , HttpSession httpSession ) {
 		System.out.println("HaPPY");

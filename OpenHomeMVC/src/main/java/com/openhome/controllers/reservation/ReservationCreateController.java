@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.openhome.Json;
 import com.openhome.OpenHomeMvcApplication;
 import com.openhome.aop.helper.annotation.GuestLoginRequired;
+import com.openhome.aop.helper.annotation.ValidAlivePlaceId;
 import com.openhome.aop.helper.annotation.ValidPlaceId;
 import com.openhome.controllers.helper.ControllerHelper;
 import com.openhome.controllers.helper.Mail;
@@ -43,7 +44,7 @@ public class ReservationCreateController {
 	TimeAdvancementManagement timeAdvancementManagement;
 	
 	@RequestMapping(method=RequestMethod.GET)
-	@ValidPlaceId
+	@ValidAlivePlaceId
 	@GuestLoginRequired
 	public String getReservationCreatePage(@RequestParam(value="placeId",required=false) Long placeId, Model model , HttpSession httpSession ) {
 		model.addAttribute("place", placeDao.getOne(placeId));
@@ -51,7 +52,7 @@ public class ReservationCreateController {
 	}
 	
 	@RequestMapping(method=RequestMethod.POST)
-	@ValidPlaceId
+	@ValidAlivePlaceId
 	@GuestLoginRequired
 	public String postReservationCreate(@RequestParam(value="placeId",required=false) Long placeId, Reservation reservation,Model model , HttpSession httpSession ) {
 		

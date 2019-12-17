@@ -26,7 +26,6 @@ import com.openhome.data.Host;
 import com.openhome.data.Place;
 import com.openhome.data.Rating;
 import com.openhome.data.Reservation;
-import com.openhome.data.helper.PlaceManager;
 import com.openhome.data.helper.RatingManager;
 import com.openhome.exception.ExceptionManager;
 import com.openhome.session.SessionManager;

@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.openhome.aop.helper.annotation.ValidPlaceId;
 import com.openhome.controllers.helper.ControllerHelper;
 import com.openhome.aop.helper.annotation.PlaceHostLoginRequired;
+import com.openhome.aop.helper.annotation.ValidAlivePlaceId;
 import com.openhome.dao.PlaceDAO;
 import com.openhome.data.Reservation;
 import com.openhome.data.Host;
@@ -37,7 +38,7 @@ public class PlaceDeleteController {
 	TimeAdvancementManagement timeAdvancementManagement;
 	
 	@RequestMapping(method=RequestMethod.GET)
-	@ValidPlaceId
+	@ValidAlivePlaceId
 	@PlaceHostLoginRequired
 	public String deleteForm( @RequestParam(value="placeId",required=false) Long placeId, Model model , HttpSession httpSession ) {
 		System.out.println("PlaceDeleteController");
