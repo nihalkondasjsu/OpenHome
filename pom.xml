@@ -34,7 +34,7 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-mail</artifactId>
         </dependency>
-        <dependency>
+        <!-- <dependency>
 	      <groupId>org.springframework.cloud</groupId>
 	      <artifactId>spring-cloud-gcp-starter</artifactId>
 	      <version>1.0.0.RELEASE</version>
@@ -43,7 +43,7 @@
 	      <groupId>org.springframework.cloud</groupId>
 	      <artifactId>spring-cloud-gcp-starter-sql-mysql</artifactId>
 	      <version>1.0.0.RELEASE</version>
-	    </dependency>
+	    </dependency> -->
 		<dependency>
 			<groupId>mysql</groupId>
 			<artifactId>mysql-connector-java</artifactId>
@@ -118,11 +118,11 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
-	        <plugin>
+	        <!-- <plugin>
 	          <groupId>com.google.cloud.tools</groupId>
 	          <artifactId>appengine-maven-plugin</artifactId>
 	          <version>1.3.2</version>
-	        </plugin>
+	        </plugin> -->
 		</plugins>
 	</build>
 
