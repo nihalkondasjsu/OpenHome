@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<link href="/basic.css" rel="stylesheet" type="text/css">
+<script>
+	var closeOp = "[[${close}]]";
+	if(closeOp == "yes"){
+		window.close();
+	}
+</script>
+<style>
+img{
+	width:200px;
+}
+</style>
+</head>
+<body>
+
+<form th:action="@{'/place/updatePlaceImagesDelete?placeId=' + ${place.id}}" method="POST" >
+	<ul>
+		<li th:each="image : ${place.placeDetails.images}">
+			<img th:src="${image.url}"/>
+			<button type="submit" name="deleteImageId" th:value="${image.id}">Delete Image</button>
+		</li>
+	</ul>
+</form>
+
+</body>
+</html>

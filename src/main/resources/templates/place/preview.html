@@ -1,0 +1,128 @@
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Place Preview</title>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<link href="/basic.css" rel="stylesheet" type="text/css">
+<style>
+	body{
+		margin:0;
+		overflow:hidden;
+	}
+	
+	#previewContainer{
+		width:420px;
+		height:410px;
+		transition: all .6s ease;
+        -webkit-transition: all .6s ease;
+        color:black;
+        background-color:white;
+	}
+	
+	#previewContainer:hover{
+        color:white;
+        background-color:black;
+    }
+	
+	#imageContainer{
+		width:420px;
+		height:300px;
+		position:relative;
+	}
+	
+	#image{
+		position:absolute;
+		width:420px;
+		height:300px;
+    	object-fit: cover;
+	}
+	#price{
+		position:absolute;
+	    bottom: 10%;
+	    background-color: #404040A0;
+	    color: white;
+	    font-size: 21pt;
+	    padding: 10px;	
+	}
+	p{
+		margin:0;
+	}
+	
+	#infoContainer{
+		padding:10px;
+		width:400px;
+		height:100px;
+		white-place:nowrap;
+	}
+	
+	
+	
+	#name{
+		font-size: 18pt;
+	    margin-bottom: 10px;
+	    width: inherit;
+	    text-overflow: ellipsis;
+	    white-place: nowrap;
+	    overflow: hidden;
+	}
+	
+	.info{
+		vertical-align: middle;
+	    margin-bottom: 5px;
+	    font-size: 12pt;
+	    color: #666;
+	    width: inherit;
+	    text-overflow: ellipsis;
+	    white-space: nowrap;
+	    overflow: hidden;
+	}
+</style>
+</head>
+<body th:attr="data-id=${place.id}" onclick="bodyClicked()">
+
+	<div id="previewContainer">
+		<div id="imageContainer">
+			<img id="image" th:src="${#lists.size(place.placeDetails.images) == 0 ? 'https://vignette.wikia.nocookie.net/made-for-tv-movie/images/6/62/Image_unavailable.png/revision/latest?cb=20171002225603' : place.placeDetails.images[0].url}"/>
+			<p id="price">$[[${place.placeDetails.weekdayRentPrice}]] to $[[${place.placeDetails.weekendRentPrice}]]</p>
+		</div>
+		<div id="infoContainer">
+			<p id="name">[[${place.placeDetails.name}]]</p>
+			<p class="info">[[${place.placeDetails.propertyType}]]&#8729;[[${place.placeDetails.roomType}]]&#8729;[[${place.placeDetails.accomodates}]] Guests&#8729;[[${place.placeDetails.address.addressLine1}]]</p>
+			<p class="info"><span class="info" id="stars" th:attr="stars=${place.placeDetails.averageRating}"></span>&#8729;[[${place.placeDetails.totalReviewsCount == null ? 10 : place.placeDetails.totalReviewsCount}]] Reviews</p>
+		</div>
+	</div>
+
+	<script>
+		
+	function bodyClicked(){
+		
+		var id = [[${place.id}]];
+		window.open("../place/view?placeId="+id,"_blank");
+		
+	}
+	
+		function addStars(rating=4.5){
+	        stars = "";
+	        count = 0;
+			for(var i=0; i<Math.floor(rating); i++)
+			{
+				stars+="<i style='vertical-align:middle;'class='material-icons'>star</i>";
+				count = count+1;
+			}
+			if (rating % 1 != 0)
+			{
+				stars+="<i style='vertical-align:middle;'class='material-icons'>star_half</i>";
+				count = count+1;
+			}
+			for (var i=0; i<5-count; i++)
+			{
+				stars+="<i style='vertical-align:middle;'class='material-icons'>star_border</i>";
+			}
+	
+	        return stars;
+	    }
+		document.getElementById("stars").innerHTML += addStars([[${place.placeDetails.averageRating}]]);
+	</script>
+
+</body>
+</html>

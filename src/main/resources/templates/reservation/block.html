@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Reservation Create</title>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<link href="/basic.css" rel="stylesheet" type="text/css">
+</head>
+<body>
+<h1>Reservation Block</h1>
+<form th:action="@{'/reservation/block?placeId=' + ${place.id}}" method="POST">
+		<input type="date" 
+	       name="checkInDateString" id="checkIn" 
+	       format-value="yyyy-MM-dd">
+	    <input type="date" 
+	       name="checkOutDateString" id="checkOut" 
+	       format-value="yyyy-MM-dd">
+	    <input type="submit">
+	</form>
+</body>
+</html>

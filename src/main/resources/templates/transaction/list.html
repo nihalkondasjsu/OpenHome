@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<link href="/basic.css" rel="stylesheet" type="text/css">
+</head>
+<body>
+
+<h1>Transactions List</h1>
+
+<table border="1">
+		<tr>
+			<td>Id</td>
+			<td>Created Date</td>
+			<td>Charged Date</td>
+			<td>Amount</td>
+			<td>Nature</td>
+			<td>User</td>
+			<td>Reservation</td>
+		</tr>
+		<tr th:each="transaction : ${transactions}">
+			<td>[[${transaction.id}]]</td>
+			<td>[[${transaction.createdDate}]]</td>
+			<td>[[${transaction.dayToChargeFor}]]</td>
+			<td>[[${transaction.amount}]]</td>
+			<td>[[${transaction.transactionNature}]]</td>
+			<td>[[${transaction.transactionUser}]]</td>
+			<td><a th:href="@{'/reservation/view?reservationId=' + ${transaction.reservation.id}}">[[${transaction.reservation.id}]]</a></td>
+		</tr>
+	</table>
+
+</body>
+</html>

@@ -1,0 +1,96 @@
+/*
+body{
+	font-family:fantasy;
+}
+
+h1{
+	color:#B22222;
+	font-size:32pt;
+}
+
+input[type="text"],input[type="password"],input[type="date"],input[type="date-time"]{
+	font-size:16pt;
+    padding:7.5px;
+    color:	#B22222;
+    border : 1px solid #B22222;
+    margin: 2.5px;
+    border-radius:10px;
+    width:250px;
+}
+*/
+
+input{
+	border-top: none;
+    border-left: none;
+    border-right: none;
+    border-bottom: 2px solid #B22222;
+    color: #B22222;
+    padding: 5px;
+    margin: 5px;
+    font-size: 16pt;
+    background-color: #fff!important;
+}
+
+input[type=submit]{
+font-size: 18pt;
+    border: 2px solid #B22222;
+    padding: 10px;
+    margin: 5px;
+    color: #B22222;
+}
+
+h1{
+    font-family: fantasy;
+    color: #B22222;
+    font-size: 30pt;
+}
+
+a {
+    font-family: monospace;
+    color: #b22222;
+    margin: 10px;
+}
+
+::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
+  color: #F08080;
+  opacity: 0.75; /* Firefox */
+}
+
+:-ms-input-placeholder { /* Internet Explorer 10-11 */
+  color: #F08080;
+}
+
+::-ms-input-placeholder { /* Microsoft Edge */
+  color: #F08080;
+}
+
+table{
+	margin-top:20px;
+	border-collapse: separate;
+    border-spacing: 0;
+}
+
+th {
+    font-size: 14pt;
+    font-family: sans-serif;
+    color: #B22222;
+    text-align: left;
+    padding: 5px;
+    border-top: none;
+    border-left: none;
+    border-right: none;
+}
+td{
+	font-size: 14pt;
+    font-family: sans-serif;
+    color: #B22222;
+    text-align: left;
+    padding: 5px;
+    border-top: none;
+    border-left: none;
+    border-right: none;
+}
+
+img{
+	width:200px;
+}

@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Guest Update</title>
+<script>
+	var successLink = "[[${successLink}]]";
+	if(successLink != undefined && successLink != ""){
+		window.location = "/"+successLink;
+	}
+</script>
+<link href="/basic.css" rel="stylesheet" type="text/css">
+</head>
+<body>
+<h1>Guest Update Form</h1>
+<p style="color:red">[[${errorMessage}]]</p>
+<form action="/guest/update" method="POST" enctype="multipart/form-data">
+	<table border="1">
+		<tr>
+			<th>New Password</th>
+			<td><input name="newPassword" ></td>
+		</tr>
+		<tr>
+			<th>First Name</th>
+			<td><input name="firstName" th:value="${guest.userDetails.firstName}" required></td>
+		</tr>
+		<tr>
+			<th>Last Name</th>
+			<td><input name="lastName" th:value="${guest.userDetails.lastName}" required></td>
+		</tr>
+		<tr>
+			<th>Phone Number</th>
+			<td><input name="phoneNumber" th:value="${guest.userDetails.phoneNumber}" required></td>
+		</tr>
+		<tr>
+			<th>Display Picture</th>
+			<td><img style="width:200px" th:src="${guest.userDetails.displayPictureId == null ? 'https://vignette.wikia.nocookie.net/made-for-tv-movie/images/6/62/Image_unavailable.png/revision/latest?cb=20171002225603' : guest.userDetails.displayPictureId.url}"></td>
+		</tr>
+		<tr>
+			<th>Display Picture Change</th>
+			<td><input name="image" type="file" accept="image/*"><input type="text" name="imageUrl" placeholder="img link"></td>
+		</tr>
+		<tr>
+			<th colspan="2">Credit Card Information</th>
+		</tr>
+		<tr>
+			<th>Credit Card Number</th>
+			<td><input name="creditCard.number" th:value="${guest.userDetails.creditCard.number}" required></td>
+		</tr>
+		<tr>
+			<th>Credit Card Cvv</th>
+			<td><input name="creditCard.cvv" th:value="${guest.userDetails.creditCard.cvv}" required></td>
+		</tr>
+		<tr>
+			<th>Credit Card Expiry Month</th>
+			<td><input name="creditCard.expiryMonth" th:value="${guest.userDetails.creditCard.expiryMonth}" required></td>
+		</tr>
+		<tr>
+			<th>Credit Card Expiry Year (YY)</th>
+			<td><input name="creditCard.expiryYear" th:value="${guest.userDetails.creditCard.expiryYear}" required></td>
+		</tr>
+		<tr>
+			<td colspan="2"><input type="submit"></td>
+		</tr>
+	</table>
+</form>
+</body>
+</html>

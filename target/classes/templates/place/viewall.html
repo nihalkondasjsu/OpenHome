@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Place List</title>
+<link href="/basic.css" rel="stylesheet" type="text/css">
+</head>
+<body>
+<h1>Place List</h1>
+<p style="color:red">[[${errorMessage}]]</p>
+<div th:if="${places != null}">
+    <ul>
+       <li th:each="place : ${places}" >
+       		<a th:text="${place.placeDetails.name}" th:href="@{${op} + '?placeId=' + ${place.id}}"></a>
+       </li>
+    </ul>
+</div>
+</body>
+</html>

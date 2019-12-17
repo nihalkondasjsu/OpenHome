@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Place Reservation List</title>
+<link href="/basic.css" rel="stylesheet" type="text/css">
+</head>
+<body>
+	<h1>Place Reservation List</h1>
+	<table border="1">
+		<tr>
+			<td>Id</td>
+			<td>Created Time</td>
+			<td>Check In</td>
+			<td>Check Out</td>
+			<td>Actual Check In</td>
+			<td>Actual Check Out</td>
+			<td>Place Id</td>
+			<td>Guest</td>
+			<td>State</td>
+			<td>Weekday Rent Price</td>
+			<td>Weekday Rent Price</td>
+			<td>Daily Parking Fee</td>
+		</tr>
+		<tr th:each="reservation : ${reservations}">
+			<td><a th:href="@{'/reservation/view?reservationId=' + ${reservation.id}}">[[${reservation.id}]]</a></td>
+			<td>[[${reservation.createdDate}]]</td>
+			<td>[[${#dates.format(new java.util.Date(reservation.checkIn))}]]</td>
+			<td>[[${#dates.format(new java.util.Date(reservation.checkOut))}]]</td>
+			<td>[[${reservation.actualCheckIn == null ? '' : #dates.format(new java.util.Date(reservation.actualCheckIn))}]]</td>			<td>[[${#dates.format(new java.util.Date(reservation.actualCheckOut))}]]</td>
+			<td><a th:href="@{'/place/view?placeId=' + ${reservation.place.id}}">[[${reservation.place.placeDetails.name}]]</a></td>
+			<td>[[${reservation.guest.userDetails.email}]]</td>
+			<td>[[${reservation.reservationState}]]</td>
+			<td>[[${reservation.weekdayRentPrice}]]</td>
+			<td>[[${reservation.weekendRentPrice}]]</td>
+			<td>[[${reservation.dailyParkingFee}]]</td>
+		</tr>
+	</table>
+	
+</body>
+</html>

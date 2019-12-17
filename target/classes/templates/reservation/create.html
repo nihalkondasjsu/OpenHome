@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Reservation Create</title>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<link href="/basic.css" rel="stylesheet" type="text/css">
+</head>
+<body>
+<h1>Reservation Create</h1>
+<form th:action="@{'/reservation/create?placeId=' + ${place.id}}" method="POST">
+		<input type="date" 
+	       name="checkInDateString" id="checkIn" onchange="dateChanged()"
+	       format-value="yyyy-MM-dd">
+	    <input type="date" 
+	       name="checkOutDateString" id="checkOut" onchange="dateChanged()"
+	       format-value="yyyy-MM-dd">
+	    <p >Price for your reservation is : $<input id="estimatePrice" readonly value="0.0"></p>
+	    <input type="submit">
+	</form>
+	<script>
+		var weekdayPrice = [[${place.placeDetails.weekdayRentPrice}]] ;
+		var weekendPrice = [[${place.placeDetails.weekendRentPrice}]] ;
+		var dailyParkingFee = [[${place.placeDetails.dailyParkingFee}]] ;
+		
+		console.log(weekdayPrice);
+		console.log(weekendPrice);
+		
+		function dateChanged(){
+			//console.log(new Date($("#checkIn").val()+" 08:00").getDay());
+			console.log("date changed");
+			var amount = 0;
+			try{
+				var checkIn = new Date($("#checkIn").val()+" 11:00");
+				var checkOut = new Date($("#checkOut").val()+" 11:00");
+				console.log(checkIn.getTime() +" | " + checkOut.getTime() + " | "+
+						(checkOut.getTime() - checkIn.getTime())+ " | "+(24*60*60*1000)
+								
+				);
+				
+				if(checkOut.getTime() - checkIn.getTime() >= 24*60*60*1000){
+					while(checkIn.getTime() < checkOut.getTime()){
+						amount += (checkIn.getDay() == 5 || checkIn.getDay() == 6) ? weekendPrice : weekdayPrice ;
+						checkIn.setTime(checkIn.getTime()+24*60*60*1000);
+						console.log(checkIn.getTime() +" | " +amount);
+						document.getElementById("estimatePrice").value = amount + dailyParkingFee;
+						console.log(amount + dailyParkingFee);
+					}
+					return;
+					
+				}
+				
+			}catch(e){
+				console.log(e);
+			}
+
+			document.getElementById("estimatePrice").value = amount;
+		}
+		
+	</script>
+</body>
+</html>

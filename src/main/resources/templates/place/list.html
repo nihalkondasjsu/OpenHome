@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Place List</title>
+<link href="/basic.css" rel="stylesheet" type="text/css">
+<style>
+	img{
+	width:200px;
+	}
+</style>
+</head>
+<body>
+	<h1>Place List</h1>
+	<table border="1">
+		<tr>
+			<td>Id</td>
+			<td>Registered Date</td>
+			<td>Name</td>
+			<td>City</td>
+			<td>Zip</td>
+			<td>Preview</td>
+		</tr>
+		<tr th:each="place : ${places}">
+			<td><a th:href="@{'/place/view?placeId=' + ${place.id}}">[[${place.id}]]</a></td>
+			<td>[[${place.placeDetails.registeredDate}]]</td>
+			<td>[[${place.placeDetails.name}]]</td>
+			<td>[[${place.placeDetails.address.city}]]</td>
+			<td>[[${place.placeDetails.address.zip}]]</td>
+			<td><img onerror="this.src='https://vignette.wikia.nocookie.net/made-for-tv-movie/images/6/62/Image_unavailable.png/revision/latest?cb=20171002225603';" th:src="${place.placeDetails.images == null ? '' : (#lists.size(place.placeDetails.images)>0 ? place.placeDetails.images[0].url : '')}"></td>
+		</tr>
+	</table>
+	
+</body>
+</html>

@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<link href="/basic.css" rel="stylesheet" type="text/css">
+<script>
+	var closeOp = "[[${close}]]";
+	if(closeOp == "yes"){
+		window.close();
+	}
+</script>
+<style>
+img{
+	width:200px;
+}
+</style>
+<script
+    type="text/javascript"
+    src="http://code.jquery.com/jquery-1.4.4.min.js"
+    
+  ></script>
+</head>
+<body>
+
+<form th:action="@{'/place/updatePlaceImagesRearrange?placeId=' + ${place.id}}" method="POST" >
+	<table border="1" id="mytable">
+		<tr th:each="image : ${place.placeDetails.images}">
+			<td><img th:src="${image.url}"/><input type="hidden" name="images[]" th:value="${image.id}"></td>
+			<td>
+				<p class="move up">Move Up</p>
+				<p class="move down">Move Down</p>
+			</td>
+		</tr>
+	</table><br>
+	<input type="submit">
+</form>
+
+<script>
+	$('#mytable p.move').click(function() {
+	    var row = $(this).closest('tr');
+	    if ($(this).hasClass('up'))
+	        row.prev().before(row);
+	    else
+	        row.next().after(row);
+	});
+</script>
+
+</body>
+</html>

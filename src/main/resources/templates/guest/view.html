@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Guest View</title>
+<link href="/basic.css" rel="stylesheet" type="text/css">
+</head>
+<body>
+<h1>Guest View</h1>
+
+	<a th:href="@{'/guest/rating/list?guestId=' + ${guest.id}}">Rating List</a>	
+	
+<div th:if="${guest != null}">
+	<table border="1">
+		<tr>
+			<th>Email</th>
+			<td>[[${guest.userDetails.email}]]</td>
+		</tr>
+		<tr>
+			<th>First Name</th>
+			<td>[[${guest.userDetails.firstName}]]</td>
+		</tr>
+		<tr>
+			<th>Last Name</th>
+			<td>[[${guest.userDetails.lastName}]]</td>
+		</tr>
+		<tr>
+			<th>Phone Number</th>
+			<td>[[${guest.userDetails.phoneNumber}]]</td>
+		</tr>
+		<tr>
+			<th>User Registration Type</th>
+			<td>[[${guest.userDetails.userRegistrationType}]]</td>
+		</tr>
+		<tr>
+			<th>Avg Rating</th>
+			<td>[[${guest.userDetails.averageRating}]]</td>
+		</tr>
+		<tr>
+			<th>Total Ratings Count</th>
+			<td>[[${guest.userDetails.totalReviewsCount}]]</td>
+		</tr>
+		<tr>
+			<th>Display Picture</th>
+			<td><img style="width:200px" onerror="this.src='https://vignette.wikia.nocookie.net/made-for-tv-movie/images/6/62/Image_unavailable.png/revision/latest?cb=20171002225603';" th:src="${guest.userDetails.displayPictureId == null ? '' : guest.userDetails.displayPictureId.url}"></td>
+		</tr>
+	</table>
+</div>
+</body>
+</html>

@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Host Login</title>
+<link href="/basic.css" rel="stylesheet" type="text/css">
+<script>
+	var successLink = "[[${successLink}]]";
+	if(successLink != undefined && successLink != ""){
+		window.location = "/"+successLink;
+	}
+</script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jquery-load-json@1.3.3/src/jquery.loadJSON.min.js"></script>
+<link href="/basic.css" rel="stylesheet" type="text/css">
+
+</head>
+<body>
+<h1>Host Login Form</h1>
+<p style="color:red">[[${errorMessage}]]</p>
+<form id="myForm" action="/host/login" method="POST" onsubmit="return preSubmit();">
+	<input name="email" id="email" placeholder="Email" class="underlineinput" required><br>
+	<input name="password" placeholder="Password" class="underlineinput" required><br>
+	<input type="submit">
+</form>
+
+	<button onclick="googleSignIn()"><img src="https://developers.google.com/identity/images/btn_google_signin_light_normal_web.png"></button>
+		<script>
+		if (location.protocol != 'https:')
+		{
+		 location.href = 'https:' + window.location.href.substring(window.location.protocol.length);
+		}
+	</script>
+	<script>
+	
+	function preSubmit(){
+		if($("#email").val().endsWith("@sjsu.edu") == false){
+			alert("Since you're logging in with a non SJSU email. You will be logged in as a Guest.");
+		}
+	}
+	
+	  function statusChangeCallback(response) {  // Called with the results from FB.getLoginStatus().
+		    console.log('statusChangeCallback');
+		    console.log(response);                   // The current login status of the person.
+		    if (response.status === 'connected') {   // Logged into your webpage and Facebook.
+		      testAPI();  
+		    } else {                                 // Not logged into your webpage or we are unable to tell.
+		      //document.getElementById('status').innerHTML = 'Please log ' +
+		      //  'into this webpage.';
+		    }
+		  }
+
+
+		  function checkLoginState() {               // Called when a person is finished with the Login Button.
+		    FB.getLoginStatus(function(response) {   // See the onlogin handler
+		      statusChangeCallback(response);
+		    });
+		  }
+
+
+		  window.fbAsyncInit = function() {
+		    FB.init({
+		      appId      : '594009504667805',
+		      cookie     : true,                     // Enable cookies to allow the server to access the session.
+		      xfbml      : true,                     // Parse social plugins on this webpage.
+		      version    : 'v5.0'           // Use this Graph API version for this call.
+		    });
+
+
+		    /* FB.getLoginStatus(function(response) {   // Called after the JS SDK has been initialized.
+		      statusChangeCallback(response);        // Returns the login status.
+		    }); */
+		  };
+
+		  
+		  (function(d, s, id) {                      // Load the SDK asynchronously
+		    var js, fjs = d.getElementsByTagName(s)[0];
+		    if (d.getElementById(id)) return;
+		    js = d.createElement(s); js.id = id;
+		    js.src = "https://connect.facebook.net/en_US/sdk.js";
+		    fjs.parentNode.insertBefore(js, fjs);
+		  }(document, 'script', 'facebook-jssdk'));
+
+		 
+		  function testAPI() {                      // Testing Graph API after login.  See statusChangeCallback() for when this call is made.
+		    console.log('Welcome!  Fetching your information.... ');
+		    FB.api('/me',{'fields':'email,name'}, function(response) {
+		    	console.log(response);
+		      console.log('Successful login for: ' + response.name);
+		      var json = {};
+		       json["email"]=response.email;
+				json["password"]=response.id;
+				json["userRegistrationType"]="Facebook";
+				json["firstName"]=response.name.split(" ")[0] || "";
+				json["lastName"]=response.name.split(" ")[1] || "";
+				json["phoneNumber"]="";
+				json["imageUrl"]= "";
+				$("#myForm").loadJSON(json);
+				document.forms["myForm"].submit();
+		    });
+		  }
+
+</script>
+<br>
+<fb:login-button scope="public_profile,email" onlogin="checkLoginState();">
+</fb:login-button>
+	
+	<!-- The core Firebase JS SDK is always required and must be listed first -->
+<script src="https://www.gstatic.com/firebasejs/7.3.0/firebase-app.js"></script>
+
+<script src="https://www.gstatic.com/firebasejs/7.2.3/firebase-auth.js"></script>
+	<!-- TODO: Add SDKs for Firebase products that you want to use
+     https://firebase.google.com/docs/web/setup#available-libraries -->
+<script src="https://www.gstatic.com/firebasejs/7.3.0/firebase-analytics.js"></script>
+	
+<script>
+  // Your web app's Firebase configuration
+  var firebaseConfig = {
+    apiKey: "AIzaSyDU7lyhMUZ1HAkPdRH5pjZnsnJrJIDn4eY",
+    authDomain: "openhome-3a5c8.firebaseapp.com",
+    databaseURL: "https://openhome-3a5c8.firebaseio.com",
+    projectId: "openhome-3a5c8",
+    storageBucket: "openhome-3a5c8.appspot.com",
+    messagingSenderId: "135823705890",
+    appId: "1:135823705890:web:69280d4159a2318f4d077b",
+    measurementId: "G-Z8DK31M2GY"
+  };
+  // Initialize Firebase
+  firebase.initializeApp(firebaseConfig);
+  firebase.analytics();
+</script>
+
+<script>
+	function googleSignIn(){
+		firebase.auth().signInWithPopup(new firebase.auth.GoogleAuthProvider()).then(function(result){
+			console.log(result);
+			var json = {};
+			json["email"]=result.user.email;
+			json["password"]=result.user.uid;
+			json["userRegistrationType"]="Google";
+			json["firstName"]=result.additionalUserInfo.profile.given_name || "";
+			json["lastName"]=result.additionalUserInfo.profile.family_name || "";
+			json["phoneNumber"]=result.user.phoneNumber || "";
+			json["imageUrl"]=result.user.photoURL || "";
+			$("#myForm").loadJSON(json);
+			document.forms["myForm"].submit();
+		}).catch(function(err){
+			console.log(err);	
+		});
+	}
+</script>
+	
+</body>
+</html>
