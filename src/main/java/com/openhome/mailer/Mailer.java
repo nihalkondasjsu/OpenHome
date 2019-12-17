@@ -16,6 +16,7 @@ public class Mailer {
 	public boolean sendMail(String email,String subject,String body) {
 		try {
 			SimpleMailMessage msg = new SimpleMailMessage();
+			msg.setFrom("openhomedksv@gmail.com");
 	        msg.setTo(email);
 	        
 	        if(OpenHomeMvcApplication.debugMailBody) {
