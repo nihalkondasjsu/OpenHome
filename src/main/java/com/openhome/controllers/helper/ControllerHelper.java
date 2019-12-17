@@ -28,7 +28,7 @@ public class ControllerHelper {
 		System.out.println(map);
 		if(mails != null) {
 			for (Mail mail : mails) {
-				mailer.sendMail(mail.getEmail(), mail.getSubject(), mail.getBody());
+				mailer.sendMail(mail);
 			}
 		}
 		return "redirect:/messageRedirect?mrId="+messageRedirect.hashCode();
