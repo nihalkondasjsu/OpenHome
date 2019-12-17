@@ -31,7 +31,9 @@ public class GuestReservationListController {
 	public String getReservationCreatePage( Model model , HttpSession httpSession ) {
 		List<Reservation> reservations = sessionManager.getGuest(httpSession).getReservations();
 		Date date = tam.getCurrentDate();
-		reservations.forEach((r) -> {r.calculatePcf(date);});
+		for (Reservation reservation : reservations) {
+			reservation.calculatePcf(date);
+		}
 		model.addAttribute("reservations", reservations);
 		return "reservation/list";
 	}

@@ -104,7 +104,11 @@ public class LoadDBController extends SampleDBData{
 		
 		FileInputStream fis = new FileInputStream(f);
 		
-		String[] urls = new String(fis.readAllBytes()).split("\n");
+		byte[] data = new byte[fis.available()];
+		
+		fis.read(data);
+		
+		String[] urls = new String(data).split("\n");
 		
 		
 		
