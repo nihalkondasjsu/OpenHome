@@ -41,9 +41,10 @@ public class Mailer {
 		// TODO Auto-generated method stub
 		try {
 			RestTemplate rt = new RestTemplate();
+			System.out.println(
 			rt.postForObject("http://nihalkonda.com/mail/mail.php",
 					mail,
-					String.class);
+					String.class));
 		} catch (Exception e) {
 			// TODO: handle exception
 			e.printStackTrace();
