@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<link href="/basic.css" rel="stylesheet" type="text/css">
+</head>
+<body>
+
+<h1>Review List</h1>
+
+<table border="1">
+		<tr>
+			<td>Id</td>
+			<td>Review Title</td>
+			<td>Review Body</td>
+			<td>Review Rating</td>
+			<td>Review To</td>
+			<td>Reservation</td>
+		</tr>
+		<tr th:each="rating : ${ratings}">
+			<td>[[${rating.id}]]</td>
+			<td>[[${rating.title}]]</td>
+			<td>[[${rating.review}]]</td>
+			<td>[[${rating.rating}]]</td>
+			<td>[[${rating.target}]]</td>
+			<td><a th:href="@{'/reservation/view?reservationId=' + ${rating.reservation.id}}">[[${rating.reservation.id}]]</a></td>
+		</tr>
+	</table>
+
+</body>
+</html>

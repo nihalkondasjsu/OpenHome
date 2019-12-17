@@ -31,6 +31,8 @@ img{
 	<a th:href="@{'/reservation/create?placeId=' + ${place.id}}">Make Reservation</a>
 </div>
 
+	<a th:href="@{'/place/rating/list?placeId=' + ${place.id}}">Rating List</a>
+
 <table border="1">
 	<tr>
 		<th>Name</th>
@@ -201,6 +203,7 @@ img{
 		<td>[[${place.placeDetails.address.country}]]</td>
 	</tr>
 </table>
+
 <script>
 $(function() {
 	$( ".checkBoxContainer" ).each(function( index ) {

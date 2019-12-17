@@ -40,7 +40,7 @@ public class ReservationManager {
 			throw new CustomException("Reservation failed.Reservation contains more than 14 days.");
 		}
 		
-		if(reservationDao.getUnCancelledReservationsOnPlaceBetweenDates(place.getId(), reservation.getCheckIn(), reservation.getCheckOut()).size() > 0) {
+		if(reservationDao.getUnCancelledReservationsAndHostBlockOnPlaceBetweenDates(place.getId(), reservation.getCheckIn(), reservation.getCheckOut()).size() > 0) {
 			throw new CustomException("Place Unavailable");
 		}
 			

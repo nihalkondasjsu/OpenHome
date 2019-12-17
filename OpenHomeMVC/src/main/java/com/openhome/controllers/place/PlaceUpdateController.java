@@ -10,8 +10,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.openhome.Json;
+import com.openhome.OpenHomeMvcApplication;
 import com.openhome.aop.helper.annotation.ValidPlaceId;
 import com.openhome.controllers.helper.ControllerHelper;
+import com.openhome.controllers.helper.Mail;
 import com.openhome.aop.helper.annotation.PlaceHostLoginRequired;
 import com.openhome.aop.helper.annotation.ValidAlivePlaceId;
 import com.openhome.dao.PlaceDAO;
@@ -65,7 +67,12 @@ public class PlaceUpdateController {
 		try {
 			Place p = placeManager.updatePlace(placeId,placeDetails);
 			
-			return ControllerHelper.popupMessageAndRedirect("Place Updated Successfully.", "place/view?placeId="+p.getId());
+			return ControllerHelper.popupMessageAndRedirect("Place Updated Successfully.", "place/view?placeId="+p.getId(),
+					new Mail(
+							p.getHost().getUserDetails().getEmail(),
+							"OpenHome: Place Updated Successfully",
+							"Link to your updated place : "+OpenHomeMvcApplication.baseUrl+"/place/view?placeId="+p.getId()
+							));
 		} catch (Exception e) {
 			exceptionManager.reportException(e);
 			return ControllerHelper.popupMessageAndRedirect(e.toString(), "place/update");

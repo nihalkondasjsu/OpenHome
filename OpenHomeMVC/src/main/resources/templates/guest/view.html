@@ -7,6 +7,9 @@
 </head>
 <body>
 <h1>Guest View</h1>
+
+	<a th:href="@{'/guest/rating/list?guestId=' + ${guest.id}}">Rating List</a>	
+	
 <div th:if="${guest != null}">
 	<table border="1">
 		<tr>

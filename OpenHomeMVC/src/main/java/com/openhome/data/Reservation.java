@@ -282,7 +282,11 @@ public class Reservation {
 		this.checkIn = simpleDateFormat.parse(checkInDateString+" "+CHECK_IN_TIME).getTime();
 		this.checkOut = simpleDateFormat.parse(checkOutDateString+" "+CHECK_OUT_TIME).getTime();
 		
-		if(this.checkIn<createdDate.getTime() || this.checkOut - this.checkIn < 20 * 60 * 60 * 1000) {
+		if(
+				this.checkIn<createdDate.getTime() ||
+				this.checkOut - this.checkIn < 20 * 60 * 60 * 1000 ||
+				this.checkOut - this.checkIn > 14 * 24 * 60 * 60 * 1000 ||
+				this.checkOut < createdDate.getTime() + 365*60*60*1000 ) {
 			throw new CustomException("Invalid Reservation");
 		}
 		
@@ -316,10 +320,10 @@ public class Reservation {
 		String pattern = "yyyy-MM-dd HH:mm";
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
 		
-		this.checkIn = simpleDateFormat.parse(checkInDateString+" "+CHECK_IN_TIME).getTime();
-		this.checkOut = simpleDateFormat.parse(checkOutDateString+" "+CHECK_OUT_TIME).getTime();
+		this.checkIn = simpleDateFormat.parse(checkInDateString+" "+"00:00").getTime();
+		this.checkOut = simpleDateFormat.parse(checkOutDateString+" "+"23:59").getTime();
 		
-		if(this.checkIn<createdDate.getTime() || this.checkOut - this.checkIn < 20 * 60 * 60 * 1000) {
+		if(this.checkIn<createdDate.getTime() || this.checkOut - this.checkIn < 20 * 60 * 60 * 1000 || this.checkOut - this.checkIn > 365 * 24 * 60 * 60 * 1000 ) {
 			throw new CustomException("Invalid Reservation");
 		}
 		

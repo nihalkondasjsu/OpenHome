@@ -21,6 +21,9 @@
 		<a href="/place/register">Register Place</a>
 		<a href="/host/place/list">Places List</a>
    	</div>	
+   	
+	<a th:href="@{'/host/rating/list?hostId=' + ${host.id}}">Rating List</a>
+   	
 	<table border="1" cellspacing="0">
 		<tr>
 			<th>Email</th>

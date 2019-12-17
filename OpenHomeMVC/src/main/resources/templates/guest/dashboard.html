@@ -23,6 +23,8 @@
 	
 	<a href="/guest/logout">Guest Logout</a>
 		
+	<a th:href="@{'/guest/rating/list?guestId=' + ${guest.id}}">Rating List</a>	
+		
 	<table border="1">
 		<tr>
 			<th>Email</th>

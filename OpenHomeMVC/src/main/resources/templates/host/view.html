@@ -7,6 +7,9 @@
 </head>
 <body>
 <h1>Host View</h1>
+
+	<a th:href="@{'/host/rating/list?hostId=' + ${host.id}}">Rating List</a>
+	
 <div th:if="${host != null}">
 	<table border="1" cellspacing="0">
 		<tr>

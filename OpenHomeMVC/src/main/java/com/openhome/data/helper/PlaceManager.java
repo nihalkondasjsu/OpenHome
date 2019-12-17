@@ -11,11 +11,13 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.openhome.dao.PlaceDAO;
 import com.openhome.dao.PlaceDetailsDAO;
+import com.openhome.dao.ReservationDAO;
 import com.openhome.data.Host;
 import com.openhome.data.Image;
 import com.openhome.data.Place;
 import com.openhome.data.PlaceDetails;
 import com.openhome.data.PlaceSearchQuery;
+import com.openhome.data.Reservation;
 import com.openhome.exception.CustomException;
 
 @Component
@@ -26,6 +28,9 @@ public class PlaceManager {
 
 	@Autowired(required=true)
 	PlaceDetailsDAO placeDetailsDao;
+	
+	@Autowired(required=true)
+	ReservationDAO reservationDao;
 	
 	@Autowired(required=true)
 	ImageManager imageManager;
@@ -79,6 +84,19 @@ public class PlaceManager {
 		aList.addAll(bList);
 		
 		return aList;
+	}
+	
+	public Place deletePlace(Date currentDate,Long placeId) throws CustomException {
+		Place s = placeDao.getOne(placeId);
+		
+		List<Reservation> reservations = reservationDao.getUnCancelledReservationsOnPlace(placeId);
+		
+		if(reservations.size() != 0)
+			throw new CustomException("Cannot delete Place.Place has future reservations.");
+		
+		s.setPermanentlyUnavailable(true);
+		
+		return placeDao.save(s);
 	}
 	
 	public List<Place> listAllPlaces(){
