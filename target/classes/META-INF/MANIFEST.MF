@@ -1,0 +1,11 @@
+Manifest-Version: 1.0
+Built-By: appleapple
+Build-Jdk: 9
+Implementation-Title: OpenHomeMVC
+Implementation-Version: 0.0.1-SNAPSHOT
+Implementation-Vendor-Id: com.openhome
+Implementation-URL: https://projects.spring.io/spring-boot/#/spring-bo
+ ot-starter-parent/OpenHomeMVC
+Main-Class: com.openhome.OpenHomeMvcApplication
+Created-By: Maven Integration for Eclipse
+
