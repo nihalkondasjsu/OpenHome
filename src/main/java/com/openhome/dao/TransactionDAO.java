@@ -6,4 +6,6 @@ import com.openhome.data.Transaction;
 
 public interface TransactionDAO extends JpaRepository<Transaction, Long>{
 
+	
+	
 }

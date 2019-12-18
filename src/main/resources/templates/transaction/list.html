@@ -3,11 +3,34 @@
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
 <link href="/basic.css" rel="stylesheet" type="text/css">
+<style>
+.hide{
+display:none;
+}
+</style>
 </head>
 <body>
 
 <h1>Transactions List</h1>
+
+<select onchange="pickMonth(this.value)">
+	<option value="-1" selected>All</option>
+	<option value="1">Jan</option>
+	<option value="2">Feb</option>
+	<option value="3">Mar</option>
+	<option value="4">Apr</option>
+	<option value="5">May</option>
+	<option value="6">Jun</option>
+	<option value="7">Jul</option>
+	<option value="8">Aug</option>
+	<option value="9">Sept</option>
+	<option value="10">Oct</option>
+	<option value="11">Nov</option>
+	<option value="12">Dec</option>
+</select>
 
 <table border="1">
 		<tr>
@@ -19,16 +42,60 @@
 			<td>User</td>
 			<td>Reservation</td>
 		</tr>
-		<tr th:each="transaction : ${transactions}">
+		<tr class='row' th:each="transaction : ${transactions}">
 			<td>[[${transaction.id}]]</td>
 			<td>[[${transaction.createdDate}]]</td>
-			<td>[[${transaction.dayToChargeFor}]]</td>
+			<td class='date'>[[${transaction.dayToChargeFor}]]</td>
 			<td>[[${transaction.amount}]]</td>
 			<td>[[${transaction.transactionNature}]]</td>
 			<td>[[${transaction.transactionUser}]]</td>
 			<td><a th:href="@{'/reservation/view?reservationId=' + ${transaction.reservation.id}}">[[${transaction.reservation.id}]]</a></td>
 		</tr>
 	</table>
+
+<script>
+
+$( ".date" ).each(function( index ) {
+	  var month = $( this ).text().split("-")[1];
+	  $(this).parent().attr("month-val",month);
+	});
+
+/* var dates = document.getElementsByClassName("date");
+
+for(var i=0;i<dates.length;i++){
+	var month = dates[i].innerHTML.split("-")[1];
+	dates[i].parentElement.setAttribute("month-val",month);
+} */
+
+function pickMonth(val){
+	if(val == -1){
+		/* var hidden = document.getElementsByClassName("hide");
+		for(var i=0;i<hidden.length;i++){
+			hidden[0].classList.remove("hide");
+		} */
+		$(".hide").removeClass("hide");
+	}else{
+		var rows = document.getElementsByClassName("row");
+		$( ".row" ).each(function( index ) {
+			  var month = $( this ).attr("month-val");
+			  if(month == val){
+				  $(this).removeClass("hide");
+			  }else{
+				  $(this).addClass("hide");
+			  }
+			});
+		/*for(var i=0;i<rows.length;i++){
+		 	var month = rows[i].getAttribute("month-val");
+			if(month == val){
+				rows[i].classList.remove("hide");
+			}else{
+				rows[i].classList.add("hide");
+			}
+		} */
+	}
+}
+
+</script>
 
 </body>
 </html>

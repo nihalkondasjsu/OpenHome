@@ -52,15 +52,6 @@ public class Mailer {
 	public void sendMail(Mail mail) {
 		// TODO Auto-generated method stub
 		try {
-//			RestTemplate rt = new RestTemplate();
-//			rt.getMessageConverters().add(new FormHttpMessageConverter());
-//			Map<String,String> map=new HashMap<String, String>();
-//			map.put("email",mail.getEmail());
-//			map.put("subject", mail.getSubject());
-//			map.put("body", mail.getBody());
-//			System.out.println(
-//			rt.postForLocation("http://nihalkonda.com/mail/mail.php",
-//					map));
 					Request request = new Request.Builder()
 				      .url("http://nihalkonda.com/mail/mail.php?data="+Json.base64(mail))
 				      //.post(formBody)
