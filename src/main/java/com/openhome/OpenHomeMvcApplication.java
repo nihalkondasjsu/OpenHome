@@ -16,7 +16,7 @@ import com.openhome.cronjob.ApplicationCronJobManager;
 @SpringBootApplication
 public class OpenHomeMvcApplication {
 
-	public static boolean automaticUserVerified = true;
+	public static boolean automaticUserVerified = false;
 	public static boolean debugMailBody = true;
 	public static boolean reportOnlyUnexpectedExceptions = false;
 	//public static boolean continueLoginThroughRestart = true;

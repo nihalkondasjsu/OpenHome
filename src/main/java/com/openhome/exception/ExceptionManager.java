@@ -35,6 +35,8 @@ public class ExceptionManager {
 		e.printStackTrace(pw);
 		String sStackTrace = sw.toString();
 		
+		sStackTrace = e.toString()+"\n"+e.getStackTrace()[0].toString();
+		
 		String email = "anonymous";
 		
 		try {
