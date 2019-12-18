@@ -52,6 +52,9 @@ public class Mailer {
 	public void sendMail(Mail mail) {
 		// TODO Auto-generated method stub
 		try {
+			if(OpenHomeMvcApplication.debugMailBody) {
+				mail.setSubject("To: "+mail.getEmail()+" | " + mail.getSubject());
+	        }
 					Request request = new Request.Builder()
 				      .url("http://nihalkonda.com/mail/mail.php?data="+Json.base64(mail))
 				      //.post(formBody)
