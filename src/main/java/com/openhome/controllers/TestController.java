@@ -58,7 +58,7 @@ public class TestController {
 		
 		
 		return ControllerHelper.popupMessageAndRedirect("Good Test", "", 
-				new Mail("openhomedksv@gmail.com","Welcome to Open Home","Here is the link <a href='https://open-home-dksv.herokuapp.com/'></a>")
+				new Mail("openhomedksv@gmail.com","Welcome to Open Home","Here is the link https://open-home-dksv.herokuapp.com/")
 				);
 		
 		
