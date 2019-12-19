@@ -3,7 +3,7 @@
   associations="true" dependencies="false" nesting-relationships="true" router="FAN">  
   <class id="1" language="java" name="com.openhome.data.CreditCard" project="repositoryOpenHome" 
     file="/repositoryOpenHome/src/main/java/com/openhome/data/CreditCard.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="390" y="47"/>    
+    <position height="-1" width="-1" x="329" y="311"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
       <attributes public="false" package="false" protected="false" private="false" static="true"/>      
@@ -12,7 +12,7 @@
   </class>  
   <class id="2" language="java" name="com.openhome.data.Reservation" project="repositoryOpenHome" 
     file="/repositoryOpenHome/src/main/java/com/openhome/data/Reservation.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="1009" y="258"/>    
+    <position height="-1" width="-1" x="948" y="522"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
       <attributes public="false" package="false" protected="false" private="false" static="true"/>      
@@ -21,7 +21,7 @@
   </class>  
   <enumeration id="3" language="java" name="com.openhome.data.Rating.RatingTarget" project="repositoryOpenHome" 
     file="/repositoryOpenHome/src/main/java/com/openhome/data/Rating.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="1295" y="142"/>    
+    <position height="-1" width="-1" x="1234" y="406"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
       <attributes public="false" package="false" protected="false" private="false" static="true"/>      
@@ -30,7 +30,7 @@
   </enumeration>  
   <class id="4" language="java" name="com.openhome.data.Guest" project="repositoryOpenHome" 
     file="/repositoryOpenHome/src/main/java/com/openhome/data/Guest.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="605" y="250"/>    
+    <position height="-1" width="-1" x="544" y="514"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
       <attributes public="false" package="false" protected="false" private="false" static="true"/>      
@@ -39,7 +39,7 @@
   </class>  
   <enumeration id="5" language="java" name="com.openhome.data.Reservation.ReservationState" project="repositoryOpenHome" 
     file="/repositoryOpenHome/src/main/java/com/openhome/data/Reservation.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="853" y="372"/>    
+    <position height="-1" width="-1" x="792" y="636"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
       <attributes public="false" package="false" protected="false" private="false" static="true"/>      
@@ -48,7 +48,7 @@
   </enumeration>  
   <enumeration id="6" language="java" name="com.openhome.data.Transaction.TransactionUser" project="repositoryOpenHome" 
     file="/repositoryOpenHome/src/main/java/com/openhome/data/Transaction.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="1342" y="457"/>    
+    <position height="-1" width="-1" x="1281" y="721"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
       <attributes public="false" package="false" protected="false" private="false" static="true"/>      
@@ -57,7 +57,7 @@
   </enumeration>  
   <class id="7" language="java" name="com.openhome.data.Image" project="repositoryOpenHome" 
     file="/repositoryOpenHome/src/main/java/com/openhome/data/Image.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="807" y="48"/>    
+    <position height="-1" width="-1" x="746" y="312"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
       <attributes public="false" package="false" protected="false" private="false" static="true"/>      
@@ -66,7 +66,7 @@
   </class>  
   <class id="8" language="java" name="com.openhome.data.UserDetails" project="repositoryOpenHome" 
     file="/repositoryOpenHome/src/main/java/com/openhome/data/UserDetails.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="606" y="47"/>    
+    <position height="-1" width="-1" x="545" y="311"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
       <attributes public="false" package="false" protected="false" private="false" static="true"/>      
@@ -76,7 +76,7 @@
   <enumeration id="9" language="java" name="com.openhome.data.UserDetails.UserRegistrationType" 
     project="repositoryOpenHome" file="/repositoryOpenHome/src/main/java/com/openhome/data/UserDetails.java" 
     binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="384" y="168"/>    
+    <position height="-1" width="-1" x="323" y="432"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
       <attributes public="false" package="false" protected="false" private="false" static="true"/>      
@@ -85,7 +85,7 @@
   </enumeration>  
   <class id="10" language="java" name="com.openhome.data.Address" project="repositoryOpenHome" 
     file="/repositoryOpenHome/src/main/java/com/openhome/data/Address.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="1301" y="49"/>    
+    <position height="-1" width="-1" x="1240" y="313"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
       <attributes public="false" package="false" protected="false" private="false" static="true"/>      
@@ -94,7 +94,7 @@
   </class>  
   <class id="11" language="java" name="com.openhome.data.Host" project="repositoryOpenHome" 
     file="/repositoryOpenHome/src/main/java/com/openhome/data/Host.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="605" y="-154"/>    
+    <position height="-1" width="-1" x="544" y="110"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
       <attributes public="false" package="false" protected="false" private="false" static="true"/>      
@@ -103,7 +103,7 @@
   </class>  
   <class id="12" language="java" name="com.openhome.data.PlaceDetails" project="repositoryOpenHome" 
     file="/repositoryOpenHome/src/main/java/com/openhome/data/PlaceDetails.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="1146" y="50"/>    
+    <position height="-1" width="-1" x="1085" y="314"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
       <attributes public="false" package="false" protected="false" private="false" static="true"/>      
@@ -112,7 +112,7 @@
   </class>  
   <class id="13" language="java" name="com.openhome.data.Rating" project="repositoryOpenHome" 
     file="/repositoryOpenHome/src/main/java/com/openhome/data/Rating.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="1298" y="261"/>    
+    <position height="-1" width="-1" x="1237" y="525"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
       <attributes public="false" package="false" protected="false" private="false" static="true"/>      
@@ -122,7 +122,7 @@
   <class id="14" language="java" name="com.openhome.data.UserVerifiedDetails" project="repositoryOpenHome" 
     file="/repositoryOpenHome/src/main/java/com/openhome/data/UserVerifiedDetails.java" binary="false" 
     corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="384" y="-80"/>    
+    <position height="-1" width="-1" x="323" y="184"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
       <attributes public="false" package="false" protected="false" private="false" static="true"/>      
@@ -131,7 +131,7 @@
   </class>  
   <class id="15" language="java" name="com.openhome.data.Transaction" project="repositoryOpenHome" 
     file="/repositoryOpenHome/src/main/java/com/openhome/data/Transaction.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="1146" y="390"/>    
+    <position height="-1" width="-1" x="1085" y="654"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
       <attributes public="false" package="false" protected="false" private="false" static="true"/>      
@@ -141,7 +141,7 @@
   <enumeration id="16" language="java" name="com.openhome.data.Transaction.TransactionNature" 
     project="repositoryOpenHome" file="/repositoryOpenHome/src/main/java/com/openhome/data/Transaction.java" 
     binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="1350" y="336"/>    
+    <position height="-1" width="-1" x="1289" y="600"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
       <attributes public="false" package="false" protected="false" private="false" static="true"/>      
@@ -150,7 +150,7 @@
   </enumeration>  
   <class id="17" language="java" name="com.openhome.data.Place" project="repositoryOpenHome" 
     file="/repositoryOpenHome/src/main/java/com/openhome/data/Place.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="1001" y="-153"/>    
+    <position height="-1" width="-1" x="940" y="111"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
       <attributes public="false" package="false" protected="false" private="false" static="true"/>      

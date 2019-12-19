@@ -1,21 +1,16 @@
 package com.openhome.mailer;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.converter.FormHttpMessageConverter;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Component;
-import org.springframework.web.client.RestTemplate;
 
 import com.openhome.Json;
 import com.openhome.OpenHomeMvcApplication;
 import com.openhome.controllers.helper.Mail;
 
 import okhttp3.Call;
-import okhttp3.FormBody;
+import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
@@ -55,16 +50,22 @@ public class Mailer {
 			if(OpenHomeMvcApplication.debugMailBody) {
 				mail.setSubject("To: "+mail.getEmail()+" | " + mail.getSubject());
 	        }
+			
+			RequestBody reqBody = new MultipartBody.Builder()
+			        .setType(MultipartBody.FORM)
+			        .addFormDataPart("data", Json.base64(mail))
+			        .build();
+			
 					Request request = new Request.Builder()
-				      .url("http://nihalkonda.com/mail/mail.php?data="+Json.base64(mail))
-				      //.post(formBody)
-				      .get()
+				      .url("http://nihalkonda.com/mail/mail.php")
+				      .post(reqBody)
 				      .build();
 				 
 				    OkHttpClient client = new OkHttpClient();
 					Call call = client.newCall(request);
 				    Response response = call.execute();
 				    System.out.println(response.message());
+				    response.close();
 		//	System.out.println(WebClient.create().post().uri("http://nihalkonda.com/mail/mail.php").bodyValue(mail).retrieve().bodyToMono(String.class).block());
 		} catch (Exception e) {
 			// TODO: handle exception
