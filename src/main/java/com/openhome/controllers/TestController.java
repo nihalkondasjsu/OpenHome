@@ -42,7 +42,7 @@ public class TestController {
 	
 	SimpleDateFormat simpleDateFormat;
 	
-	@GetMapping("/test1")
+	//@GetMapping("/test1")
 	public String test1() throws Exception {
 		
 		simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
