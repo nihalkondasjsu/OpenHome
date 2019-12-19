@@ -29,19 +29,20 @@ public class Mailer {
 	
 	public boolean sendMail(String email,String subject,String body) {
 		try {
-			SimpleMailMessage msg = new SimpleMailMessage();
-			msg.setFrom("openhomedksv@gmail.com");
-	        msg.setTo(email);
-	        
-	        if(OpenHomeMvcApplication.debugMailBody) {
-	        	msg.setCc("openhomedksv@gmail.com");
-	        	subject = "To: "+email+" | " + subject;
-	        }
-	        msg.setSubject(subject);
-	        
-	        msg.setText(body);
-	        
-	        javaMailSender.send(msg);
+//			SimpleMailMessage msg = new SimpleMailMessage();
+//			msg.setFrom("openhomedksv@gmail.com");
+//	        msg.setTo(email);
+//	        
+//	        if(OpenHomeMvcApplication.debugMailBody) {
+//	        	msg.setCc("openhomedksv@gmail.com");
+//	        	subject = "To: "+email+" | " + subject;
+//	        }
+//	        msg.setSubject(subject);
+//	        
+//	        msg.setText(body);
+//	        
+//	        javaMailSender.send(msg);
+			sendMail(new Mail(email,subject,body));
 			return true;
 		} catch (Exception e) {
 			e.printStackTrace();

@@ -65,8 +65,8 @@ public class ReservationCreateController {
 			reservation = reservationManager.createReservation(timeAdvancementManagement.getCurrentDate(), place, reservation, sessionManager.getGuest(httpSession));
 			
 			return ControllerHelper.popupMessageAndRedirect("Reservation Successfull", "/reservation/view?reservationId="+reservation.getId(),
-					new Mail(place.getHost().getUserDetails().getEmail(),"OpenHome: A Reservation has been made on your place '"+place.getPlaceDetails().getName()+"'","Link to view reservation : "+OpenHomeMvcApplication.baseUrl+"/reservation/view?reservationId="+reservation.getId()),
-					new Mail(sessionManager.getGuest(httpSession).getUserDetails().getEmail(),"OpenHome: Reservation successfull on '"+place.getPlaceDetails().getName()+"'","Link to view reservation : "+OpenHomeMvcApplication.baseUrl+"/reservation/view?reservationId="+reservation.getId())
+					new Mail(reservation.getPlace().getHost().getUserDetails().getEmail(),"OpenHome: A Reservation has been made on your place '"+place.getPlaceDetails().getName()+"'","Link to view reservation : "+OpenHomeMvcApplication.baseUrl+"/reservation/view?reservationId="+reservation.getId()),
+					new Mail(reservation.getGuest().getUserDetails().getEmail(),"OpenHome: Reservation successfull on '"+place.getPlaceDetails().getName()+"'","Link to view reservation : "+OpenHomeMvcApplication.baseUrl+"/reservation/view?reservationId="+reservation.getId())
 					);
 			
 		} catch (Exception e) {

@@ -9,10 +9,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.openhome.OpenHomeMvcApplication;
 import com.openhome.aop.helper.annotation.ReservationAssociatedGuestLoginRequired;
 import com.openhome.aop.helper.annotation.ReservationAssociatedUserLoginRequired;
 import com.openhome.aop.helper.annotation.ValidReservationId;
 import com.openhome.controllers.helper.ControllerHelper;
+import com.openhome.controllers.helper.Mail;
 import com.openhome.dao.ReservationDAO;
 import com.openhome.data.Reservation;
 import com.openhome.data.helper.ReservationProcessor;
@@ -47,7 +49,10 @@ public class ReservationActionController {
 			e.printStackTrace();
 			return ControllerHelper.popupMessageAndRedirect(e.getMessage(),  "/reservation/view?reservationId="+reservationId);
 		}
-		return ControllerHelper.popupMessageAndRedirect("Check In Successful.", "/reservation/view?reservationId="+reservationId);
+		return ControllerHelper.popupMessageAndRedirect("Check In Successful.", "/reservation/view?reservationId="+reservationId,
+				new Mail(reservation.getPlace().getHost().getUserDetails().getEmail(),"OpenHome: Check In Successful '"+reservation.getPlace().getPlaceDetails().getName()+"'","Link to view reservation : "+OpenHomeMvcApplication.baseUrl+"/reservation/view?reservationId="+reservation.getId()),
+				new Mail(reservation.getGuest().getUserDetails().getEmail(),"OpenHome: Check In Successful '"+reservation.getPlace().getPlaceDetails().getName()+"'","Link to view reservation : "+OpenHomeMvcApplication.baseUrl+"/reservation/view?reservationId="+reservation.getId())
+				);
 	}
 	
 	@RequestMapping(value = "/reservation/checkOut" ,method=RequestMethod.GET)
@@ -63,7 +68,10 @@ public class ReservationActionController {
 			e.printStackTrace();
 			return ControllerHelper.popupMessageAndRedirect(e.getMessage(),  "/reservation/view?reservationId="+reservationId);
 		}
-		return ControllerHelper.popupMessageAndRedirect("Check Out Successful.", "/reservation/view?reservationId="+reservationId);
+		return ControllerHelper.popupMessageAndRedirect("Check Out Successful.", "/reservation/view?reservationId="+reservationId,
+				new Mail(reservation.getPlace().getHost().getUserDetails().getEmail(),"OpenHome: Check Out Successful. '"+reservation.getPlace().getPlaceDetails().getName()+"'","Link to view reservation : "+OpenHomeMvcApplication.baseUrl+"/reservation/view?reservationId="+reservation.getId()),
+				new Mail(reservation.getGuest().getUserDetails().getEmail(),"OpenHome: Check Out Successful. '"+reservation.getPlace().getPlaceDetails().getName()+"'","Link to view reservation : "+OpenHomeMvcApplication.baseUrl+"/reservation/view?reservationId="+reservation.getId()))
+				;
 	}	
 	
 	@RequestMapping(value = "/reservation/cancel" ,method=RequestMethod.GET)
@@ -83,7 +91,10 @@ public class ReservationActionController {
 			e.printStackTrace();
 			return ControllerHelper.popupMessageAndRedirect(e.getMessage(),  "/reservation/view?reservationId="+reservationId);
 		}
-		return ControllerHelper.popupMessageAndRedirect("Cancellation Successful.", "/reservation/view?reservationId="+reservationId);
+		return ControllerHelper.popupMessageAndRedirect("Cancellation Successful.", "/reservation/view?reservationId="+reservationId,
+				new Mail(reservation.getPlace().getHost().getUserDetails().getEmail(),"OpenHome: Cancellation Successful. '"+reservation.getPlace().getPlaceDetails().getName()+"'","Link to view reservation : "+OpenHomeMvcApplication.baseUrl+"/reservation/view?reservationId="+reservation.getId()),
+				new Mail(reservation.getGuest().getUserDetails().getEmail(),"OpenHome: Cancellation Successful. '"+reservation.getPlace().getPlaceDetails().getName()+"'","Link to view reservation : "+OpenHomeMvcApplication.baseUrl+"/reservation/view?reservationId="+reservation.getId())
+				);
 	}
 	
 }

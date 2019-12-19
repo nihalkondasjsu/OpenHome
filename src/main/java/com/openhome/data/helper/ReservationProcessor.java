@@ -496,6 +496,8 @@ public class ReservationProcessor {
 			Reservation reservation,
 			TransactionNature transactionNature,
 			TransactionUser transactionUser) {
+		if(amount == 0.0)
+			return;
 		Transaction t1 = new Transaction(amount * SERVICE_CHARGE, createdDate, dayToChargeFor, reservation, transactionNature, transactionUser);
 		if(transactionNature == TransactionNature.Charge || transactionNature == TransactionNature.Fee) {
 			transactionNature = TransactionNature.Payment;
