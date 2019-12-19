@@ -20,7 +20,7 @@ public class OpenHomeMvcApplication {
 	public static boolean debugMailBody = true;
 	public static boolean reportOnlyUnexpectedExceptions = false;
 	//public static boolean continueLoginThroughRestart = true;
-	public static String baseUrl = "http://0b5dc0b3.ngrok.io/";
+	public static String baseUrl = "https://open-home-dksv.herokuapp.com/";
 	
 	public static void main(String[] args) {
 		ConfigurableApplicationContext context = SpringApplication.run(OpenHomeMvcApplication.class, args);
