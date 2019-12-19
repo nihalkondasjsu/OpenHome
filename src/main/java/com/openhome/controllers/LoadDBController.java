@@ -47,7 +47,7 @@ public class LoadDBController extends SampleDBData{
 	@Autowired(required=true)
 	TimeAdvancementManagement timeAdvancementManagement;
 	
-	@GetMapping("/resetDB")
+	//@GetMapping("/resetDB")
 	public String resetDB() {
 		
 		hostDAO.deleteAll();
@@ -75,7 +75,7 @@ public class LoadDBController extends SampleDBData{
 		return "index";
 	}
 	
-	@GetMapping("/reloadDB")
+	//@GetMapping("/reloadDB")
 	public String reloadDB() throws IOException {
 		
 		deleteAllImages();
