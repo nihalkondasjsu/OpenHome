@@ -15,12 +15,12 @@
 <link href="/basic.css" rel="stylesheet" type="text/css">
 
 </head>
-<body>
+<body><h1>Open Home</h1><a href='/home'>Go To Dashboard</a>
 <h1>Host Login Form</h1>
 <p style="color:red">[[${errorMessage}]]</p>
 <form id="myForm" action="/host/login" method="POST" onsubmit="return preSubmit();">
 	<input name="email" id="email" placeholder="Email" class="underlineinput" required><br>
-	<input name="password" placeholder="Password" class="underlineinput" required><br>
+	<input type="password" name="password" placeholder="Password" class="underlineinput" required><br>
 	<input type="submit">
 </form>
 

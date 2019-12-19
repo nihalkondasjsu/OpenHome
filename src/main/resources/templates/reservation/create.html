@@ -6,7 +6,7 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 <link href="/basic.css" rel="stylesheet" type="text/css">
 </head>
-<body>
+<body><h1>Open Home</h1><a href='/home'>Go To Dashboard</a>
 <h1>Reservation Create</h1>
 <form th:action="@{'/reservation/create?placeId=' + ${place.id}}" method="POST">
 		<input type="date" 

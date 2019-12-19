@@ -5,7 +5,7 @@
 <title>Reservation Read</title>
 <link href="/basic.css" rel="stylesheet" type="text/css">
 </head>
-<body>
+<body><h1>Open Home</h1><a href='/home'>Go To Dashboard</a>
 	<h1>Reservation Read</h1>
 	<div th:if="${hostAccess == true}">
 		<div th:if="${#strings.toString(reservation.reservationState) == 'Booked' || #strings.toString(reservation.reservationState) == 'CheckedIn' }">

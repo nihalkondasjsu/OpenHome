@@ -20,7 +20,7 @@
 <link href="/basic.css" rel="stylesheet" type="text/css">
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 </head>
-<body>
+<body><h1>Open Home</h1><a href='/home'>Go To Dashboard</a>
 	<form action="../place/searchresults" method="POST">
 		<input name="keywords" th:value="${placeSearchQuery.keywords}" placeholder="Keywords">
 		<input name="cityOrZip" th:value="${placeSearchQuery.cityOrZip}" placeholder="City or Zip">
