@@ -9,16 +9,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 
-import com.openhome.dao.ReservationDAO;
+import com.openhome.controllers.helper.ControllerHelper;
+import com.openhome.controllers.helper.Mail;
 import com.openhome.dao.GuestDAO;
 import com.openhome.dao.PlaceDAO;
-import com.openhome.data.Reservation;
-import com.openhome.data.helper.ReservationProcessor;
-import com.openhome.data.CreditCard;
+import com.openhome.dao.ReservationDAO;
 import com.openhome.data.Guest;
 import com.openhome.data.Place;
+import com.openhome.data.Reservation;
+import com.openhome.data.helper.ReservationProcessor;
 import com.openhome.exception.CustomException;
-import com.openhome.tam.TimeAdvancementManagement;
 
 @Controller
 public class TestController {
@@ -42,20 +42,26 @@ public class TestController {
 	
 	SimpleDateFormat simpleDateFormat;
 	
-	//@GetMapping("/test1")
+	
+	
+	@GetMapping("/test1")
 	public String test1() throws Exception {
 		
-		simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+		//simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 		
 		//testNoShow();
 		
 		//testAutoCheckOut();
 		
-		testInit();
+		//testInit();
 		
 		
 		
-		return "index";
+		return ControllerHelper.popupMessageAndRedirect("Good Test", "", 
+				new Mail("openhomedksv@gmail.com","Welcome to Open Home","Here is the link <a href='https://open-home-dksv.herokuapp.com/'></a>")
+				);
+		
+		
 	}
 
 	public void testInit() throws Exception {
