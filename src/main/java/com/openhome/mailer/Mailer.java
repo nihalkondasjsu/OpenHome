@@ -1,5 +1,10 @@
 package com.openhome.mailer;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -51,6 +56,12 @@ public class Mailer {
 				mail.setSubject("To: "+mail.getEmail()+" | " + mail.getSubject());
 	        }
 			
+			List<String> links = extractUrls(mail.getBody());
+			
+			if(links.size() != 0) {
+				mail.setBody(mail.getBody().replace(links.get(0), "<a href='"+links.get(0)+"'>Click Here</a>"));
+			}
+			
 			RequestBody reqBody = new MultipartBody.Builder()
 			        .setType(MultipartBody.FORM)
 			        .addFormDataPart("data", Json.base64(mail))
@@ -71,6 +82,22 @@ public class Mailer {
 			// TODO: handle exception
 			e.printStackTrace();
 		}
+	}
+	
+	public static List<String> extractUrls(String text)
+	{
+	    List<String> containedUrls = new ArrayList<String>();
+	    String urlRegex = "((https?|ftp|gopher|telnet|file):((//)|(\\\\))+[\\w\\d:#@%/;$()~_?\\+-=\\\\\\.&]*)";
+	    Pattern pattern = Pattern.compile(urlRegex, Pattern.CASE_INSENSITIVE);
+	    Matcher urlMatcher = pattern.matcher(text);
+
+	    while (urlMatcher.find())
+	    {
+	        containedUrls.add(text.substring(urlMatcher.start(0),
+	                urlMatcher.end(0)));
+	    }
+
+	    return containedUrls;
 	}
 	
 }
