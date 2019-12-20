@@ -26,7 +26,7 @@ public class ReservationManager {
 	public Reservation createReservation(Date currentDate,Place place, Reservation reservation, Guest guest) throws ParseException, CustomException {
 		reservation.prepareForRegistration(currentDate, place, guest);
 		
-		if(reservation.getCheckOut() - currentDate.getTime() > 365*24*60*60*1000) {
+		if(reservation.getCheckOut() - currentDate.getTime() > 365*24*60*60*1000l) {
 			throw new CustomException("Reservation failed.Reservation contains days that are 365 days away from now.");
 		}
 		
@@ -36,7 +36,7 @@ public class ReservationManager {
 		Long checkIn = simpleDateFormat.parse(reservation.getCheckInDateString()+" "+"01:00").getTime();
 		Long checkOut = simpleDateFormat.parse(reservation.getCheckInDateString()+" "+"01:00").getTime();
 		
-		if(checkOut - checkIn > 14*24*60*60*1000) {
+		if(checkOut - checkIn > 14*24*60*60*1000l) {
 			throw new CustomException("Reservation failed.Reservation contains more than 14 days.");
 		}
 		
