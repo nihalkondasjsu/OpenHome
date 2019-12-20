@@ -47,7 +47,7 @@ public class HostMonthlyBillingSummary {
 			for (Reservation reservation : reservations) {
 				List<Transaction> tempList = reservation.getTransactions();
 				for (Transaction transaction : tempList) {
-					if(transaction.getDayToChargeFor().getTime() < date.getTime() - 365 * 24 * 60 * 60 * 1000) {
+					if(transaction.getDayToChargeFor().getTime() < date.getTime() - 365 * 24 * 60 * 60 * 1000l) {
 						// too old
 					}else {
 						if(transaction.getTransactionUser() == Transaction.TransactionUser.Host)

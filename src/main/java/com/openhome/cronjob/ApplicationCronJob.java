@@ -13,7 +13,7 @@ public class ApplicationCronJob {
 	}
 	
 	public void runTask(TimeAdvancementManagement tam) {
-		long ONE_DAY = (24*60*60*1000);
+		long ONE_DAY = (24*60*60*1000l);
 		if(tam == null)
 			System.out.println("Big problem");
 		Date currentDate = tam.getCurrentDate();

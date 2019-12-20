@@ -41,8 +41,8 @@ public class OpenHomeMvcApplication {
 			
 			ApplicationCronJobManager acjm = context.getBean(ApplicationCronJobManager.class);
 			
-			acjm.addJob(new Date(3*60*60*1000 + 60*1000));
-			acjm.addJob(new Date(11*60*60*1000 +  60*1000));
+			acjm.addJob(new Date(3*60*60*1000l + 60*1000l));
+			acjm.addJob(new Date(11*60*60*1000l +  60*1000l));
 			
 			acjm.keepRunning();
 			

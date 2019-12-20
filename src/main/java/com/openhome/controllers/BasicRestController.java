@@ -40,8 +40,8 @@ public class BasicRestController {
 	
 	@RequestMapping(value="/setup" , method = RequestMethod.GET)
 	public String setup() {
-		acjm.addJob(new Date(3*60*60*1000));
-		acjm.addJob(new Date(11*60*60*1000));
+		acjm.addJob(new Date(3*60*60*1000l));
+		acjm.addJob(new Date(11*60*60*1000l));
 		acjm.keepRunning();
 		return "good";
 	}

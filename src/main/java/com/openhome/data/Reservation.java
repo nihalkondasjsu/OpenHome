@@ -340,11 +340,11 @@ public class Reservation {
 			throw new CustomException("Invalid Reservation. Predate.");
 		}
 		
-		if(this.checkOut - this.checkIn < 20 * 60 * 60 * 1000) {
+		if(this.checkOut - this.checkIn < 20 * 60 * 60 * 1000l) {
 			throw new CustomException("Invalid Reservation. Less than 20hrs.");
 		}
 		
-		if(this.checkOut > createdDate.getTime() + 365 * 24 * 60 * 60 * 1000 ) {
+		if(this.checkOut > createdDate.getTime() + 365 * 24 * 60 * 60 * 1000l ) {
 			throw new CustomException("Invalid Reservation");
 		}
 		
@@ -372,7 +372,7 @@ public class Reservation {
 		
 		String[] week = "Sunday;Monday;Tuesday;Wednesday;Thursday;Friday;Saturday".split(";");
 		
-		for (long i = start; i <= end; i+= 24*60*60*1000) {
+		for (long i = start; i <= end; i+= 24*60*60*1000l) {
 			String weekS = week[new Date(i).getDay()];
 			if(weekdays.contains(weekS) == false)
 				weekdays.add(weekS);
