@@ -300,7 +300,7 @@ public class Reservation {
 		if(this.checkOut - createdDate.getTime() > (365 * 24 * 60 * 60 * 1000l) ) {
 			System.out.println("");
 			
-			throw new CustomException("Invalid Reservation. Checkout is 365 days away. CheckOut:" + this.checkOut + " | createdDate:" + createdDate.getTime() + " | this.checkOut - createdDate.getTime() : "+(this.checkOut - createdDate.getTime()) + " | 365 * 24 * 60 * 60 * 1000l = "+(365 * 24 * 60 * 60 * 1000l));
+			throw new CustomException("Invalid Reservation. Checkout is 365 days away.");
 		}
 		
 		this.requiredDays = weekDays();
