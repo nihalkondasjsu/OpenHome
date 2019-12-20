@@ -297,8 +297,8 @@ public class Reservation {
 			throw new CustomException("Invalid Reservation. Greater than 14days");
 		}
 		
-		if(this.checkOut > createdDate.getTime() + (365 * 24 * 60 * 60 * 1000) ) {
-			throw new CustomException("Invalid Reservation. Checkout is 365 days away.");
+		if(this.checkOut - createdDate.getTime() > (365 * 24 * 60 * 60 * 1000) ) {
+			throw new CustomException("Invalid Reservation. Checkout is 365 days away." + this.checkOut + " | " + createdDate.getTime());
 		}
 		
 		this.requiredDays = weekDays();
