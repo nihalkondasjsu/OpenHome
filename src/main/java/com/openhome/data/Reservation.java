@@ -289,16 +289,18 @@ public class Reservation {
 			throw new CustomException("Invalid Reservation. Predate.");
 		}
 		
-		if(this.checkOut - this.checkIn < 20 * 60 * 60 * 1000) {
+		if(this.checkOut - this.checkIn < 20 * 60 * 60 * 1000l) {
 			throw new CustomException("Invalid Reservation. Less than 20hrs.");
 		}
 		
-		if(this.checkOut - this.checkIn > 14 * 24 * 60 * 60 * 1000) {
+		if(this.checkOut - this.checkIn > 14 * 24 * 60 * 60 * 1000l) {
 			throw new CustomException("Invalid Reservation. Greater than 14days");
 		}
 		
-		if(this.checkOut - createdDate.getTime() > (365 * 24 * 60 * 60 * 1000) ) {
-			throw new CustomException("Invalid Reservation. Checkout is 365 days away." + this.checkOut + " | " + createdDate.getTime());
+		if(this.checkOut - createdDate.getTime() > (365 * 24 * 60 * 60 * 1000l) ) {
+			System.out.println("");
+			
+			throw new CustomException("Invalid Reservation. Checkout is 365 days away. CheckOut:" + this.checkOut + " | createdDate:" + createdDate.getTime() + " | this.checkOut - createdDate.getTime() : "+(this.checkOut - createdDate.getTime()) + " | 365 * 24 * 60 * 60 * 1000l = "+(365 * 24 * 60 * 60 * 1000l));
 		}
 		
 		this.requiredDays = weekDays();
